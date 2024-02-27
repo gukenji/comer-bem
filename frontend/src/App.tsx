@@ -5,14 +5,14 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import Header from "./components/Header";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import PrivateRoute from "./utils/PrivateRoute";
 function App() {
   return (
     <div>
       <Router>
         <Header />
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<PrivateRoute component={HomePage} />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>
       </Router>
