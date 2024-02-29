@@ -3,8 +3,8 @@ import { Navigate } from "react-router-dom";
 import { Outlet } from "react-router-dom";
 
 const PrivateRoute = () => {
-  const basicUserInfo = useAppSelector((state) => state.auth.basicUserInfo);
-  if (!basicUserInfo) {
+  const tokenInfo = useAppSelector((state) => state.auth.tokenInfo);
+  if (!tokenInfo) {
     return <Navigate replace to={"/login"} />;
   }
   return <Outlet />;

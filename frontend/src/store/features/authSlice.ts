@@ -10,10 +10,9 @@ type NewUser = User & {
   name: string;
 };
 
-type UserBasicInfo = {
-  id: string;
-  name: string;
-  email: string;
+type TokenInfo = {
+  refresh: string;
+  access: string;
 };
 
 type UserProfileData = {
@@ -22,15 +21,15 @@ type UserProfileData = {
 };
 
 type AuthApiState = {
-  basicUserInfo?: UserBasicInfo | null;
+  tokenInfo?: TokenInfo | null;
   userProfileData?: UserProfileData | null;
   status: "idle" | "loading" | "failed";
   error: string | null;
 };
 
 const initialState: AuthApiState = {
-  basicUserInfo: localStorage.getItem("userInfo")
-    ? JSON.parse(localStorage.getItem("userInfo") as string)
+  tokenInfo: localStorage.getItem("tokenInfo")
+    ? JSON.parse(localStorage.getItem("tokenInfo") as string)
     : null,
   userProfileData: undefined,
   status: "idle",
@@ -41,7 +40,7 @@ export const login = createAsyncThunk("login", async (data: User) => {
   const response = await axiosInstance.post("/token/", data);
   const resData = response.data;
   console.log(resData);
-  localStorage.setItem("userInfo", JSON.stringify(resData));
+  localStorage.setItem("tokenInfo", JSON.stringify(resData));
 
   return resData;
 });
@@ -50,7 +49,7 @@ export const register = createAsyncThunk("register", async (data: NewUser) => {
   const response = await axiosInstance.post("/register", data);
   const resData = response.data;
 
-  localStorage.setItem("userInfo", JSON.stringify(resData));
+  localStorage.setItem("tokenInfo", JSON.stringify(resData));
 
   return resData;
 });
@@ -59,7 +58,7 @@ export const logout = createAsyncThunk("logout", async () => {
   const response = await axiosInstance.post("/logout", {});
   const resData = response.data;
 
-  localStorage.removeItem("userInfo");
+  localStorage.removeItem("tokenInfo");
 
   return resData;
 });
@@ -82,13 +81,10 @@ const authSlice = createSlice({
         state.status = "loading";
         state.error = null;
       })
-      .addCase(
-        login.fulfilled,
-        (state, action: PayloadAction<UserBasicInfo>) => {
-          state.status = "idle";
-          state.basicUserInfo = action.payload;
-        }
-      )
+      .addCase(login.fulfilled, (state, action: PayloadAction<TokenInfo>) => {
+        state.status = "idle";
+        state.tokenInfo = action.payload;
+      })
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || "Login failed";
@@ -100,9 +96,9 @@ const authSlice = createSlice({
       })
       .addCase(
         register.fulfilled,
-        (state, action: PayloadAction<UserBasicInfo>) => {
+        (state, action: PayloadAction<TokenInfo>) => {
           state.status = "idle";
-          state.basicUserInfo = action.payload;
+          state.tokenInfo = action.payload;
         }
       )
       .addCase(register.rejected, (state, action) => {
@@ -116,7 +112,7 @@ const authSlice = createSlice({
       })
       .addCase(logout.fulfilled, (state, action) => {
         state.status = "idle";
-        state.basicUserInfo = null;
+        state.tokenInfo = null;
       })
       .addCase(logout.rejected, (state, action) => {
         state.status = "failed";
