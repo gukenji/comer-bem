@@ -7,9 +7,8 @@ const LandingPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const basicUserInfo = useAppSelector((state) => state.auth.basicUserInfo);
+  const basicUserInfo = useAppSelector((state) => state.auth.tokenInfo);
   const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
-
   const handleLogout = async () => {
     try {
       await dispatch(logout()).unwrap();
@@ -20,16 +19,13 @@ const LandingPage = () => {
   };
   useEffect(() => {
     if (basicUserInfo) {
-      dispatch(getUser(basicUserInfo.id));
+      dispatch(getUser(basicUserInfo.access));
     }
   }, [basicUserInfo]);
 
   return (
     <div>
       <h1>Landing Page</h1>
-      <p>Name: {userProfileInfo?.name}</p>
-      <p>Email: {userProfileInfo?.email}</p>
-      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };

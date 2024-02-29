@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosInstance";
+import { jwtDecode } from "jwt-decode";
 
 type User = {
   username: string;
@@ -10,14 +11,20 @@ type NewUser = User & {
   name: string;
 };
 
+interface IJWTDecode {
+  user_id: string;
+  token_type: string;
+  exp: string;
+  username: string;
+}
+
 type TokenInfo = {
   refresh: string;
   access: string;
 };
 
 type UserProfileData = {
-  name: string;
-  email: string;
+  username: string;
 };
 
 type AuthApiState = {
@@ -39,9 +46,7 @@ const initialState: AuthApiState = {
 export const login = createAsyncThunk("login", async (data: User) => {
   const response = await axiosInstance.post("/token/", data);
   const resData = response.data;
-  console.log(resData);
   localStorage.setItem("tokenInfo", JSON.stringify(resData));
-
   return resData;
 });
 
@@ -55,12 +60,7 @@ export const register = createAsyncThunk("register", async (data: NewUser) => {
 });
 
 export const logout = createAsyncThunk("logout", async () => {
-  const response = await axiosInstance.post("/logout", {});
-  const resData = response.data;
-
   localStorage.removeItem("tokenInfo");
-
-  return resData;
 });
 
 export const getUser = createAsyncThunk(
@@ -83,7 +83,13 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action: PayloadAction<TokenInfo>) => {
         state.status = "idle";
-        state.tokenInfo = action.payload;
+        state.tokenInfo = {
+          refresh: action.payload.refresh,
+          access: action.payload.access,
+        };
+        state.userProfileData = {
+          username: jwtDecode<IJWTDecode>(state.tokenInfo.access).username,
+        };
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
