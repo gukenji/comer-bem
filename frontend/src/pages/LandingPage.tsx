@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { useNavigate } from "react-router-dom";
-import { getUser, logout } from "../store/features/authSlice";
+import { logout } from "../store/features/authSlice";
 
 const LandingPage = () => {
   const dispatch = useAppDispatch();
@@ -17,11 +17,6 @@ const LandingPage = () => {
       console.error(e);
     }
   };
-  useEffect(() => {
-    if (basicUserInfo) {
-      dispatch(getUser(basicUserInfo.access));
-    }
-  }, [basicUserInfo]);
 
   return (
     <div>

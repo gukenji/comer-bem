@@ -7,6 +7,10 @@ type User = {
   password: string;
 };
 
+type Refresh = {
+  refresh: string;
+};
+
 type NewUser = User & {
   name: string;
 };
@@ -38,7 +42,13 @@ const initialState: AuthApiState = {
   tokenInfo: localStorage.getItem("tokenInfo")
     ? JSON.parse(localStorage.getItem("tokenInfo") as string)
     : null,
-  userProfileData: undefined,
+  userProfileData: localStorage.getItem("tokenInfo")
+    ? {
+        username: jwtDecode<IJWTDecode>(
+          JSON.parse(localStorage.getItem("tokenInfo") as string).access
+        ).username,
+      }
+    : null,
   status: "idle",
   error: null,
 };
@@ -50,26 +60,23 @@ export const login = createAsyncThunk("login", async (data: User) => {
   return resData;
 });
 
+export const refresh = createAsyncThunk("refresh", async (data: Refresh) => {
+  const response = await axiosInstance.post("/token/refresh/", data);
+  const resData = response.data;
+  localStorage.setItem("tokenInfo", JSON.stringify(resData));
+  return resData;
+});
+
 export const register = createAsyncThunk("register", async (data: NewUser) => {
   const response = await axiosInstance.post("/register", data);
   const resData = response.data;
-
   localStorage.setItem("tokenInfo", JSON.stringify(resData));
-
   return resData;
 });
 
 export const logout = createAsyncThunk("logout", async () => {
   localStorage.removeItem("tokenInfo");
 });
-
-export const getUser = createAsyncThunk(
-  "users/profile",
-  async (userId: string) => {
-    const response = await axiosInstance.get(`/users/${userId}`);
-    return response.data;
-  }
-);
 
 const authSlice = createSlice({
   name: "auth",
@@ -95,6 +102,25 @@ const authSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message || "Login failed";
       })
+      .addCase(refresh.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(refresh.fulfilled, (state, action: PayloadAction<TokenInfo>) => {
+        state.status = "idle";
+        state.tokenInfo = {
+          refresh: action.payload.refresh,
+          access: action.payload.access,
+        };
+        state.userProfileData = {
+          username: jwtDecode<IJWTDecode>(state.tokenInfo.access).username,
+        };
+      })
+      .addCase(refresh.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || "Login failed";
+        logout();
+      })
 
       .addCase(register.pending, (state) => {
         state.status = "loading";
@@ -119,23 +145,11 @@ const authSlice = createSlice({
       .addCase(logout.fulfilled, (state, action) => {
         state.status = "idle";
         state.tokenInfo = null;
+        state.userProfileData = null;
       })
       .addCase(logout.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || "Logout failed";
-      })
-
-      .addCase(getUser.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
-      })
-      .addCase(getUser.fulfilled, (state, action) => {
-        state.status = "idle";
-        state.userProfileData = action.payload;
-      })
-      .addCase(getUser.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message || "Get user profile data failed";
       });
   },
 });
