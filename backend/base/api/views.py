@@ -12,7 +12,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token["username"] = user.username
+        token["name"] = user.name
+        token["superuser"] = user.is_superuser
+        token["staff"] = user.is_staff
+
         return token
 
 
@@ -31,7 +34,6 @@ def getRoutes(request):
 def getMeals(request):
     user = request.user
     # meals = Meal.objects.all()
-    print(request)
     meals = user.meal_set.all()
     serializer = MealSerializer(meals, many=True)
     return Response(serializer.data)

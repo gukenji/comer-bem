@@ -9,10 +9,12 @@ interface IMeals {
 
 interface IMealsList {
   meal_list: IMeals[] | null;
+  error: string | null;
 }
 
 const initialState: IMealsList = {
   meal_list: null,
+  error: null,
 };
 
 export const getMeals = createAsyncThunk("meals", async () => {
@@ -27,11 +29,17 @@ const mealsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getMeals.pending, (state) => {})
+      .addCase(getMeals.pending, (state) => {
+        state.error = "carregando...";
+      })
       .addCase(getMeals.fulfilled, (state, action: PayloadAction<IMeals[]>) => {
         state.meal_list = action.payload;
+        state.error = null;
       })
-      .addCase(getMeals.rejected, (state, action) => {});
+      .addCase(getMeals.rejected, (state, action) => {
+        state.meal_list = null;
+        state.error = "falha ao recuperar refeições ";
+      });
   },
 });
 

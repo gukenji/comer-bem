@@ -16,13 +16,13 @@ import {
 } from "@mui/material";
 const LoginPage = () => {
   const dispatch = useAppDispatch();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    if (username && password) {
+    if (email && password) {
       try {
-        await dispatch(login({ username, password })).unwrap();
+        await dispatch(login({ email, password })).unwrap();
       } catch (e) {
         console.error(e);
       }
@@ -52,12 +52,12 @@ const LoginPage = () => {
               margin="normal"
               required
               fullWidth
-              id="username"
-              label="Username"
-              name="username"
+              id="email"
+              label="Email"
+              name="email"
               autoFocus
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
 
             <TextField

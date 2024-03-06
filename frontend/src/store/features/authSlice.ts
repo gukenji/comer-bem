@@ -3,12 +3,13 @@ import axiosInstance from "../../api/axiosInstance";
 import { jwtDecode } from "jwt-decode";
 
 type User = {
-  username: string;
+  email: string;
   password: string;
 };
 
 type Refresh = {
   refresh: string;
+  access: string;
 };
 
 type NewUser = User & {
@@ -16,10 +17,12 @@ type NewUser = User & {
 };
 
 interface IJWTDecode {
-  user_id: string;
+  user_id: number;
   token_type: string;
   exp: string;
-  username: string;
+  name: string;
+  superuser: boolean;
+  staff: boolean;
 }
 
 type TokenInfo = {
@@ -28,7 +31,10 @@ type TokenInfo = {
 };
 
 type UserProfileData = {
-  username: string;
+  name: string;
+  user_id: number;
+  superuser: boolean;
+  staff: boolean;
 };
 
 type AuthApiState = {
@@ -44,9 +50,18 @@ const initialState: AuthApiState = {
     : null,
   userProfileData: localStorage.getItem("tokenInfo")
     ? {
-        username: jwtDecode<IJWTDecode>(
+        name: jwtDecode<IJWTDecode>(
           JSON.parse(localStorage.getItem("tokenInfo") as string).access
-        ).username,
+        ).name,
+        user_id: jwtDecode<IJWTDecode>(
+          JSON.parse(localStorage.getItem("tokenInfo") as string).access
+        ).user_id,
+        superuser: jwtDecode<IJWTDecode>(
+          JSON.parse(localStorage.getItem("tokenInfo") as string).access
+        ).superuser,
+        staff: jwtDecode<IJWTDecode>(
+          JSON.parse(localStorage.getItem("tokenInfo") as string).access
+        ).staff,
       }
     : null,
   status: "idle",
@@ -56,7 +71,9 @@ const initialState: AuthApiState = {
 export const login = createAsyncThunk("login", async (data: User) => {
   const response = await axiosInstance.post("/token/", data);
   const resData = response.data;
+  console.log(resData);
   localStorage.setItem("tokenInfo", JSON.stringify(resData));
+
   return resData;
 });
 
@@ -95,8 +112,12 @@ const authSlice = createSlice({
           access: action.payload.access,
         };
         state.userProfileData = {
-          username: jwtDecode<IJWTDecode>(state.tokenInfo.access).username,
+          user_id: jwtDecode<IJWTDecode>(state.tokenInfo.access).user_id,
+          name: jwtDecode<IJWTDecode>(state.tokenInfo.access).name,
+          superuser: jwtDecode<IJWTDecode>(state.tokenInfo.access).superuser,
+          staff: jwtDecode<IJWTDecode>(state.tokenInfo.access).staff,
         };
+        console.log(state.userProfileData);
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
@@ -113,13 +134,15 @@ const authSlice = createSlice({
           access: action.payload.access,
         };
         state.userProfileData = {
-          username: jwtDecode<IJWTDecode>(state.tokenInfo.access).username,
+          user_id: jwtDecode<IJWTDecode>(state.tokenInfo.access).user_id,
+          name: jwtDecode<IJWTDecode>(state.tokenInfo.access).name,
+          superuser: jwtDecode<IJWTDecode>(state.tokenInfo.access).superuser,
+          staff: jwtDecode<IJWTDecode>(state.tokenInfo.access).staff,
         };
       })
       .addCase(refresh.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message || "Login failed";
-        logout();
       })
 
       .addCase(register.pending, (state) => {
