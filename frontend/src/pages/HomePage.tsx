@@ -20,7 +20,6 @@ const HomePage = () => {
 
   return (
     <div>
-      <p>Olá {userProfileInfo?.name}!</p>
       <Button
         fullWidth
         variant="contained"
