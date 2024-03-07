@@ -28,7 +28,7 @@ export default function Header() {
   const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
   const consumed_kcal = 1000;
   const meta_kcal = 2700;
-  const level = 1;
+  const level = userProfileInfo?.level;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const handleLogout = async () => {
@@ -108,7 +108,6 @@ export default function Header() {
                     width={greaterThanMid ? 65 : 65}
                     height={greaterThanMid ? 65 : 65}
                   />
-                  {/* <AccountCircle sx={{ fontSize: { xs: 35, lg: 50 } }} /> */}
                 </Icon>
               </IconButton>
               {userProfileInfo ? (
@@ -162,7 +161,7 @@ export default function Header() {
                           fontSize: 16,
                         }}
                       >
-                        KCALs
+                        KCAL
                       </span>
                     </Typography>
                   </Container>

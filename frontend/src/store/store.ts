@@ -3,10 +3,12 @@ import { TypedUseSelectorHook, useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import authSlice from "./features/authSlice";
 import mealsSlice from "./features/mealsSlice";
+import foodsSlice from "./features/foodsSlice";
 export const store = configureStore({
   reducer: {
     auth: authSlice,
     meals: mealsSlice,
+    foods: foodsSlice,
   },
 });
 

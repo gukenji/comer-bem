@@ -13,6 +13,7 @@ import {
   Grid,
   createSvgIcon,
 } from "@mui/material";
+import { getMeals } from "../store/features/mealsSlice";
 const LoginPage = () => {
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");

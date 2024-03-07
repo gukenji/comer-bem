@@ -23,6 +23,11 @@ interface IJWTDecode {
   name: string;
   superuser: boolean;
   staff: boolean;
+  height: number;
+  weight: number;
+  age: number;
+  is_male: boolean;
+  level: number;
 }
 
 type TokenInfo = {
@@ -35,6 +40,11 @@ type UserProfileData = {
   user_id: number;
   superuser: boolean;
   staff: boolean;
+  height: number;
+  weight: number;
+  age: number;
+  is_male: boolean;
+  level: number;
 };
 
 type AuthApiState = {
@@ -62,6 +72,21 @@ const initialState: AuthApiState = {
         staff: jwtDecode<IJWTDecode>(
           JSON.parse(localStorage.getItem("tokenInfo") as string).access
         ).staff,
+        height: jwtDecode<IJWTDecode>(
+          JSON.parse(localStorage.getItem("tokenInfo") as string).access
+        ).height,
+        weight: jwtDecode<IJWTDecode>(
+          JSON.parse(localStorage.getItem("tokenInfo") as string).access
+        ).weight,
+        age: jwtDecode<IJWTDecode>(
+          JSON.parse(localStorage.getItem("tokenInfo") as string).access
+        ).age,
+        is_male: jwtDecode<IJWTDecode>(
+          JSON.parse(localStorage.getItem("tokenInfo") as string).access
+        ).is_male,
+        level: jwtDecode<IJWTDecode>(
+          JSON.parse(localStorage.getItem("tokenInfo") as string).access
+        ).level,
       }
     : null,
   status: "idle",
@@ -115,6 +140,11 @@ const authSlice = createSlice({
           name: jwtDecode<IJWTDecode>(state.tokenInfo.access).name,
           superuser: jwtDecode<IJWTDecode>(state.tokenInfo.access).superuser,
           staff: jwtDecode<IJWTDecode>(state.tokenInfo.access).staff,
+          height: jwtDecode<IJWTDecode>(state.tokenInfo.access).height,
+          weight: jwtDecode<IJWTDecode>(state.tokenInfo.access).weight,
+          age: jwtDecode<IJWTDecode>(state.tokenInfo.access).age,
+          is_male: jwtDecode<IJWTDecode>(state.tokenInfo.access).is_male,
+          level: jwtDecode<IJWTDecode>(state.tokenInfo.access).level,
         };
         console.log(state.userProfileData);
       })
@@ -137,6 +167,11 @@ const authSlice = createSlice({
           name: jwtDecode<IJWTDecode>(state.tokenInfo.access).name,
           superuser: jwtDecode<IJWTDecode>(state.tokenInfo.access).superuser,
           staff: jwtDecode<IJWTDecode>(state.tokenInfo.access).staff,
+          height: jwtDecode<IJWTDecode>(state.tokenInfo.access).height,
+          weight: jwtDecode<IJWTDecode>(state.tokenInfo.access).weight,
+          age: jwtDecode<IJWTDecode>(state.tokenInfo.access).age,
+          is_male: jwtDecode<IJWTDecode>(state.tokenInfo.access).is_male,
+          level: jwtDecode<IJWTDecode>(state.tokenInfo.access).level,
         };
       })
       .addCase(refresh.rejected, (state, action) => {
