@@ -1,4 +1,3 @@
-import React from "react";
 import MyMeals from "../components/MyMeals";
 import NewMeal from "../components/NewMeal";
 const AddMealPage = () => {

@@ -1,9 +1,7 @@
-import { useAppDispatch } from "../store/store";
+import { useAppDispatch, useAppSelector } from "../store/store";
 import { useState } from "react";
 import { login } from "../store/features/authSlice";
-import { LockOutlined } from "@mui/icons-material";
 import { Link } from "react-router-dom";
-import { styled } from "@mui/material/styles";
 import {
   Container,
   CssBaseline,
@@ -19,6 +17,7 @@ const LoginPage = () => {
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const errors = useAppSelector((state) => state.auth.error);
   const padlock = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -111,7 +110,13 @@ const LoginPage = () => {
             <Button
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              color="error"
+              sx={{
+                mt: 3,
+                mb: 2,
+                fontFamily: "VT323",
+                fontSize: { xs: 20, md: 25 },
+              }}
               onClick={handleLogin}
             >
               Login

@@ -12,7 +12,6 @@ import {
 const NewMeal = () => {
   return (
     <Container maxWidth="xs">
-      {/* <CssBaseline /> */}
       <Box
         sx={{
           mt: 20,

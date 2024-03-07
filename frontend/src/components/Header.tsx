@@ -2,24 +2,33 @@ import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import Switch from "@mui/material/Switch";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormGroup from "@mui/material/FormGroup";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { Link } from "react-router-dom";
 import { useAppSelector, useAppDispatch } from "../store/store";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../store/features/authSlice";
-import padlock from "../assets/padlock.svg";
+import { Pixelify } from "react-pixelify";
+import Icon from "@mui/material/Icon";
+import { useTheme } from "@mui/material/styles";
+import { Container, Typography } from "@mui/material";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import profile_pic from "../assets/profile.jpeg";
+import { styled } from "@mui/material/styles";
+import LinearProgress, {
+  linearProgressClasses,
+} from "@mui/material/LinearProgress";
+import kcal_pic from "../assets/kcal.png";
+import level_pic from "../assets/level.png";
 export default function Header() {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
+  const consumed_kcal = 1000;
+  const meta_kcal = 2700;
+  const level = 1;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const handleLogout = async () => {
@@ -41,6 +50,23 @@ export default function Header() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const theme = useTheme();
+  const greaterThanMid = useMediaQuery(theme.breakpoints.up("md"));
+  const smallToMid = useMediaQuery(theme.breakpoints.between("sm", "md"));
+  const lessThanSmall = useMediaQuery(theme.breakpoints.down("sm"));
+  const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+    height: 15,
+    borderRadius: 10,
+    boxShadow:
+      "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+    [`&.${linearProgressClasses.colorPrimary}`]: {
+      backgroundColor:
+        theme.palette.grey[theme.palette.mode === "light" ? 300 : 800],
+    },
+    [`& .${linearProgressClasses.bar}`]: {
+      backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
+    },
+  }));
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -50,7 +76,6 @@ export default function Header() {
           bgcolor: "transparent",
           boxShadow: "none",
           display: "flex",
-          alignItems: "flex-end",
         }}
       >
         <Toolbar>
@@ -59,13 +84,9 @@ export default function Header() {
               style={{
                 display: "flex",
                 alignItems: "center",
+                flexGrow: 1,
               }}
             >
-              {userProfileInfo ? (
-                <p style={{ color: "black" }}>Olá, {userProfileInfo?.name}!</p>
-              ) : (
-                <></>
-              )}
               <IconButton
                 size="large"
                 aria-label="my account"
@@ -73,8 +94,117 @@ export default function Header() {
                 aria-haspopup="true"
                 onClick={handleMenu}
               >
-                <AccountCircle sx={{ fontSize: { xs: 35, lg: 50 } }} />
+                <Icon
+                  sx={{
+                    width: { xs: 65, md: 65 },
+                    height: { xs: 65, md: 65 },
+                    borderRadius: 50,
+                  }}
+                >
+                  <Pixelify
+                    src={profile_pic}
+                    pixelSize={2}
+                    centered={true}
+                    width={greaterThanMid ? 65 : 65}
+                    height={greaterThanMid ? 65 : 65}
+                  />
+                  {/* <AccountCircle sx={{ fontSize: { xs: 35, lg: 50 } }} /> */}
+                </Icon>
               </IconButton>
+              {userProfileInfo ? (
+                <Container
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 0.4,
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      color: "black",
+                      fontFamily: "VT323",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    {" "}
+                    <span>olá, {userProfileInfo?.name}!</span>
+                    <span>LVL {level}</span>
+                  </Typography>
+                  <Container>
+                    <BorderLinearProgress
+                      variant="determinate"
+                      value={(consumed_kcal / meta_kcal) * 100}
+                    />
+                    <Typography
+                      sx={{
+                        color: "black",
+                        fontFamily: "VT323",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: "black",
+                          fontSize: 16,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 2,
+                        }}
+                      >
+                        <img src={kcal_pic} width={12} height={14} />
+                        {consumed_kcal}/{meta_kcal}
+                      </span>
+                      <span
+                        style={{
+                          color: "black",
+                          fontSize: 16,
+                        }}
+                      >
+                        KCALs
+                      </span>
+                    </Typography>
+                  </Container>
+                  <Container>
+                    <BorderLinearProgress
+                      variant="determinate"
+                      value={(consumed_kcal / meta_kcal) * 100}
+                    />
+                    <Typography
+                      sx={{
+                        color: "black",
+                        fontFamily: "VT323",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: "black",
+                          fontSize: 16,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 2,
+                        }}
+                      >
+                        <img src={level_pic} width={12} height={14} />
+                        {consumed_kcal}/{meta_kcal}
+                      </span>
+                      <span
+                        style={{
+                          color: "black",
+                          fontSize: 16,
+                        }}
+                      >
+                        EXP
+                      </span>
+                    </Typography>
+                  </Container>
+                </Container>
+              ) : (
+                <></>
+              )}
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}

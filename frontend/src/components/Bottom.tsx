@@ -10,8 +10,11 @@ import "../main.css";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import { styled } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 export default function FixedBottomNavigation() {
+  const navigate = useNavigate();
+
   const [value, setValue] = React.useState(0);
   const ref = React.useRef<HTMLDivElement>(null);
   const BottomNavigationActionStyled = styled(BottomNavigationAction)(
@@ -35,6 +38,9 @@ export default function FixedBottomNavigation() {
     })
   );
 
+  const linkHome = () => {
+    navigate("/home");
+  };
   React.useEffect(() => {
     (ref.current as HTMLDivElement).ownerDocument.body.scrollTop = 0;
   }, [value]);
@@ -53,7 +59,11 @@ export default function FixedBottomNavigation() {
             setValue(newValue);
           }}
         >
-          <BottomNavigationActionStyled label="HOME" icon={<HomeIcon />} />
+          <BottomNavigationActionStyled
+            label="HOME"
+            icon={<HomeIcon />}
+            onClick={linkHome}
+          />
           <BottomNavigationActionStyled
             label="COMER"
             icon={<LocalDiningIcon />}
@@ -63,7 +73,7 @@ export default function FixedBottomNavigation() {
             icon={<ViewListIcon />}
           />
           <BottomNavigationActionStyled
-            label="ESTATÍSTICA"
+            label="ESTATÍSTICAS"
             icon={<PieChartIcon />}
           />
         </BottomNavigation>

@@ -1,11 +1,5 @@
 import axios from "axios";
 // Create an Axios instance with default options
-import { refresh } from "../store/features/authSlice";
-type Refresh = {
-  refresh: string;
-};
-
-const axiosApiInstance = axios.create();
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8000/api",

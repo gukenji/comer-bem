@@ -71,7 +71,6 @@ const initialState: AuthApiState = {
 export const login = createAsyncThunk("login", async (data: User) => {
   const response = await axiosInstance.post("/token/", data);
   const resData = response.data;
-  console.log(resData);
   localStorage.setItem("tokenInfo", JSON.stringify(resData));
 
   return resData;

@@ -7,22 +7,7 @@ const LandingPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const basicUserInfo = useAppSelector((state) => state.auth.tokenInfo);
-  const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
-  const handleLogout = async () => {
-    try {
-      await dispatch(logout()).unwrap();
-      navigate("/login");
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  return (
-    <div>
-      <p>Landing Page</p>
-    </div>
-  );
+  return <div>LP</div>;
 };
 
 export default LandingPage;
