@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosInstance";
 
 interface IFood {
-  id?: number | null;
   brand?: string | null;
   name?: string | null;
   portion_size: number | null;
@@ -24,7 +23,18 @@ const initialState: IFoodList = {
   error: null,
 };
 
-export const getFoods = createAsyncThunk("foods", async () => {
+export const createFood = createAsyncThunk(
+  "create_food",
+  async (data: IFood) => {
+    console.log(data);
+    const response = await axiosInstance.post("/foods/create/", data);
+    console.log(response);
+    const resData = response.data;
+    return resData;
+  }
+);
+
+export const getFoods = createAsyncThunk("get_food", async () => {
   const response = await axiosInstance.get("/foods/");
   const resData = response.data;
   return resData;
@@ -46,7 +56,15 @@ const foodsSlice = createSlice({
       .addCase(getFoods.rejected, (state, action) => {
         state.food_list = null;
         state.error = "falha ao recuperar refeições ";
-      });
+      })
+      .addCase(createFood.pending, (state) => {})
+      .addCase(
+        createFood.fulfilled,
+        (state, action: PayloadAction<IFood[]>) => {
+          console.log(state);
+        }
+      )
+      .addCase(createFood.rejected, (state, action) => {});
   },
 });
 

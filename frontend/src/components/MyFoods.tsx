@@ -17,6 +17,7 @@ const MyFoods = () => {
   };
 
   useEffect(() => {
+    console.log(my_foods);
     fetchFood();
   }, []);
   return (

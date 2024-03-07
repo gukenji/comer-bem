@@ -8,12 +8,45 @@ import Fade from "@mui/material/Fade";
 import { Button, Box, TextField, Container } from "@mui/material";
 import BackupIcon from "@mui/icons-material/Backup";
 import { styled } from "@mui/material/styles";
-
+import { createFood } from "../store/features/foodsSlice";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { useState } from "react";
 export default function NewFood() {
   const [expanded, setExpanded] = React.useState(false);
+  const [brand, setBrand] = useState("");
+  const [name, setName] = useState("");
+  const [portionSize, setPortionSize] = useState(null);
+  const [isCustomPortion, setIsCustomPortion] = useState(null);
+  const [portionDescription, setPortionDescription] = useState("");
+  const [kcal, setKcal] = useState(null);
+  const [protein, setProtein] = useState(null);
+  const [carbs, setCarbs] = useState(null);
+  const [fat, setFat] = useState(null);
+  const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
 
+  const dispatch = useAppDispatch();
   const handleExpansion = () => {
     setExpanded((prevExpanded) => !prevExpanded);
+  };
+  const handleCreateFood = async () => {
+    try {
+      const food = {
+        brand: brand,
+        name: name,
+        portion_size: parseFloat(portionSize),
+        is_custom_portion: false,
+        portion_description: portionDescription,
+        kcal: parseFloat(kcal),
+        protein: parseFloat(protein),
+        carbs: parseFloat(carbs),
+        fat: parseFloat(fat),
+        user: userProfileInfo?.user_id,
+      };
+      console.log(food);
+      await dispatch(createFood(food)).unwrap();
+    } catch (e) {
+      console.error(e);
+    }
   };
   const TypographyStyled = styled(Typography)(({ theme }) => ({
     position: "relative",
@@ -65,13 +98,24 @@ export default function NewFood() {
             autoComplete="off"
             sx={{ display: "flex", flexDirection: "column" }}
           >
-            <TextField fullWidth id="brand" label="Marca" variant="standard" />
+            <TextField
+              fullWidth
+              id="brand"
+              label="Marca"
+              variant="standard"
+              onChange={(e) => {
+                setBrand(e.target.value);
+              }}
+            />
             <TextField
               fullWidth
               id="name"
               label="Alimento"
               required
               variant="standard"
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
             />
 
             <TextField
@@ -81,6 +125,9 @@ export default function NewFood() {
               id="portion_size"
               label="Porção (gr)"
               variant="standard"
+              onChange={(e) => {
+                setPortionSize(e.target.value);
+              }}
             />
             <TextField
               fullWidth
@@ -89,6 +136,9 @@ export default function NewFood() {
               id="kcal"
               label="Calorias (kcal)"
               variant="standard"
+              onChange={(e) => {
+                setKcal(e.target.value);
+              }}
             />
             <TextField
               fullWidth
@@ -97,6 +147,9 @@ export default function NewFood() {
               id="protein"
               label="Proteínas (gr)"
               variant="standard"
+              onChange={(e) => {
+                setProtein(e.target.value);
+              }}
             />
             <TextField
               fullWidth
@@ -105,6 +158,9 @@ export default function NewFood() {
               id="carbs"
               label="Carboidratos (gr)"
               variant="standard"
+              onChange={(e) => {
+                setCarbs(e.target.value);
+              }}
             />
             <TextField
               fullWidth
@@ -113,11 +169,15 @@ export default function NewFood() {
               id="fat"
               label="Gordura (gr)"
               variant="standard"
+              onChange={(e) => {
+                setFat(e.target.value);
+              }}
             />
             <Button
               variant="outlined"
               endIcon={<BackupIcon />}
               sx={{ width: "50%", alignSelf: "center", mt: 3 }}
+              onClick={handleCreateFood}
             >
               CADASTRAR
             </Button>
