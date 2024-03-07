@@ -11,4 +11,5 @@ urlpatterns = [
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("meals/", views.getMeals),
     path("foods/", views.getFoods),
+    path("foods/create", views.createFood),
 ]

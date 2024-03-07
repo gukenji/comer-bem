@@ -30,7 +30,13 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 @api_view(["GET"])
 def getRoutes(request):
-    routes = ["/api/token", "/api/token/refresh", "/api/meals", "/api/foods"]
+    routes = [
+        "/api/token",
+        "/api/token/refresh",
+        "/api/meals",
+        "/api/foods",
+        "api/foods/create",
+    ]
     return Response(routes)
 
 
@@ -48,7 +54,15 @@ def getMeals(request):
 @permission_classes([IsAuthenticated])
 def getFoods(request):
     user = request.user
-    # meals = Meal.objects.all()
     foods = user.food_set.all()
     serializer = FoodSerializer(foods, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def createFood(request):
+    serializer = FoodSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
     return Response(serializer.data)
