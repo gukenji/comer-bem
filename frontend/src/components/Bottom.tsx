@@ -41,6 +41,16 @@ export default function FixedBottomNavigation() {
   const linkHome = () => {
     navigate("/home");
   };
+  const linkEat = () => {
+    navigate("/eat");
+  };
+  const linkMeals = () => {
+    navigate("/meals");
+  };
+  const linkStatistics = () => {
+    navigate("/statistics");
+  };
+
   React.useEffect(() => {
     (ref.current as HTMLDivElement).ownerDocument.body.scrollTop = 0;
   }, [value]);
@@ -67,14 +77,17 @@ export default function FixedBottomNavigation() {
           <BottomNavigationActionStyled
             label="COMER"
             icon={<LocalDiningIcon />}
+            onClick={linkEat}
           />
           <BottomNavigationActionStyled
             label="REFEIÇÕES"
             icon={<ViewListIcon />}
+            onClick={linkMeals}
           />
           <BottomNavigationActionStyled
             label="ESTATÍSTICAS"
             icon={<PieChartIcon />}
+            onClick={linkStatistics}
           />
         </BottomNavigation>
       </Paper>
