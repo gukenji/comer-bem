@@ -61,4 +61,4 @@ class Food(models.Model):
 class Meal(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=255, blank=False)
-    body = models.TextField()
+    foods = models.ForeignKey(Food, on_delete=models.CASCADE, null=True)
