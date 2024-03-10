@@ -13,7 +13,7 @@ import StatisticsPage from "./pages/StatisticsPage";
 import { Container } from "@mui/material";
 function App() {
   return (
-    <div>
+    <div style={{ fontFamily: "VT323" }}>
       <Router>
         <Header />
         <Container sx={{ mt: 5 }}>

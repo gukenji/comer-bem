@@ -1,22 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosInstance";
-
-interface IFood {
-  brand?: string | null;
-  name?: string | null;
-  portion_size: number | null;
-  is_custom_portion: boolean | null;
-  portion_description: string | null;
-  kcal: number | null;
-  protein: number | null;
-  carbs: number | null;
-  fat: number | null;
-  user: number | null;
-}
-interface IFoodList {
-  food_list: IFood[] | null;
-  error: string | null;
-}
+import { IFood, IFoodList } from "../../interfaces/FoodInterfaces";
 
 const initialState: IFoodList = {
   food_list: null,

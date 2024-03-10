@@ -1,48 +1,63 @@
 import * as React from "react";
+import { useEffect } from "react";
 import Accordion, { AccordionSlots } from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
 import Fade from "@mui/material/Fade";
 import { Button, Box, TextField, Container } from "@mui/material";
 import BackupIcon from "@mui/icons-material/Backup";
 import { styled } from "@mui/material/styles";
 import { createFood } from "../store/features/foodsSlice";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
+import FormControl from "@mui/material/FormControl";
+import { IFood } from "../interfaces/FoodInterfaces";
+
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { useState } from "react";
 export default function NewFood() {
   const [expanded, setExpanded] = React.useState(false);
-  const [brand, setBrand] = useState("");
-  const [name, setName] = useState("");
-  const [portionSize, setPortionSize] = useState(null);
-  const [isCustomPortion, setIsCustomPortion] = useState(null);
-  const [portionDescription, setPortionDescription] = useState("");
-  const [kcal, setKcal] = useState(null);
-  const [protein, setProtein] = useState(null);
-  const [carbs, setCarbs] = useState(null);
-  const [fat, setFat] = useState(null);
+  const [brand, setBrand] = useState<string | null>("");
+  const [name, setName] = useState<string | null>("");
+  const [portionSize, setPortionSize] = useState<number | null>(null);
+  const [isCustomPortion, setIsCustomPortion] = useState<boolean>(false);
+  const [portionDescription, setPortionDescription] = useState<string | null>(
+    ""
+  );
+  const [kcal, setKcal] = useState<number | null>(null);
+  const [protein, setProtein] = useState<number | null>(null);
+  const [carbs, setCarbs] = useState<number | null>(null);
+  const [fat, setFat] = useState<number | null>(null);
   const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
-
   const dispatch = useAppDispatch();
+
   const handleExpansion = () => {
     setExpanded((prevExpanded) => !prevExpanded);
   };
+  const handleCustomPortion = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selection = event.target.value;
+    selection == "false" ? setIsCustomPortion(false) : setIsCustomPortion(true);
+    console.log(isCustomPortion);
+  };
+
   const handleCreateFood = async () => {
     try {
-      const food = {
+      const food: IFood = {
         brand: brand,
         name: name,
-        portion_size: parseFloat(portionSize),
-        is_custom_portion: false,
+        portion_size: portionSize,
+        is_custom_portion: isCustomPortion,
         portion_description: portionDescription,
-        kcal: parseFloat(kcal),
-        protein: parseFloat(protein),
-        carbs: parseFloat(carbs),
-        fat: parseFloat(fat),
+        kcal: kcal,
+        protein: protein,
+        carbs: carbs,
+        fat: fat,
         user: userProfileInfo?.user_id,
       };
-      console.log(food);
       await dispatch(createFood(food)).unwrap();
     } catch (e) {
       console.error(e);
@@ -101,7 +116,9 @@ export default function NewFood() {
             <TextField
               fullWidth
               id="brand"
-              label="Marca"
+              InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
+              label="MARCA"
+              inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
               variant="standard"
               onChange={(e) => {
                 setBrand(e.target.value);
@@ -110,23 +127,78 @@ export default function NewFood() {
             <TextField
               fullWidth
               id="name"
-              label="Alimento"
+              InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
+              label="ALIMENTO"
+              inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
               required
               variant="standard"
               onChange={(e) => {
                 setName(e.target.value);
               }}
             />
+            <div style={{ paddingTop: 20 }}>
+              <FormLabel
+                id="demo-controlled-radio-buttons-group"
+                sx={{ fontFamily: "VT323" }}
+              >
+                PORÇÃO CUSTOMIZADA? (ex.: 1 fatia)
+              </FormLabel>
 
+              <RadioGroup
+                row
+                aria-labelledby="demo-row-radio-buttons-group-label"
+                name="row-radio-buttons-group"
+                value={isCustomPortion}
+                onChange={handleCustomPortion}
+                sx={{ mb: 0 }}
+              >
+                <FormControlLabel
+                  value={false}
+                  control={<Radio />}
+                  label={<Typography fontFamily={"VT323"}>NÃO</Typography>}
+                />
+                <FormControlLabel
+                  value={true}
+                  control={<Radio />}
+                  label={<Typography fontFamily={"VT323"}>SIM</Typography>}
+                />
+              </RadioGroup>
+            </div>{" "}
+            <TextField
+              fullWidth
+              id="custom_portion"
+              InputLabelProps={{
+                sx: {
+                  fontFamily: "VT323",
+                  fontSize: 20,
+                  display: isCustomPortion ? "inherit" : "none",
+                },
+              }}
+              required={isCustomPortion}
+              label="DESCRIÇÃO (ex.: 1 fatia)"
+              inputProps={{
+                style: {
+                  fontFamily: "VT323",
+                  fontSize: 20,
+                  display: isCustomPortion ? "inherit" : "none",
+                },
+              }}
+              onChange={(e) => {
+                setPortionDescription(e.target.value);
+              }}
+              variant="standard"
+            />
             <TextField
               fullWidth
               required
               type="number"
               id="portion_size"
-              label="Porção (gr)"
+              InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
+              label="PORÇÃO (GR)"
+              inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
               variant="standard"
               onChange={(e) => {
-                setPortionSize(e.target.value);
+                setPortionSize(parseFloat(e.target.value));
               }}
             />
             <TextField
@@ -134,10 +206,12 @@ export default function NewFood() {
               required
               type="number"
               id="kcal"
-              label="Calorias (kcal)"
+              InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
+              label="CALORIAS (KCAL)"
+              inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
               variant="standard"
               onChange={(e) => {
-                setKcal(e.target.value);
+                setKcal(parseFloat(e.target.value));
               }}
             />
             <TextField
@@ -145,10 +219,12 @@ export default function NewFood() {
               required
               type="number"
               id="protein"
-              label="Proteínas (gr)"
+              InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
+              label="PROTEÍNAS (GR)"
+              inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
               variant="standard"
               onChange={(e) => {
-                setProtein(e.target.value);
+                setProtein(parseFloat(e.target.value));
               }}
             />
             <TextField
@@ -156,10 +232,12 @@ export default function NewFood() {
               required
               type="number"
               id="carbs"
-              label="Carboidratos (gr)"
+              InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
+              label="CARBOÍDRATOS (GR)"
+              inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
               variant="standard"
               onChange={(e) => {
-                setCarbs(e.target.value);
+                setCarbs(parseFloat(e.target.value));
               }}
             />
             <TextField
@@ -167,10 +245,12 @@ export default function NewFood() {
               required
               type="number"
               id="fat"
-              label="Gordura (gr)"
+              InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
+              label="GORDURA (GR)"
+              inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
               variant="standard"
               onChange={(e) => {
-                setFat(e.target.value);
+                setFat(parseFloat(e.target.value));
               }}
             />
             <Button
