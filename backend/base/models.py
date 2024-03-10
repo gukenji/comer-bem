@@ -52,9 +52,10 @@ class Food(models.Model):
     carbs = models.FloatField(blank=False)
     fat = models.FloatField(blank=False)
 
-    def clean(self):
+    def save(self, *args, **kwargs):
         if self.is_custom_portion and len(self.portion_description) == 0:
             raise ValidationError("You need to provide a portion description")
+        super(Food, self).save(*args, **kwargs)
 
 
 class Meal(models.Model):

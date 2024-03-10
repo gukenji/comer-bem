@@ -35,7 +35,6 @@ def getRoutes(request):
         "/api/token/refresh",
         "/api/meals",
         "/api/foods",
-        "api/foods/create",
     ]
     return Response(routes)
 
