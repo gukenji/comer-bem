@@ -265,7 +265,7 @@ export default function NewFood() {
               required={isCustomPortion}
               label="DESCRIÇÃO"
               helperText={
-                <div
+                <span
                   style={{
                     display: isCustomPortion ? "flex" : "none",
                     flexDirection: "column",
@@ -273,15 +273,15 @@ export default function NewFood() {
                     marginBottom: 10,
                   }}
                 >
-                  <p style={{ margin: 0, padding: 0 }}>ex.: 1 fatia</p>
+                  <span style={{ margin: 0, padding: 0 }}>ex.: 1 fatia</span>
                   {isCustomPortion &&
                   !portionDescription &&
                   formResult == false ? (
-                    <p style={{ margin: 0, padding: 0, color: "red" }}>
+                    <span style={{ margin: 0, padding: 0, color: "red" }}>
                       PREENCHIMENTO NECESSÁRIO
-                    </p>
+                    </span>
                   ) : null}
-                </div>
+                </span>
               }
               FormHelperTextProps={{
                 sx: { fontFamily: "VT323" },

@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import { getFoods } from "../store/features/foodsSlice";
 import { useEffect } from "react";
 import { IFood, IGetFood } from "../interfaces/FoodInterfaces";
-import { Box, Divider } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 export default function IncludeToFreezer() {
   const [value, setValue] = React.useState<IGetFood | null>(null);
   const [inputValue, setInputValue] = React.useState("");
@@ -21,7 +21,7 @@ export default function IncludeToFreezer() {
 
   useEffect(() => {
     fetchFoods();
-  }, []);
+  }, [foods]);
 
   return (
     <Box sx={{ p: 1 }}>
@@ -33,6 +33,14 @@ export default function IncludeToFreezer() {
         <Autocomplete
           value={value}
           filterSelectedOptions
+          noOptionsText={
+            <Typography
+              component={"span"}
+              sx={{ fontFamily: "VT323", fontSize: 20 }}
+            >
+              ALIMENTO NÃO ENCONTRADO
+            </Typography>
+          }
           onChange={(event, newValue: IGetFood | null) => {
             setValue(newValue);
           }}
@@ -44,7 +52,7 @@ export default function IncludeToFreezer() {
           options={foods as IGetFood[]}
           getOptionLabel={(option) => (option as { name: string }).name}
           renderOption={(props, option) => (
-            <>
+            <div key={option.id}>
               <li
                 {...props}
                 style={{
@@ -59,7 +67,7 @@ export default function IncludeToFreezer() {
                 {option?.name}
               </li>
               <Divider />
-            </>
+            </div>
           )}
           renderInput={(params) => (
             <TextField

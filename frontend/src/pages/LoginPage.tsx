@@ -66,7 +66,7 @@ const LoginPage = () => {
   };
 
   return (
-    <>
+    <div>
       <Container maxWidth="xs">
         <CssBaseline />
         <Box
@@ -130,7 +130,7 @@ const LoginPage = () => {
           </Box>
         </Box>
       </Container>
-    </>
+    </div>
   );
 };
 

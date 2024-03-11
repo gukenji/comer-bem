@@ -35,8 +35,8 @@ const MyFreezer = () => {
                 >
                   <Typography
                     gutterBottom
+                    component={"span"}
                     variant="h6"
-                    component="div"
                     fontFamily={"VT323"}
                     textTransform={"uppercase"}
                   >
@@ -47,6 +47,7 @@ const MyFreezer = () => {
                   <Typography
                     color="text.secondary"
                     variant="body2"
+                    component={"span"}
                     fontFamily={"VT323"}
                     fontSize={16}
                   >
