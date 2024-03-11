@@ -14,15 +14,12 @@ import { styled } from "@mui/material/styles";
 import { createFood } from "../store/features/foodsSlice";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
-import FormControl from "@mui/material/FormControl";
 import { IFood } from "../interfaces/FoodInterfaces";
-import { useCallback } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import InfoIcon from "@mui/icons-material/Info";
 import IconButton from "@mui/material/IconButton";
 import Alert from "@mui/material/Alert";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
-
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { useState, useRef } from "react";
 export default function NewFood() {
@@ -31,8 +28,8 @@ export default function NewFood() {
   const [open, setOpen] = React.useState(false);
 
   const [brand, setBrand] = useState<string | null>("");
-  const [name, setName] = useState<string | null>("");
-  const [portionSize, setPortionSize] = useState<number | null | string>("");
+  const [name, setName] = useState<string>("");
+  const [portionSize, setPortionSize] = useState<number | string>("");
   const [isCustomPortion, setIsCustomPortion] = useState<boolean>(false);
   const [portionDescription, setPortionDescription] = useState<string | null>(
     ""
@@ -42,7 +39,7 @@ export default function NewFood() {
   const [carbs, setCarbs] = useState<number | string>("");
   const [fat, setFat] = useState<number | string>("");
   const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
-  const formRef = useRef<HTMLFormElement | undefined>();
+  const formRef = useRef<HTMLFormElement>();
   const dispatch = useAppDispatch();
   const handleExpansion = () => {
     setExpanded((prevExpanded) => !prevExpanded);

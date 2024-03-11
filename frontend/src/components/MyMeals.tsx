@@ -16,9 +16,6 @@ const MyMeals = () => {
     }
   };
 
-  useEffect(() => {
-    fetchFood();
-  }, [my_foods]);
   return (
     <div
       style={{

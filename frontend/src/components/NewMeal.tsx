@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import dinner_icon from "../assets/dinner.png";
 import { Pixelify } from "react-pixelify";
+
 import { styled } from "@mui/material/styles";
 
 const icons = [
@@ -42,7 +43,6 @@ export default function NewMeal() {
   const greaterThanMid = useMediaQuery(theme.breakpoints.up("md"));
   const smallToMid = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const lessThanSmall = useMediaQuery(theme.breakpoints.down("sm"));
-  const [value, setValue] = useState<FilmOptionType | null>(null);
 
   const handleExpansion = () => {
     setExpanded((prevExpanded) => !prevExpanded);

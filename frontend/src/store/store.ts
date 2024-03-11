@@ -4,11 +4,13 @@ import { useSelector } from "react-redux";
 import authSlice from "./features/authSlice";
 import mealsSlice from "./features/mealsSlice";
 import foodsSlice from "./features/foodsSlice";
+import freezerSlice from "./features/freezerSlice";
 export const store = configureStore({
   reducer: {
     auth: authSlice,
     meals: mealsSlice,
     foods: foodsSlice,
+    freezer: freezerSlice,
   },
 });
 
