@@ -1,13 +1,13 @@
 export interface IFood {
   brand?: string | null;
   name?: string | null;
-  portion_size: number | null;
+  portion_size: number | null | string;
   is_custom_portion: boolean | null;
   portion_description: string | null;
-  kcal: number | null;
-  protein: number | null;
-  carbs: number | null;
-  fat: number | null;
+  kcal: number | null | string;
+  protein: number | null | string;
+  carbs: number | null | string;
+  fat: number | null | string;
   user: number | undefined;
 }
 export interface IFoodList {

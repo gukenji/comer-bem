@@ -7,7 +7,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Fade from "@mui/material/Fade";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-
+import Autocomplete from "@mui/material/Autocomplete";
+import { useState } from "react";
 import {
   Button,
   Box,
@@ -20,7 +21,7 @@ import dinner_icon from "../assets/dinner.png";
 import { Pixelify } from "react-pixelify";
 import { styled } from "@mui/material/styles";
 
-const currencies = [
+const icons = [
   {
     value: "dinner",
     icon: dinner_icon,
@@ -41,6 +42,8 @@ export default function NewMeal() {
   const greaterThanMid = useMediaQuery(theme.breakpoints.up("md"));
   const smallToMid = useMediaQuery(theme.breakpoints.between("sm", "md"));
   const lessThanSmall = useMediaQuery(theme.breakpoints.down("sm"));
+  const [value, setValue] = useState<FilmOptionType | null>(null);
+
   const handleExpansion = () => {
     setExpanded((prevExpanded) => !prevExpanded);
   };
@@ -94,10 +97,15 @@ export default function NewMeal() {
               variant="standard"
               id="icon"
               select
-              label="Ícone"
-              helperText="Selecione o ícone da sua refeição"
+              InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
+              label="ÍCONE"
+              inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
+              helperText="SELECIONE O ÍCONE DA SUA REFEIÇÃO"
+              FormHelperTextProps={{
+                sx: { fontFamily: "VT323", fontSize: 15 },
+              }}
             >
-              {currencies.map((option) => (
+              {icons.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   <Icon
                     sx={{
@@ -119,10 +127,13 @@ export default function NewMeal() {
             <TextField
               fullWidth
               id="name"
-              label="Refeição"
+              InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
+              label="REFEIÇÃO"
+              inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
               required
               variant="standard"
             />
+            <div style={{ paddingTop: 20 }}></div>
           </Box>
         </AccordionDetails>
       </Accordion>
