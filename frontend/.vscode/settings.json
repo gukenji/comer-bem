@@ -1,8 +1,8 @@
 {
-  "git.enabled": false,
+  "git.enabled": true,
   "files.exclude": {
     "node_modules": true,
-    ".vscode": true,
+    ".vscode": false,
     ".gitignore": true,
     "package.json": true,
     "package-lock.json": true,
@@ -10,7 +10,7 @@
     "vite.config.ts": true,
     "tsconfig.*": true,
     "public": true,
-    "index.html": true,
+    "index.html": false,
     "src/vite-env.d.ts": true
   }
 }
