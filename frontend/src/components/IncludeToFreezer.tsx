@@ -4,9 +4,9 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { getFoods } from "../store/features/foodsSlice";
 import { useEffect } from "react";
-import { IFood } from "../interfaces/FoodInterfaces";
+import { IFood, IGetFood } from "../interfaces/FoodInterfaces";
 export default function IncludeToFreezer() {
-  const [value, setValue] = React.useState<IFood | null>(null);
+  const [value, setValue] = React.useState<IGetFood | null>(null);
   const [inputValue, setInputValue] = React.useState("");
   const foods = useAppSelector((state) => state.foods.food_list);
   const dispatch = useAppDispatch();
@@ -30,7 +30,7 @@ export default function IncludeToFreezer() {
       <Autocomplete
         value={value}
         filterSelectedOptions
-        onChange={(event, newValue: IFood | null) => {
+        onChange={(event, newValue: IGetFood | null) => {
           setValue(newValue);
         }}
         inputValue={inputValue}
@@ -38,7 +38,7 @@ export default function IncludeToFreezer() {
           setInputValue(newInputValue);
         }}
         id="controllable-states-demo"
-        options={foods as IFood[]}
+        options={foods as IGetFood[]}
         getOptionLabel={(option) => (option as { name: string }).name}
         renderOption={(props, option) => <li {...props}>{option?.name}</li>}
         renderInput={(params) => (

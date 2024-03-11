@@ -10,6 +10,10 @@ export interface IFood {
   fat: number | string;
   user: number | undefined;
 }
+export interface IGetFood extends IFood {
+  id: number;
+}
+
 export interface IFoodList {
   food_list: IFood[] | null;
   error: string | null;
