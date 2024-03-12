@@ -113,13 +113,13 @@ export default function NewFood() {
     setOpen(true);
   };
   useEffect(() => {
-    // when the component is mounted, the alert is displayed for 3 seconds
     formResult == true
       ? setTimeout(() => {
           setFormResult(null);
         }, 6000)
       : null;
   }, [formResult]);
+
   return (
     <>
       <Accordion

@@ -4,12 +4,17 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { getFoods } from "../store/features/foodsSlice";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import BackupIcon from "@mui/icons-material/Backup";
+import { includeToFreezer } from "../store/features/freezerSlice";
+import { IIncludeToFreezer } from "../interfaces/FreezerInterfaces";
 import { IGetFood } from "../interfaces/FoodInterfaces";
 import {
   Box,
+  Alert,
   Divider,
   Typography,
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -24,12 +29,24 @@ import {
   Input,
   InputAdornment,
 } from "@mui/material";
+import { change } from "../store/features/inputQuantitySlice";
 
 export default function IncludeToFreezer() {
   const [food, setFood] = useState<IGetFood | null>(null);
   const [inputValue, setInputValue] = useState("");
   const foods = useAppSelector((state) => state.foods.food_list);
   const dispatch = useAppDispatch();
+  const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
+  const [formResult, setFormResult] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    formResult == true
+      ? setTimeout(() => {
+          setFormResult(null);
+        }, 6000)
+      : null;
+  }, [formResult]);
+
   const fetchFoods = async () => {
     try {
       await dispatch(getFoods()).unwrap();
@@ -43,13 +60,41 @@ export default function IncludeToFreezer() {
   }, []);
 
   const CardAddFood = () => {
-    const [quantity, setQuantity] = useState<number>(0);
+    const globalQuantity = useAppSelector((state) => state.inputQuantity.value);
+    const [quantity, setQuantity] = useState<number | string>(globalQuantity);
     const handleQuantityInput = (
       e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
       const value = parseInt(e.target.value);
-      setQuantity(value >= 0 ? value : 0);
+      if (value >= 0) {
+        setQuantity((prev) => value);
+        dispatch(change(value));
+      } else {
+        setQuantity((prev) => "");
+      }
     };
+
+    const clearForm = () => {
+      setQuantity((prev) => "");
+      dispatch(change(""));
+      setFood(null);
+    };
+
+    const handleIncludeToFreezer = async () => {
+      try {
+        const new_food: IIncludeToFreezer = {
+          user: userProfileInfo?.user_id,
+          food: food?.id as number,
+          quantity: quantity as number,
+        };
+        await dispatch(includeToFreezer(new_food)).unwrap();
+        setFormResult(true);
+        clearForm();
+      } catch (e) {
+        setFormResult(false);
+      }
+    };
+    useEffect(() => {}, [quantity]);
     const calculateMacros = (input_quantity: number, food: IGetFood | null) => {
       const carbs: string = food
         ? `${(input_quantity / +food?.portion_size) * +food?.carbs}`
@@ -167,7 +212,7 @@ export default function IncludeToFreezer() {
                     sx={{ fontFamily: "VT323", padding: 0 }}
                     align="center"
                   >
-                    {calculateMacros(quantity, food).kcal}
+                    {calculateMacros(quantity as number, food).kcal}
                   </TableCell>
                   <TableCell
                     sx={{ fontFamily: "VT323", padding: 0 }}
@@ -196,7 +241,7 @@ export default function IncludeToFreezer() {
                     sx={{ fontFamily: "VT323", padding: 0 }}
                     align="center"
                   >
-                    {calculateMacros(quantity, food).carbs}
+                    {calculateMacros(quantity as number, food).carbs}
                   </TableCell>
                   <TableCell
                     sx={{ fontFamily: "VT323", padding: 0 }}
@@ -225,7 +270,7 @@ export default function IncludeToFreezer() {
                     sx={{ fontFamily: "VT323", padding: 0 }}
                     align="center"
                   >
-                    {calculateMacros(quantity, food).protein}
+                    {calculateMacros(quantity as number, food).protein}
                   </TableCell>
                   <TableCell
                     sx={{ fontFamily: "VT323", padding: 0 }}
@@ -254,7 +299,7 @@ export default function IncludeToFreezer() {
                     sx={{ fontFamily: "VT323", padding: 0 }}
                     align="center"
                   >
-                    {calculateMacros(quantity, food).fat}
+                    {calculateMacros(quantity as number, food).fat}
                   </TableCell>
                   <TableCell
                     sx={{ fontFamily: "VT323", padding: 0 }}
@@ -267,12 +312,37 @@ export default function IncludeToFreezer() {
             </Table>
           </TableContainer>
         </Box>
+        <Button
+          variant="outlined"
+          endIcon={<BackupIcon />}
+          sx={{ width: "50%", display: "flex", margin: "0 auto", mt: 3 }}
+          onClick={handleIncludeToFreezer}
+        >
+          CADASTRAR
+        </Button>
       </Card>
     );
   };
   return (
     <>
       <Box sx={{ p: 2 }}>
+        {formResult ? (
+          <Alert
+            severity="success"
+            sx={{ mt: 2, fontFamily: "VT323", fontSize: 15 }}
+          >
+            ALIMENTO CADASTRADO COM SUCESSO!
+          </Alert>
+        ) : formResult == false ? (
+          <Alert
+            severity="error"
+            sx={{ mt: 2, fontFamily: "VT323", fontSize: 15 }}
+          >
+            ERRO AO CADASTRAR ALIMENTO!
+          </Alert>
+        ) : (
+          <></>
+        )}
         <Autocomplete
           value={food}
           filterSelectedOptions

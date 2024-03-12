@@ -1,11 +1,11 @@
 import { IFood } from "./FoodInterfaces";
 
-export interface IFreezer {
+export interface IIncludeToFreezer {
   user: number | undefined;
-  food: IFood;
-  quantity: number | string;
+  food: number;
+  quantity: number;
 }
 export interface IFreezerList {
-  food_list: IFreezer[] | null;
+  food_list: IIncludeToFreezer[] | null;
   error: string | null;
 }

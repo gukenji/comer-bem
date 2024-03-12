@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosInstance";
-import { IFreezer, IFreezerList } from "../../interfaces/FreezerInterfaces";
+import {
+  IIncludeToFreezer,
+  IFreezerList,
+} from "../../interfaces/FreezerInterfaces";
 
 const initialState: IFreezerList = {
   food_list: null,
@@ -15,8 +18,7 @@ export const getFreezer = createAsyncThunk("get_my_freezer", async () => {
 
 export const includeToFreezer = createAsyncThunk(
   "include_to_freezer",
-  async (data: IFreezer) => {
-    console.log(data);
+  async (data: IIncludeToFreezer) => {
     const response = await axiosInstance.post("/my_freezer/include/", data);
     const resData = response.data;
     return resData;
@@ -34,7 +36,7 @@ const freezerSlice = createSlice({
       })
       .addCase(
         getFreezer.fulfilled,
-        (state, action: PayloadAction<IFreezer[]>) => {
+        (state, action: PayloadAction<IIncludeToFreezer[]>) => {
           state.food_list = action.payload;
           state.error = null;
         }
@@ -42,7 +44,13 @@ const freezerSlice = createSlice({
       .addCase(getFreezer.rejected, (state, action) => {
         state.food_list = null;
         state.error = "falha ao recuperar refeições ";
-      });
+      })
+      .addCase(includeToFreezer.pending, (state) => {})
+      .addCase(
+        includeToFreezer.fulfilled,
+        (state, action: PayloadAction<IIncludeToFreezer[]>) => {}
+      )
+      .addCase(includeToFreezer.rejected, (state, action) => {});
   },
 });
 

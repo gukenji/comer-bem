@@ -5,12 +5,14 @@ import authSlice from "./features/authSlice";
 import mealsSlice from "./features/mealsSlice";
 import foodsSlice from "./features/foodsSlice";
 import freezerSlice from "./features/freezerSlice";
+import inputQuantitySlice from "./features/inputQuantitySlice";
 export const store = configureStore({
   reducer: {
     auth: authSlice,
     meals: mealsSlice,
     foods: foodsSlice,
     freezer: freezerSlice,
+    inputQuantity: inputQuantitySlice,
   },
 });
 
