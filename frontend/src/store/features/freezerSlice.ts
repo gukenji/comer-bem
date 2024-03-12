@@ -3,9 +3,13 @@ import axiosInstance from "../../api/axiosInstance";
 import {
   IIncludeToFreezer,
   IFreezerList,
+  IInputQuantity,
 } from "../../interfaces/FreezerInterfaces";
+import { IGetFood } from "../../interfaces/FoodInterfaces";
 
-const initialState: IFreezerList = {
+const initialState: IFreezerList & IInputQuantity = {
+  food: null,
+  value: "",
   food_list: null,
   error: null,
 };
@@ -28,7 +32,14 @@ export const includeToFreezer = createAsyncThunk(
 const freezerSlice = createSlice({
   name: "freezer",
   initialState,
-  reducers: {},
+  reducers: {
+    selectQuantity(state, action: PayloadAction<number | string>) {
+      state.value = action.payload;
+    },
+    selectFood(state, action: PayloadAction<IGetFood | null>) {
+      state.food = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getFreezer.pending, (state) => {
@@ -53,5 +64,6 @@ const freezerSlice = createSlice({
       .addCase(includeToFreezer.rejected, (state, action) => {});
   },
 });
+export const { selectQuantity, selectFood } = freezerSlice.actions;
 
 export default freezerSlice.reducer;

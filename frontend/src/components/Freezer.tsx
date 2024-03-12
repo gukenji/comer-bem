@@ -12,6 +12,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import IconButton from "@mui/material/IconButton";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import MyFreezer from "./MyFreezer";
+import SearchFoodFreezer from "./SearchFoodFreezer";
 import IncludeToFreezer from "./IncludeToFreezer";
 
 const Freezer = () => {
@@ -96,6 +97,7 @@ const Freezer = () => {
           MEUS ALIMENTOS
         </TypographyStyled>
       </AccordionSummary>
+      <SearchFoodFreezer />
       <IncludeToFreezer />
       <MyFreezer />
       <AccordionDetails></AccordionDetails>
