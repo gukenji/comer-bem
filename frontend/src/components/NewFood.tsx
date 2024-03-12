@@ -173,7 +173,7 @@ export default function NewFood() {
             noValidate
             ref={formRef}
             autoComplete="off"
-            sx={{ display: "flex", flexDirection: "column" }}
+            sx={{ display: "flex", flexDirection: "column", p: 1 }}
             onChange={() => setFormResult(null)}
           >
             {formResult ? (
