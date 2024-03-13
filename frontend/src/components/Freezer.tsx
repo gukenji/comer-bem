@@ -107,7 +107,14 @@ const Freezer = () => {
         </TypographyStyled>
       </AccordionSummary>
       <TabContext value={value}>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Box
+          sx={{
+            borderBottom: 1,
+            borderColor: "divider",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <TabList
             onChange={handleChange}
             aria-label="lab API tabs example"

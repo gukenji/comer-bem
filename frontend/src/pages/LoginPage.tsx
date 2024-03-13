@@ -17,7 +17,6 @@ const LoginPage = () => {
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const errors = useAppSelector((state) => state.auth.error);
 
   const handleLogin = async () => {
     if (email && password) {
