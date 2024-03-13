@@ -14,15 +14,12 @@ import { styled } from "@mui/material/styles";
 import { createFood } from "../store/features/foodsSlice";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
-import FormControl from "@mui/material/FormControl";
 import { IFood } from "../interfaces/FoodInterfaces";
-import { useCallback } from "react";
 import Tooltip from "@mui/material/Tooltip";
 import InfoIcon from "@mui/icons-material/Info";
 import IconButton from "@mui/material/IconButton";
 import Alert from "@mui/material/Alert";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
-
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { useState, useRef } from "react";
 export default function NewFood() {
@@ -31,8 +28,8 @@ export default function NewFood() {
   const [open, setOpen] = React.useState(false);
 
   const [brand, setBrand] = useState<string | null>("");
-  const [name, setName] = useState<string | null>("");
-  const [portionSize, setPortionSize] = useState<number | null | string>("");
+  const [name, setName] = useState<string>("");
+  const [portionSize, setPortionSize] = useState<number | string>("");
   const [isCustomPortion, setIsCustomPortion] = useState<boolean>(false);
   const [portionDescription, setPortionDescription] = useState<string | null>(
     ""
@@ -42,7 +39,7 @@ export default function NewFood() {
   const [carbs, setCarbs] = useState<number | string>("");
   const [fat, setFat] = useState<number | string>("");
   const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
-  const formRef = useRef<HTMLFormElement | undefined>();
+  const formRef = useRef<HTMLFormElement>();
   const dispatch = useAppDispatch();
   const handleExpansion = () => {
     setExpanded((prevExpanded) => !prevExpanded);
@@ -90,7 +87,7 @@ export default function NewFood() {
       O ALIMENTO CADASTRADO SERÁ INSERIDO NO BANCO DE DADOS. <br />
       DESSA FORMA QUALQUER PESSOA QUE QUISER INCLUIR ALGUM ALIMENTO EM SUA
       GELADEIRA OU EM SUA REFEIÇÃO POSTERIORMENTE PODERÁ UTILIZAR ESTE ALIMENTO
-      CADASTRADO
+      CADASTRADO.
     </Typography>
   );
   const TypographyStyled = styled(Typography)(({ theme }) => ({
@@ -116,13 +113,13 @@ export default function NewFood() {
     setOpen(true);
   };
   useEffect(() => {
-    // when the component is mounted, the alert is displayed for 3 seconds
     formResult == true
       ? setTimeout(() => {
           setFormResult(null);
         }, 6000)
       : null;
   }, [formResult]);
+
   return (
     <>
       <Accordion
@@ -176,7 +173,7 @@ export default function NewFood() {
             noValidate
             ref={formRef}
             autoComplete="off"
-            sx={{ display: "flex", flexDirection: "column" }}
+            sx={{ display: "flex", flexDirection: "column", p: 1 }}
             onChange={() => setFormResult(null)}
           >
             {formResult ? (
@@ -268,7 +265,7 @@ export default function NewFood() {
               required={isCustomPortion}
               label="DESCRIÇÃO"
               helperText={
-                <div
+                <span
                   style={{
                     display: isCustomPortion ? "flex" : "none",
                     flexDirection: "column",
@@ -276,15 +273,15 @@ export default function NewFood() {
                     marginBottom: 10,
                   }}
                 >
-                  <p style={{ margin: 0, padding: 0 }}>ex.: 1 fatia</p>
+                  <span style={{ margin: 0, padding: 0 }}>ex.: 1 fatia</span>
                   {isCustomPortion &&
                   !portionDescription &&
                   formResult == false ? (
-                    <p style={{ margin: 0, padding: 0, color: "red" }}>
+                    <span style={{ margin: 0, padding: 0, color: "red" }}>
                       PREENCHIMENTO NECESSÁRIO
-                    </p>
+                    </span>
                   ) : null}
-                </div>
+                </span>
               }
               FormHelperTextProps={{
                 sx: { fontFamily: "VT323" },

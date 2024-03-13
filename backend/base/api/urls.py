@@ -9,7 +9,9 @@ urlpatterns = [
     path("", views.getRoutes),
     path("token/", MyTokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("meals/", views.getMeals),
-    path("foods/", views.getFoods),
+    path("foods/get/", views.getFoods),
     path("foods/create/", views.createFood),
+    path("my_freezer/get/", views.getFreezer),
+    path("my_freezer/include/", views.includeToFreezer),
+    path("meals/get/", views.getMyMeals),
 ]

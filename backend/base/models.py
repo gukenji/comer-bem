@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Food(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=False)
     brand = models.CharField(max_length=255, blank=True)
     name = models.CharField(max_length=255, blank=False)
     portion_size = models.FloatField(blank=False)
@@ -59,6 +59,18 @@ class Food(models.Model):
 
 
 class Meal(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=False)
     name = models.CharField(max_length=255, blank=False)
-    foods = models.ForeignKey(Food, on_delete=models.CASCADE, null=True)
+
+
+class MyMeals(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=True)
+    meal = models.ForeignKey(Meal, on_delete=models.CASCADE, blank=False)
+    food = models.ForeignKey(Food, on_delete=models.CASCADE, blank=False)
+    quantity = models.FloatField(blank=False)
+
+
+class Freezer(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
+    food = models.ForeignKey(Food, on_delete=models.CASCADE, null=False, blank=False)
+    quantity = models.FloatField(blank=True)

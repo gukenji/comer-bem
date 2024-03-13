@@ -223,19 +223,13 @@ export default function Header() {
                   <MenuItem>
                     <Link to="/login">Login</Link>
                   </MenuItem>
-                ) : (
-                  <></>
-                )}
+                ) : null}
                 {userProfileInfo ? (
                   <MenuItem onClick={handleClose}>Minha Conta</MenuItem>
-                ) : (
-                  <></>
-                )}
+                ) : null}
                 {userProfileInfo ? (
                   <MenuItem onClick={handleLogout}>Logout</MenuItem>
-                ) : (
-                  <></>
-                )}
+                ) : null}
               </Menu>
             </div>
           )}

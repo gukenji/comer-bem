@@ -12,7 +12,6 @@ import { LockOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "../store/store";
-import { register } from "../store/features/authSlice";
 
 const RegisterPage = () => {
   const dispatch = useAppDispatch();
@@ -25,13 +24,7 @@ const RegisterPage = () => {
     // This is only a basic validation of inputs. Improve this as needed.
     if (name && email && password) {
       try {
-        await dispatch(
-          register({
-            name,
-            email,
-            password,
-          })
-        ).unwrap();
+        console.log("oi");
       } catch (e) {
         console.error(e);
       }

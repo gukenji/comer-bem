@@ -10,16 +10,14 @@ const initialState: IFoodList = {
 export const createFood = createAsyncThunk(
   "create_food",
   async (data: IFood) => {
-    console.log(data);
     const response = await axiosInstance.post("/foods/create/", data);
-    console.log(response);
     const resData = response.data;
     return resData;
   }
 );
 
 export const getFoods = createAsyncThunk("get_food", async () => {
-  const response = await axiosInstance.get("/foods/");
+  const response = await axiosInstance.get("/foods/get/");
   const resData = response.data;
   return resData;
 });
@@ -44,9 +42,7 @@ const foodsSlice = createSlice({
       .addCase(createFood.pending, (state) => {})
       .addCase(
         createFood.fulfilled,
-        (state, action: PayloadAction<IFood[]>) => {
-          console.log(state);
-        }
+        (state, action: PayloadAction<IFood[]>) => {}
       )
       .addCase(createFood.rejected, (state, action) => {});
   },

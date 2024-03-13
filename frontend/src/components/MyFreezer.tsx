@@ -1,146 +1,110 @@
 import React, { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../store/store";
-import { getFoods } from "../store/features/foodsSlice";
+import { getFreezer } from "../store/features/freezerSlice";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import { Divider } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import Accordion, { AccordionSlots } from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Fade from "@mui/material/Fade";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { styled } from "@mui/material/styles";
-import Tooltip from "@mui/material/Tooltip";
-import InfoIcon from "@mui/icons-material/Info";
-import IconButton from "@mui/material/IconButton";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
+import { IGetFood } from "../interfaces/FoodInterfaces";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import DeleteIcon from "@mui/icons-material/Delete";
+import LocalDiningIcon from "@mui/icons-material/LocalDining";
 
 const MyFreezer = () => {
-  const my_foods = useAppSelector((state) => state.foods.food_list);
+  const my_freezer = useAppSelector((state) => state.freezer.food_list);
   const dispatch = useAppDispatch();
-  const [open, setOpen] = React.useState(false);
-
-  const [expanded, setExpanded] = React.useState(false);
-  const toolTipText = (
-    <Typography sx={{ fontFamily: "VT323" }}>
-      CADASTRE, EDITE E UTILIZE ALIMENTOS QUE VOCÊ POSSUI EM SUA
-      DESPENSA/GELADEIRA. <br />
-      AO CADASTRAR VOCÊ TERÁ UMA VISÃO FACILITADA DOS ALIMENTOS QUE PODERÁ
-      CONSUMIR E UMA VISÃO MACRO DOS NUTRIENTES DISPONÍVEIS.
-    </Typography>
-  );
-  const handleTooltipClose = () => {
-    setOpen(false);
-  };
-
-  const handleTooltipOpen = () => {
-    setOpen(true);
-  };
-  const TypographyStyled = styled(Typography)(({ theme }) => ({
-    position: "relative",
-    textDecoration: "none",
-    "&:before": {
-      content: expanded ? "''" : null,
-      position: expanded ? "absolute" : "relative",
-      display: "block",
-      background: "black",
-      width: "100%",
-      height: "2px",
-      bottom: 0,
-      left: 0,
-      transform: expanded ? "scaleX(1) " : "scaleX(0)",
-    },
-  }));
-  const handleExpansion = () => {
-    setExpanded((prevExpanded) => !prevExpanded);
-  };
-  const fetchFood = async () => {
+  const fetchFreezer = async () => {
     try {
-      await dispatch(getFoods()).unwrap();
+      await dispatch(getFreezer()).unwrap();
     } catch (e) {
       console.error(e);
     }
   };
 
   useEffect(() => {
-    fetchFood();
-  }, [my_foods]);
+    fetchFreezer();
+  }, []);
 
+  const calculateMacros = (input_quantity: number, food: IGetFood | null) => {
+    const carbs: string = food
+      ? `${(input_quantity / +food?.portion_size) * +food?.carbs}`
+      : `0`;
+    const fat: string = food
+      ? `${(input_quantity / +food?.portion_size) * +food?.fat}`
+      : `0`;
+    const protein: string = food
+      ? `${(input_quantity / +food?.portion_size) * +food?.protein}`
+      : `0`;
+    const kcal: string = food
+      ? `${(input_quantity / +food?.portion_size) * +food?.kcal}`
+      : `0`;
+    const macros = {
+      carbs: parseFloat(carbs).toFixed(2),
+      fat: parseFloat(fat).toFixed(2),
+      protein: parseFloat(protein).toFixed(2),
+      kcal: parseFloat(kcal).toFixed(2),
+    };
+    return macros;
+  };
   return (
-    <Accordion
-      expanded={expanded}
-      slots={{ transition: Fade as AccordionSlots["transition"] }}
-      slotProps={{ transition: { timeout: 400 } }}
-      sx={{
-        boxShadow:
-          "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
-        "& .MuiAccordion-region": { height: expanded ? "auto" : 0 },
-        "& .MuiAccordionDetails-root": {
-          display: expanded ? "block" : "none",
-        },
-      }}
-    >
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon onClick={handleExpansion} />}
-        aria-controls="panel1-content"
-        id="panel1-header"
-        sx={{ maxHeight: 64, minHeight: 30 }}
-      >
-        <ClickAwayListener onClickAway={handleTooltipClose}>
-          <Tooltip
-            PopperProps={{
-              disablePortal: true,
-            }}
-            onClose={handleTooltipClose}
-            open={open}
-            disableFocusListener
-            disableHoverListener
-            disableTouchListener
-            placement="bottom-start"
-            title={toolTipText}
-            arrow
-          >
-            <IconButton onClick={handleTooltipOpen}>
-              <InfoIcon />
-            </IconButton>
-          </Tooltip>
-        </ClickAwayListener>
-        <TypographyStyled
-          sx={{ fontFamily: "VT323", fontSize: { xs: 25, md: 35 } }}
-        >
-          MEUS ALIMENTOS
-        </TypographyStyled>
-      </AccordionSummary>
-      <AccordionDetails>
-        {my_foods ? (
-          my_foods.map((food) => {
-            return (
-              <>
-                <Box sx={{ p: 1 }}>
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
+    <>
+      {my_freezer ? (
+        my_freezer.map((props) => {
+          return (
+            <>
+              <Divider />
+              <Box sx={{ p: 1 }}>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Typography
+                    gutterBottom
+                    component={"span"}
+                    variant="h6"
+                    fontFamily={"VT323"}
+                    textTransform={"uppercase"}
                   >
-                    <Typography
-                      gutterBottom
-                      variant="h6"
-                      component="div"
-                      fontFamily={"VT323"}
-                      textTransform={"uppercase"}
-                    >
-                      {food.name}
-                    </Typography>
-                  </Stack>
+                    <span style={{ textDecoration: "underline dotted" }}>
+                      ALIMENTO
+                    </span>
+                    : {props.food.name}
+                  </Typography>
+                  <Typography
+                    gutterBottom
+                    component={"span"}
+                    variant="h6"
+                    fontFamily={"VT323"}
+                    textTransform={"uppercase"}
+                    display={props.food.brand ? "inherit" : "none"}
+                  >
+                    <span style={{ textDecoration: "underline dotted" }}>
+                      MARCA
+                    </span>
+                    : {props.food.brand}
+                  </Typography>
+                </Stack>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  sx={{ fontSize: 18 }}
+                >
+                  <span style={{ textDecoration: "underline" }}>
+                    DISPONIBILIDADE
+                  </span>
+                </Stack>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                   <span style={{ display: "flex", gap: 10 }}>
                     <Typography
                       color="text.secondary"
                       variant="body2"
+                      component={"span"}
                       fontFamily={"VT323"}
                       fontSize={16}
                     >
-                      {food.portion_size} G
+                      PORÇÃO: {props.quantity} G /
                     </Typography>
                     <Typography
                       color="green"
@@ -148,19 +112,100 @@ const MyFreezer = () => {
                       fontFamily={"VT323"}
                       fontSize={16}
                     >
-                      {food.kcal} KCAL
+                      {
+                        calculateMacros(props.quantity as number, props.food)
+                          .kcal
+                      }
+                      <span> KCAL</span>
                     </Typography>
                   </span>
+                  <span
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography
+                      color="text.secondary"
+                      variant="body2"
+                      component={"span"}
+                      fontFamily={"VT323"}
+                      fontSize={16}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>PROTEÍNAS</span>
+                      <span>
+                        {
+                          calculateMacros(props.quantity as number, props.food)
+                            .protein
+                        }
+                        G
+                      </span>
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      fontFamily={"VT323"}
+                      fontSize={16}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>CARBOÍDRATOS</span>
+                      <span>
+                        {" "}
+                        {
+                          calculateMacros(props.quantity as number, props.food)
+                            .carbs
+                        }{" "}
+                        G
+                      </span>
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      fontFamily={"VT323"}
+                      fontSize={16}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>GORDURA</span>
+                      <span>
+                        {" "}
+                        {
+                          calculateMacros(props.quantity as number, props.food)
+                            .fat
+                        }
+                        G
+                      </span>
+                    </Typography>
+                  </span>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      gap: 3,
+                    }}
+                  >
+                    <EditNoteIcon />
+                    <DeleteIcon />
+                    <LocalDiningIcon />
+                  </Box>
                 </Box>
-                <Divider />
-              </>
-            );
-          })
-        ) : (
-          <></>
-        )}
-      </AccordionDetails>
-    </Accordion>
+              </Box>
+            </>
+          );
+        })
+      ) : (
+        <></>
+      )}
+    </>
   );
 };
 
