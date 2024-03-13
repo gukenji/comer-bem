@@ -3,7 +3,7 @@ import MyMeals from "../components/MyMeals";
 import { Container } from "@mui/material";
 import NewFood from "../components/NewFood";
 import Freezer from "../components/Freezer";
-const EatPage = () => {
+const FoodsPage = () => {
   return (
     <>
       <NewFood />
@@ -12,4 +12,4 @@ const EatPage = () => {
   );
 };
 
-export default EatPage;
+export default FoodsPage;

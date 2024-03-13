@@ -1,13 +1,14 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosInstance";
 import {
+  IFetchFreezer,
+  IGetFreezer,
   IIncludeToFreezer,
-  IFreezerList,
   IInputQuantity,
 } from "../../interfaces/FreezerInterfaces";
 import { IGetFood } from "../../interfaces/FoodInterfaces";
 
-const initialState: IFreezerList & IInputQuantity = {
+const initialState: IGetFreezer & IInputQuantity = {
   food: null,
   value: "",
   food_list: null,
@@ -47,7 +48,7 @@ const freezerSlice = createSlice({
       })
       .addCase(
         getFreezer.fulfilled,
-        (state, action: PayloadAction<IIncludeToFreezer[]>) => {
+        (state, action: PayloadAction<IFetchFreezer[]>) => {
           state.food_list = action.payload;
           state.error = null;
         }

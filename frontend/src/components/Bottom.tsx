@@ -2,47 +2,30 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import BottomNavigation from "@mui/material/BottomNavigation";
-import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import HomeIcon from "@mui/icons-material/Home";
 import Paper from "@mui/material/Paper";
 import PieChartIcon from "@mui/icons-material/PieChart";
 import "../main.css";
 import ViewListIcon from "@mui/icons-material/ViewList";
-import LocalDiningIcon from "@mui/icons-material/LocalDining";
-import { styled } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-
+import { BottomNavigationActionHome } from "../styles/BottomNavigationActionHome";
+import { BottomNavigationActionFoods } from "../styles/BottomNavigationActionFoods";
+import { BottomNavigationActionMeals } from "../styles/BottomNavigationActionMeals";
+import { BottomNavigationActionStatistics } from "../styles/BottomNavigationActionStatistics";
+import KitchenIcon from "@mui/icons-material/Kitchen";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { selectTab } from "../store/features/authSlice";
 export default function FixedBottomNavigation() {
   const navigate = useNavigate();
-
-  const [value, setValue] = React.useState(0);
+  const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
+  const tab = useAppSelector((state) => state.auth.tab);
   const ref = React.useRef<HTMLDivElement>(null);
-  const BottomNavigationActionStyled = styled(BottomNavigationAction)(
-    ({ theme }) => ({
-      "& .MuiBottomNavigationAction-label.Mui-selected": {
-        [theme.breakpoints.up("xs")]: {
-          fontSize: "1.2rem",
-        },
-        [theme.breakpoints.up("md")]: {
-          fontSize: "1.5rem",
-        },
-      },
-      "& .MuiBottomNavigationAction-label": {
-        [theme.breakpoints.up("xs")]: {
-          fontSize: "1rem",
-        },
-        [theme.breakpoints.up("md")]: {
-          fontSize: "1.2rem",
-        },
-      },
-    })
-  );
-
+  const dispatch = useAppDispatch();
   const linkHome = () => {
     navigate("/home");
   };
-  const linkEat = () => {
-    navigate("/eat");
+  const linkFoods = () => {
+    navigate("/foods");
   };
   const linkMeals = () => {
     navigate("/meals");
@@ -53,7 +36,7 @@ export default function FixedBottomNavigation() {
 
   React.useEffect(() => {
     (ref.current as HTMLDivElement).ownerDocument.body.scrollTop = 0;
-  }, [value]);
+  }, [tab]);
 
   return (
     <Box sx={{ pb: 7 }} ref={ref}>
@@ -64,27 +47,27 @@ export default function FixedBottomNavigation() {
       >
         <BottomNavigation
           showLabels
-          value={value}
+          value={tab}
           onChange={(event, newValue) => {
-            setValue(newValue);
+            userProfileInfo ? dispatch(selectTab(newValue)) : null;
           }}
         >
-          <BottomNavigationActionStyled
+          <BottomNavigationActionHome
             label="HOME"
             icon={<HomeIcon />}
             onClick={linkHome}
           />
-          <BottomNavigationActionStyled
-            label="COMER"
-            icon={<LocalDiningIcon />}
-            onClick={linkEat}
+          <BottomNavigationActionFoods
+            label="ALIMENTOS"
+            icon={<KitchenIcon />}
+            onClick={linkFoods}
           />
-          <BottomNavigationActionStyled
+          <BottomNavigationActionMeals
             label="REFEIÇÕES"
             icon={<ViewListIcon />}
             onClick={linkMeals}
           />
-          <BottomNavigationActionStyled
+          <BottomNavigationActionStatistics
             label="ESTATÍSTICAS"
             icon={<PieChartIcon />}
             onClick={linkStatistics}

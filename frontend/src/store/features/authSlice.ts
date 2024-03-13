@@ -8,19 +8,19 @@ import {
   IUserLogin,
 } from "../../interfaces/AuthInterfaces";
 
-type Refresh = {
+interface IRefresh {
   refresh: string;
   access: string;
-};
+}
 
-type AuthApiState = {
+interface IAuthApiState {
   tokenInfo?: ITokenInfo | null;
   userProfileData?: IUserData | null;
   status: "idle" | "loading" | "failed";
   error: string | null;
-};
+}
 
-const initialState: AuthApiState = {
+const initialState: IAuthApiState & { tab: null | number } = {
   tokenInfo: localStorage.getItem("tokenInfo")
     ? JSON.parse(localStorage.getItem("tokenInfo") as string)
     : null,
@@ -57,6 +57,7 @@ const initialState: AuthApiState = {
     : null,
   status: "idle",
   error: null,
+  tab: null,
 };
 
 export const login = createAsyncThunk("login", async (data: IUserLogin) => {
@@ -67,7 +68,7 @@ export const login = createAsyncThunk("login", async (data: IUserLogin) => {
   return resData;
 });
 
-export const refresh = createAsyncThunk("refresh", async (data: Refresh) => {
+export const refresh = createAsyncThunk("refresh", async (data: IRefresh) => {
   const response = await axiosInstance.post("/token/refresh/", data);
   const resData = response.data;
   localStorage.setItem("tokenInfo", JSON.stringify(resData));
@@ -81,7 +82,11 @@ export const logout = createAsyncThunk("logout", async () => {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    selectTab(state, action: PayloadAction<number | null>) {
+      state.tab = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
@@ -90,6 +95,7 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action: PayloadAction<ITokenInfo>) => {
         state.status = "idle";
+        state.tab = 0;
         state.tokenInfo = {
           refresh: action.payload.refresh,
           access: action.payload.access,
@@ -156,5 +162,6 @@ const authSlice = createSlice({
       });
   },
 });
+export const { selectTab } = authSlice.actions;
 
 export default authSlice.reducer;

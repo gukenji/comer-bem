@@ -75,7 +75,6 @@ def getFreezer(request):
     user = request.user
     freezer = user.freezer_set.all()
     serializer = GetFreezerSerializer(freezer, many=True)
-    print(serializer.data)
     return Response(serializer.data)
 
 

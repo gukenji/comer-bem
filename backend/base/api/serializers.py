@@ -23,7 +23,7 @@ class MyMealsSerializer(ModelSerializer):
 class GetFreezerSerializer(ModelSerializer):
     class Meta:
         model = Freezer
-        fields = "__all__"
+        fields = ["food", "id", "quantity"]
         depth = 1
 
 

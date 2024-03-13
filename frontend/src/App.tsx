@@ -7,7 +7,7 @@ import LandingPage from "./pages/LandingPage";
 import RegisterPage from "./pages/RegisterPage";
 import DefaultRoute from "./utils/DefaultRoute";
 import Bottom from "./components/Bottom";
-import EatPage from "./pages/EatPage";
+import FoodsPage from "./pages/FoodsPage";
 import MealsPage from "./pages/MealsPage";
 import StatisticsPage from "./pages/StatisticsPage";
 import { Container } from "@mui/material";
@@ -24,7 +24,7 @@ function App() {
             </Route>
             <Route element={<PrivateRoute />}>
               <Route path="/home" element={<HomePage />} />
-              <Route path="/eat" element={<EatPage />} />
+              <Route path="/foods" element={<FoodsPage />} />
               <Route path="/meals" element={<MealsPage />} />
               <Route path="/statistics" element={<StatisticsPage />} />
             </Route>

@@ -11,13 +11,22 @@ import Tooltip from "@mui/material/Tooltip";
 import InfoIcon from "@mui/icons-material/Info";
 import IconButton from "@mui/material/IconButton";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
+import Box from "@mui/material/Box";
 import MyFreezer from "./MyFreezer";
 import SearchFoodFreezer from "./SearchFoodFreezer";
 import IncludeToFreezer from "./IncludeToFreezer";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 
 const Freezer = () => {
   const [open, setOpen] = React.useState(false);
   const [expanded, setExpanded] = React.useState(false);
+  const [value, setValue] = React.useState("1");
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
   const toolTipText = (
     <Typography sx={{ fontFamily: "VT323" }}>
       CADASTRE, EDITE E UTILIZE ALIMENTOS QUE VOCÊ POSSUI EM SUA
@@ -97,10 +106,39 @@ const Freezer = () => {
           MEUS ALIMENTOS
         </TypographyStyled>
       </AccordionSummary>
-      <SearchFoodFreezer />
-      <IncludeToFreezer />
-      <MyFreezer />
-      <AccordionDetails></AccordionDetails>
+      <TabContext value={value}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <TabList
+            onChange={handleChange}
+            aria-label="lab API tabs example"
+            TabIndicatorProps={{ style: { background: "#F48925" } }}
+          >
+            <Tab
+              label="INCLUIR"
+              value="1"
+              sx={{ fontFamily: "VT323", fontSize: 20 }}
+            />
+            <Tab
+              label="INVENTÁRIO"
+              value="2"
+              sx={{ fontFamily: "VT323", fontSize: 20 }}
+            />
+            <Tab
+              label="RESUMO"
+              value="3"
+              sx={{ fontFamily: "VT323", fontSize: 20 }}
+            />
+          </TabList>
+        </Box>
+        <TabPanel value="1">
+          <SearchFoodFreezer />
+          <IncludeToFreezer />
+        </TabPanel>
+        <TabPanel value="2">
+          <MyFreezer />
+        </TabPanel>
+        <TabPanel value="3">Item Three</TabPanel>
+      </TabContext>
     </Accordion>
   );
 };

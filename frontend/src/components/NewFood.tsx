@@ -87,7 +87,7 @@ export default function NewFood() {
       O ALIMENTO CADASTRADO SERÁ INSERIDO NO BANCO DE DADOS. <br />
       DESSA FORMA QUALQUER PESSOA QUE QUISER INCLUIR ALGUM ALIMENTO EM SUA
       GELADEIRA OU EM SUA REFEIÇÃO POSTERIORMENTE PODERÁ UTILIZAR ESTE ALIMENTO
-      CADASTRADO
+      CADASTRADO.
     </Typography>
   );
   const TypographyStyled = styled(Typography)(({ theme }) => ({
