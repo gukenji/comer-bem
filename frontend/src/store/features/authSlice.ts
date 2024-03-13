@@ -150,6 +150,7 @@ const authSlice = createSlice({
       .addCase(logout.pending, (state) => {
         state.status = "loading";
         state.error = null;
+        state.tab = null;
       })
       .addCase(logout.fulfilled, (state, action) => {
         state.status = "idle";
