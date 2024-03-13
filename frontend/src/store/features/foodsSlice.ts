@@ -5,6 +5,7 @@ import { IFood, IFoodList } from "../../interfaces/FoodInterfaces";
 const initialState: IFoodList = {
   food_list: null,
   error: null,
+  refreshed: true,
 };
 
 export const createFood = createAsyncThunk(
@@ -34,6 +35,7 @@ const foodsSlice = createSlice({
       .addCase(getFoods.fulfilled, (state, action: PayloadAction<IFood[]>) => {
         state.food_list = action.payload;
         state.error = null;
+        state.refreshed = true;
       })
       .addCase(getFoods.rejected, (state, action) => {
         state.food_list = null;
@@ -42,7 +44,9 @@ const foodsSlice = createSlice({
       .addCase(createFood.pending, (state) => {})
       .addCase(
         createFood.fulfilled,
-        (state, action: PayloadAction<IFood[]>) => {}
+        (state, action: PayloadAction<IFood[]>) => {
+          state.refreshed = false;
+        }
       )
       .addCase(createFood.rejected, (state, action) => {});
   },

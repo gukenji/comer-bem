@@ -17,4 +17,5 @@ export interface IGetFood extends IFood {
 export interface IFoodList {
   food_list: IFood[] | null;
   error: string | null;
+  refreshed: boolean;
 }

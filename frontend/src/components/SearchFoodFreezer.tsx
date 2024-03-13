@@ -9,6 +9,7 @@ import { Box, Divider, Typography } from "@mui/material";
 import { selectFood } from "../store/features/freezerSlice";
 const SearchFoodFreezer = () => {
   const [inputValue, setInputValue] = useState("");
+  const isRefreshed = useAppSelector((state) => state.foods.refreshed);
   const foods = useAppSelector((state) => state.foods.food_list);
   const food = useAppSelector((state) => state.freezer.food);
   const dispatch = useAppDispatch();
@@ -21,8 +22,8 @@ const SearchFoodFreezer = () => {
     }
   };
   useEffect(() => {
-    fetchFoods();
-  }, []);
+    !isRefreshed ? fetchFoods() : null;
+  }, [isRefreshed]);
   return (
     <>
       <Box sx={{ p: 2 }}>

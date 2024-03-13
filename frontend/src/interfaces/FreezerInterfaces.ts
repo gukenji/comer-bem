@@ -8,6 +8,7 @@ export interface IIncludeToFreezer {
 export interface IGetFreezer {
   food_list: IFetchFreezer[] | null;
   error: string | null;
+  refreshed: boolean;
 }
 export interface IInputQuantity {
   food: IGetFood | null;

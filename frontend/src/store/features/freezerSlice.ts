@@ -13,6 +13,7 @@ const initialState: IGetFreezer & IInputQuantity = {
   value: "",
   food_list: null,
   error: null,
+  refreshed: true,
 };
 
 export const getFreezer = createAsyncThunk("get_my_freezer", async () => {
@@ -51,6 +52,7 @@ const freezerSlice = createSlice({
         (state, action: PayloadAction<IFetchFreezer[]>) => {
           state.food_list = action.payload;
           state.error = null;
+          state.refreshed = true;
         }
       )
       .addCase(getFreezer.rejected, (state, action) => {
@@ -60,7 +62,9 @@ const freezerSlice = createSlice({
       .addCase(includeToFreezer.pending, (state) => {})
       .addCase(
         includeToFreezer.fulfilled,
-        (state, action: PayloadAction<IIncludeToFreezer[]>) => {}
+        (state, action: PayloadAction<IIncludeToFreezer[]>) => {
+          state.refreshed = false;
+        }
       )
       .addCase(includeToFreezer.rejected, (state, action) => {});
   },

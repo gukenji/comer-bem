@@ -12,6 +12,8 @@ import LocalDiningIcon from "@mui/icons-material/LocalDining";
 
 const MyFreezer = () => {
   const my_freezer = useAppSelector((state) => state.freezer.food_list);
+  const isRefreshed = useAppSelector((state) => state.freezer.refreshed);
+
   const dispatch = useAppDispatch();
   const fetchFreezer = async () => {
     try {
@@ -22,8 +24,8 @@ const MyFreezer = () => {
   };
 
   useEffect(() => {
-    fetchFreezer();
-  }, []);
+    !isRefreshed ? fetchFreezer() : null;
+  }, [isRefreshed]);
 
   const calculateMacros = (input_quantity: number, food: IGetFood | null) => {
     const carbs: string = food
