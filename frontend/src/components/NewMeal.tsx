@@ -7,16 +7,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Fade from "@mui/material/Fade";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import Autocomplete from "@mui/material/Autocomplete";
-import { useState } from "react";
-import {
-  Button,
-  Box,
-  TextField,
-  Container,
-  MenuItem,
-  Icon,
-} from "@mui/material";
+import { Box, TextField, MenuItem, Icon } from "@mui/material";
 import dinner_icon from "../assets/dinner.png";
 import { Pixelify } from "react-pixelify";
 

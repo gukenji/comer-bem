@@ -1,18 +1,19 @@
 import React from "react";
 import { Pixelify } from "react-pixelify";
-import IconButton from "@mui/material/IconButton";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
-import { Link } from "react-router-dom";
-import Icon from "@mui/material/Icon";
-import { Typography } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Box,
+  Icon,
+  Typography,
+  useMediaQuery,
+  useTheme,
+  Menu,
+  MenuItem,
+  IconButton,
+} from "@mui/material";
 import { useAppSelector, useAppDispatch } from "../store/store";
 import profile_pic from "../assets/profile.jpeg";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
 import { logout } from "../store/features/authSlice";
-import Box from "@mui/material/Box";
 const Avatar = () => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

@@ -1,12 +1,17 @@
-import { useState } from "react";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { getFoods } from "../store/features/foodsSlice";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { IGetFood } from "../interfaces/FoodInterfaces";
-import { Box, Divider, Typography } from "@mui/material";
-import { selectFood } from "../store/features/freezerSlice";
+import {
+  Box,
+  Divider,
+  Typography,
+  TextField,
+  Autocomplete,
+} from "@mui/material";
+import { eraseSucessAlert, selectFood } from "../store/features/freezerSlice";
+import { useState } from "react";
+
 const SearchFoodFreezer = () => {
   const [inputValue, setInputValue] = useState("");
   const isRefreshed = useAppSelector((state) => state.foods.refreshed);
@@ -14,16 +19,16 @@ const SearchFoodFreezer = () => {
   const food = useAppSelector((state) => state.freezer.food);
   const dispatch = useAppDispatch();
 
-  const fetchFoods = async () => {
-    try {
-      await dispatch(getFoods()).unwrap();
-    } catch (e) {
-      console.error(e);
-    }
-  };
   useEffect(() => {
+    const fetchFoods = async () => {
+      try {
+        await dispatch(getFoods()).unwrap();
+      } catch (e) {
+        console.error(e);
+      }
+    };
     !isRefreshed ? fetchFoods() : null;
-  }, [isRefreshed]);
+  }, [isRefreshed, dispatch]);
   return (
     <>
       <Box sx={{ p: 2 }}>
@@ -71,6 +76,7 @@ const SearchFoodFreezer = () => {
               {...params}
               variant="standard"
               label="BUSCAR ALIMENTO"
+              onClick={() => dispatch(eraseSucessAlert())}
               InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
             />
           )}

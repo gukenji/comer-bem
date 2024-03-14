@@ -1,31 +1,87 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../store/store";
 import { getFreezer } from "../store/features/freezerSlice";
-import Stack from "@mui/material/Stack";
-import Box from "@mui/material/Box";
-import { Divider } from "@mui/material";
-import Typography from "@mui/material/Typography";
 import { IGetFood } from "../interfaces/FoodInterfaces";
-import EditNoteIcon from "@mui/icons-material/EditNote";
-import DeleteIcon from "@mui/icons-material/Delete";
-import LocalDiningIcon from "@mui/icons-material/LocalDining";
-
+import {
+  Stack,
+  Box,
+  Typography,
+  Divider,
+  Pagination,
+  MenuItem,
+  FormControl,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
+import { EditNote, Delete, LocalDining } from "@mui/icons-material";
+import { quickSort } from "../utils/quickSort";
+import { IFetchFreezer } from "../interfaces/FreezerInterfaces";
 const MyFreezer = () => {
   const my_freezer = useAppSelector((state) => state.freezer.food_list);
-  const isRefreshed = useAppSelector((state) => state.freezer.refreshed);
+  const [sortedFreezer, setSortedFreezer] = useState<IFetchFreezer[] | null>(
+    null
+  );
+  const [currentFoods, setCurrentFoods] = useState<IFetchFreezer[] | null>(
+    null
+  );
+  const [index, setIndex] = useState(0);
+  const [page, setPage] = useState(1);
+  const [foodsPerPage, setFoodsPerPage] = useState<number>(5);
 
-  const dispatch = useAppDispatch();
-  const fetchFreezer = async () => {
-    try {
-      await dispatch(getFreezer()).unwrap();
-    } catch (e) {
-      console.error(e);
-    }
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
+    setIndex((prev) => (value - 1) * foodsPerPage);
   };
 
+  const isRefreshed = useAppSelector((state) => state.freezer.refreshed);
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
+    const fetchFreezer = async () => {
+      try {
+        await dispatch(getFreezer()).unwrap();
+      } catch (e) {
+        console.error(e);
+      }
+    };
     !isRefreshed ? fetchFreezer() : null;
-  }, [isRefreshed]);
+  }, [isRefreshed, dispatch]);
+
+  useEffect(() => {
+    isRefreshed
+      ? setSortedFreezer(quickSort(my_freezer as IFetchFreezer[]))
+      : null;
+  }, [isRefreshed, my_freezer]);
+
+  useEffect(() => {
+    const selectedFoods = sortedFreezer?.slice(
+      (page - 1) * foodsPerPage,
+      page * foodsPerPage
+    );
+    if (selectedFoods !== undefined) {
+      setCurrentFoods(selectedFoods);
+    }
+  }, [page, foodsPerPage, sortedFreezer]);
+
+  const handleFoodsPerPage = (e: SelectChangeEvent<number>) => {
+    (e.target.value as number) >= 1
+      ? setFoodsPerPage((prev) => e.target.value as number)
+      : null;
+  };
+  useEffect(() => {
+    const new_page =
+      foodsPerPage > 1
+        ? Math.ceil(
+            index % foodsPerPage == 0
+              ? index / foodsPerPage + 1
+              : index / foodsPerPage
+          )
+        : Math.ceil(index / foodsPerPage + 1);
+    setPage((prev) => (new_page > 0 ? new_page : 1));
+  }, [foodsPerPage]);
 
   const calculateMacros = (input_quantity: number, food: IGetFood | null) => {
     const carbs: string = food
@@ -50,12 +106,80 @@ const MyFreezer = () => {
   };
   return (
     <>
-      {my_freezer ? (
-        my_freezer.map((props) => {
+      <Stack spacing={2}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            <Typography sx={{ fontFamily: "VT323" }}>
+              ALIMENTOS POR PÁGINA:
+            </Typography>
+            <FormControl sx={{ m: 1 }}>
+              <Select
+                variant="standard"
+                labelId="demo-simple-select-autowidth-label"
+                id="demo-simple-select-autowidth"
+                value={foodsPerPage}
+                onChange={handleFoodsPerPage}
+                autoWidth
+                sx={{ fontFamily: "VT323", fontSize: 20 }}
+              >
+                <MenuItem style={{ fontFamily: "VT323" }} value={1}>
+                  1
+                </MenuItem>
+                <MenuItem style={{ fontFamily: "VT323" }} value={2}>
+                  2
+                </MenuItem>
+                <MenuItem style={{ fontFamily: "VT323" }} value={5}>
+                  5
+                </MenuItem>
+                <MenuItem style={{ fontFamily: "VT323" }} value={10}>
+                  10
+                </MenuItem>
+                <MenuItem style={{ fontFamily: "VT323" }} value={15}>
+                  15
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          <Typography
+            sx={{ textAlign: "end", fontFamily: "VT323", fontSize: 18 }}
+          >
+            PÁGINA {page}
+          </Typography>
+        </Box>
+        <Pagination
+          sx={{ display: "flex", justifyContent: "flex-end" }}
+          size="small"
+          count={Math.ceil((sortedFreezer?.length as number) / foodsPerPage)}
+          page={page}
+          onChange={handlePageChange}
+        />
+      </Stack>
+      {currentFoods ? (
+        currentFoods.map((props) => {
           return (
-            <>
+            <div key={Math.random()}>
               <Divider />
-              <Box sx={{ p: 1 }}>
+              <Box
+                sx={{
+                  p: 1,
+                  borderLeft: 3,
+                  borderColor: "green",
+                  marginBottom: 0.5,
+                  marginTop: 0.5,
+                }}
+              >
                 <Stack
                   direction="row"
                   justifyContent="space-between"
@@ -195,13 +319,13 @@ const MyFreezer = () => {
                       gap: 3,
                     }}
                   >
-                    <EditNoteIcon />
-                    <DeleteIcon />
-                    <LocalDiningIcon />
+                    <EditNote />
+                    <Delete />
+                    <LocalDining />
                   </Box>
                 </Box>
               </Box>
-            </>
+            </div>
           );
         })
       ) : (

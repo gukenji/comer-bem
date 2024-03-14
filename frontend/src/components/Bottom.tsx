@@ -1,18 +1,12 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import BottomNavigation from "@mui/material/BottomNavigation";
-import HomeIcon from "@mui/icons-material/Home";
-import Paper from "@mui/material/Paper";
-import PieChartIcon from "@mui/icons-material/PieChart";
+import { Box, CssBaseline, BottomNavigation, Paper } from "@mui/material";
+import { PieChart, ViewList, Home, Kitchen } from "@mui/icons-material";
 import "../main.css";
-import ViewListIcon from "@mui/icons-material/ViewList";
 import { useNavigate } from "react-router-dom";
 import { BottomNavigationActionHome } from "../styles/BottomNavigationActionHome";
 import { BottomNavigationActionFoods } from "../styles/BottomNavigationActionFoods";
 import { BottomNavigationActionMeals } from "../styles/BottomNavigationActionMeals";
 import { BottomNavigationActionStatistics } from "../styles/BottomNavigationActionStatistics";
-import KitchenIcon from "@mui/icons-material/Kitchen";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { selectTab } from "../store/features/authSlice";
 export default function FixedBottomNavigation() {
@@ -54,22 +48,22 @@ export default function FixedBottomNavigation() {
         >
           <BottomNavigationActionHome
             label="HOME"
-            icon={<HomeIcon />}
+            icon={<Home />}
             onClick={linkHome}
           />
           <BottomNavigationActionFoods
             label="ALIMENTOS"
-            icon={<KitchenIcon />}
+            icon={<Kitchen />}
             onClick={linkFoods}
           />
           <BottomNavigationActionMeals
             label="REFEIÇÕES"
-            icon={<ViewListIcon />}
+            icon={<ViewList />}
             onClick={linkMeals}
           />
           <BottomNavigationActionStatistics
             label="ESTATÍSTICAS"
-            icon={<PieChartIcon />}
+            icon={<PieChart />}
             onClick={linkStatistics}
           />
         </BottomNavigation>

@@ -1,29 +1,33 @@
-import React, { useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "../store/store";
-import Typography from "@mui/material/Typography";
-import Accordion, { AccordionSlots } from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Fade from "@mui/material/Fade";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { styled } from "@mui/material/styles";
-import Tooltip from "@mui/material/Tooltip";
-import InfoIcon from "@mui/icons-material/Info";
-import IconButton from "@mui/material/IconButton";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
-import Box from "@mui/material/Box";
+import React from "react";
 import MyFreezer from "./MyFreezer";
 import SearchFoodFreezer from "./SearchFoodFreezer";
 import IncludeToFreezer from "./IncludeToFreezer";
-import Tab from "@mui/material/Tab";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
+import { useAppSelector, useAppDispatch } from "../store/store";
+import { useEffect } from "react";
+import { Info, ExpandMore } from "@mui/icons-material";
+import { eraseSucessAlert } from "../store/features/freezerSlice";
+import {
+  Box,
+  styled,
+  ClickAwayListener,
+  Fade,
+  Accordion,
+  Tooltip,
+  Tab,
+  AccordionSlots,
+  AccordionSummary,
+  Typography,
+  IconButton,
+} from "@mui/material";
+import { TabList, TabPanel, TabContext } from "@mui/lab";
+import AlertInput from "./AlertInput";
 
 const Freezer = () => {
   const [open, setOpen] = React.useState(false);
   const [expanded, setExpanded] = React.useState(false);
   const [value, setValue] = React.useState("1");
+  const dispatch = useAppDispatch();
+  const success = useAppSelector((state) => state.freezer.success);
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -61,6 +65,13 @@ const Freezer = () => {
     setExpanded((prevExpanded) => !prevExpanded);
   };
 
+  useEffect(() => {
+    success == true
+      ? setTimeout(() => {
+          dispatch(eraseSucessAlert());
+        }, 6000)
+      : null;
+  }, [success, dispatch]);
   return (
     <Accordion
       expanded={expanded}
@@ -76,7 +87,7 @@ const Freezer = () => {
       }}
     >
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon onClick={handleExpansion} />}
+        expandIcon={<ExpandMore onClick={handleExpansion} />}
         aria-controls="panel1-content"
         id="panel1-header"
         sx={{ maxHeight: 64, minHeight: 30 }}
@@ -96,7 +107,7 @@ const Freezer = () => {
             arrow
           >
             <IconButton onClick={handleTooltipOpen}>
-              <InfoIcon />
+              <Info />
             </IconButton>
           </Tooltip>
         </ClickAwayListener>
@@ -138,6 +149,7 @@ const Freezer = () => {
           </TabList>
         </Box>
         <TabPanel value="1">
+          <AlertInput result={success} />
           <SearchFoodFreezer />
           <IncludeToFreezer />
         </TabPanel>

@@ -1,15 +1,17 @@
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
 import { useAppSelector, useAppDispatch } from "../store/store";
-import { Container, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import LinearProgress, {
-  linearProgressClasses,
-} from "@mui/material/LinearProgress";
 import kcal_pic from "../assets/kcal.png";
 import level_pic from "../assets/level.png";
 import Avatar from "./Avatar";
+import {
+  Box,
+  styled,
+  Container,
+  Toolbar,
+  AppBar,
+  LinearProgress,
+  linearProgressClasses,
+  Typography,
+} from "@mui/material";
 export default function Header() {
   const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
   const consumed_kcal = 1000;

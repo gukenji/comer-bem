@@ -6,7 +6,16 @@ import mealsSlice from "./features/mealsSlice";
 import foodsSlice from "./features/foodsSlice";
 import freezerSlice from "./features/freezerSlice";
 import storage from "redux-persist/lib/storage";
-import { persistReducer } from "redux-persist";
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
 
 const reducers = combineReducers({
   auth: authSlice,
@@ -17,12 +26,20 @@ const reducers = combineReducers({
 
 const persistConfig = {
   key: "root",
+  whitelist: ["auth"],
   storage,
 };
+
 const persistedReducer = persistReducer(persistConfig, reducers);
 
 export const store = configureStore({
   reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -1,20 +1,15 @@
 import React from "react";
-import { useState } from "react";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { getFoods } from "../store/features/foodsSlice";
-import { useEffect, useRef } from "react";
-import BackupIcon from "@mui/icons-material/Backup";
-import { includeToFreezer } from "../store/features/freezerSlice";
+import {
+  eraseSucessAlert,
+  includeToFreezer,
+} from "../store/features/freezerSlice";
 import { IIncludeToFreezer } from "../interfaces/FreezerInterfaces";
 import { IGetFood } from "../interfaces/FoodInterfaces";
 import { selectFood, selectQuantity } from "../store/features/freezerSlice";
-
 import {
   Box,
-  Alert,
-  Divider,
+  CardActions,
   Typography,
   Button,
   Table,
@@ -33,11 +28,9 @@ import {
 
 const IncludeToFreezer = () => {
   const quantity = useAppSelector((state) => state.freezer.value);
-  const [formResult, setFormResult] = useState<boolean | null>(null);
   const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
+  const success = useAppSelector((state) => state.freezer.success);
   const dispatch = useAppDispatch();
-  const [showNutritionalInfo, setShowNutritionalInfo] =
-    useState<boolean>(false);
   const food = useAppSelector((state) => state.freezer.food);
   const handleQuantityInput = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -63,15 +56,11 @@ const IncludeToFreezer = () => {
         quantity: quantity as number,
       };
       await dispatch(includeToFreezer(new_food)).unwrap();
-      setFormResult(true);
       clearForm();
     } catch (e) {
-      setFormResult(false);
+      console.log(e);
     }
   };
-  useEffect(() => {
-    food ? setShowNutritionalInfo(true) : setShowNutritionalInfo(false);
-  }, [food]);
 
   const calculateMacros = (input_quantity: number, food: IGetFood | null) => {
     const carbs: string = food
@@ -95,14 +84,31 @@ const IncludeToFreezer = () => {
     return macros;
   };
   return (
-    <Card variant="outlined" sx={{ p: 2, display: food ? "inherit" : "none" }}>
+    <Card
+      sx={{
+        display: food ? "inherit" : "none",
+        border: "none",
+        boxShadow: "none",
+      }}
+    >
       <Box sx={{ p: 1, display: "flex", justifyContent: "flex-end" }}>
         <FormControl variant="standard">
+          {success == false ? (
+            <FormHelperText
+              id="standard-weight-helper-text"
+              sx={{ color: "red", fontFamily: "VT323" }}
+            >
+              PREENCHA ESTE CAMPO
+            </FormHelperText>
+          ) : null}
+
           <Input
             onChange={handleQuantityInput}
+            onFocus={() => dispatch(eraseSucessAlert())}
             value={quantity}
             type="number"
             id="standard-adornment-weight"
+            required
             endAdornment={
               <InputAdornment position="end">
                 <Typography sx={{ fontFamily: "VT323", fontSize: 25 }}>
@@ -111,10 +117,12 @@ const IncludeToFreezer = () => {
               </InputAdornment>
             }
             aria-describedby="standard-weight-helper-text"
-            sx={{ fontFamily: "VT323", fontSize: 20 }}
-            inputProps={{
-              "aria-label": "weight",
+            sx={{
+              fontFamily: "VT323",
+              fontSize: 20,
+              width: 100,
             }}
+            inputProps={{ style: { textAlign: "end" } }}
           />
           <FormHelperText
             id="standard-weight-helper-text"
@@ -124,7 +132,6 @@ const IncludeToFreezer = () => {
           </FormHelperText>
         </FormControl>
       </Box>
-      <Divider />
       <Box sx={{ width: "auto" }}>
         <TableContainer component={Paper}>
           <Typography
@@ -290,14 +297,14 @@ const IncludeToFreezer = () => {
           </Table>
         </TableContainer>
       </Box>
-      <Button
-        variant="outlined"
-        endIcon={<BackupIcon />}
-        sx={{ width: "50%", display: "flex", margin: "0 auto", mt: 3 }}
-        onClick={handleIncludeToFreezer}
-      >
-        CADASTRAR
-      </Button>
+      <CardActions>
+        <Button
+          sx={{ fontFamily: "VT323", margin: "0 auto", fontSize: 22 }}
+          onClick={handleIncludeToFreezer}
+        >
+          CADASTRAR
+        </Button>
+      </CardActions>
     </Card>
   );
 };

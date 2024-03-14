@@ -5,7 +5,7 @@ import { IFood, IFoodList } from "../../interfaces/FoodInterfaces";
 const initialState: IFoodList = {
   food_list: null,
   error: null,
-  refreshed: true,
+  refreshed: false,
 };
 
 export const createFood = createAsyncThunk(

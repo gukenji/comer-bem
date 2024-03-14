@@ -1,25 +1,29 @@
 import * as React from "react";
 import { useEffect } from "react";
-import Accordion, { AccordionSlots } from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import Fade from "@mui/material/Fade";
-import { Button, Box, TextField, Container } from "@mui/material";
-import BackupIcon from "@mui/icons-material/Backup";
-import { styled } from "@mui/material/styles";
+import {
+  Accordion,
+  AccordionSlots,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  Radio,
+  RadioGroup,
+  Fade,
+  Button,
+  Box,
+  TextField,
+  styled,
+  FormControlLabel,
+  FormLabel,
+  Tooltip,
+  IconButton,
+  Alert,
+  ClickAwayListener,
+} from "@mui/material";
+import { ExpandMore, Backup, Info } from "@mui/icons-material";
 import { createFood } from "../store/features/foodsSlice";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormLabel from "@mui/material/FormLabel";
 import { IFood } from "../interfaces/FoodInterfaces";
-import Tooltip from "@mui/material/Tooltip";
-import InfoIcon from "@mui/icons-material/Info";
-import IconButton from "@mui/material/IconButton";
-import Alert from "@mui/material/Alert";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
+import AlertInput from "./AlertInput";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { useState, useRef } from "react";
 export default function NewFood() {
@@ -136,7 +140,7 @@ export default function NewFood() {
         }}
       >
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon onClick={handleExpansion} />}
+          expandIcon={<ExpandMore onClick={handleExpansion} />}
           aria-controls="panel1-content"
           id="panel1-header"
           sx={{ maxHeight: 64, minHeight: 30 }}
@@ -157,7 +161,7 @@ export default function NewFood() {
               arrow
             >
               <IconButton onClick={handleTooltipOpen}>
-                <InfoIcon />
+                <Info />
               </IconButton>
             </Tooltip>
           </ClickAwayListener>
@@ -176,23 +180,7 @@ export default function NewFood() {
             sx={{ display: "flex", flexDirection: "column", p: 1 }}
             onChange={() => setFormResult(null)}
           >
-            {formResult ? (
-              <Alert
-                severity="success"
-                sx={{ mt: 2, fontFamily: "VT323", fontSize: 15 }}
-              >
-                ALIMENTO CADASTRADO COM SUCESSO!
-              </Alert>
-            ) : formResult == false ? (
-              <Alert
-                severity="error"
-                sx={{ mt: 2, fontFamily: "VT323", fontSize: 15 }}
-              >
-                ERRO AO CADASTRAR ALIMENTO!
-              </Alert>
-            ) : (
-              <></>
-            )}
+            <AlertInput result={formResult} />
             <TextField
               fullWidth
               id="brand"
@@ -426,7 +414,7 @@ export default function NewFood() {
             />
             <Button
               variant="outlined"
-              endIcon={<BackupIcon />}
+              endIcon={<Backup />}
               sx={{ width: "50%", alignSelf: "center", mt: 3 }}
               onClick={handleCreateFood}
             >

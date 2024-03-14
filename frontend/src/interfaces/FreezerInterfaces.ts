@@ -1,4 +1,4 @@
-import { IFood, IGetFood } from "./FoodInterfaces";
+import { IGetFood } from "./FoodInterfaces";
 
 export interface IIncludeToFreezer {
   user: number | undefined;
