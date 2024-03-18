@@ -20,9 +20,11 @@ const SearchFoodFreezer = () => {
   const [inputValue, setInputValue] = useState("");
   const isRefreshed = useAppSelector((state) => state.foods.refreshed);
   const foods = useAppSelector((state) => state.foods.food_list);
-  const food = useAppSelector((state) => state.freezer.food);
-  const my_freezer = useAppSelector((state) => state.freezer.food_list);
-  const isFreezerRefreshed = useAppSelector((state) => state.freezer.refreshed);
+  const food = useAppSelector((state) => state.inventory.food);
+  const my_freezer = useAppSelector((state) => state.inventory.food_list);
+  const isFreezerRefreshed = useAppSelector(
+    (state) => state.inventory.refreshed
+  );
   const [foodExist, setFoodExist] = useState(false);
 
   const checkIfFoodExist = (key: number) => {
@@ -54,6 +56,10 @@ const SearchFoodFreezer = () => {
     !isFreezerRefreshed ? fetchFreezer() : null;
   }, [!isFreezerRefreshed, dispatch]);
 
+  useEffect(() => {
+    food ? checkIfFoodExist(food.id) : setFoodExist(false);
+  }, [food]);
+
   const helperText = (
     <Box>
       <FormHelperText
@@ -70,10 +76,6 @@ const SearchFoodFreezer = () => {
       </FormHelperText>
     </Box>
   );
-
-  useEffect(() => {
-    food ? checkIfFoodExist(food.id) : setFoodExist(false);
-  }, [food]);
 
   return (
     <>

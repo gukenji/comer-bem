@@ -17,7 +17,7 @@ import { EditNote, Delete, LocalDining } from "@mui/icons-material";
 import { quickSort } from "../utils/quickSort";
 import { IFetchInventory } from "../interfaces/InventoryInterfaces";
 const MyInventory = () => {
-  const my_freezer = useAppSelector((state) => state.freezer.food_list);
+  const my_freezer = useAppSelector((state) => state.inventory.food_list);
   const [sortedFreezer, setSortedFreezer] = useState<IFetchInventory[] | null>(
     null
   );
@@ -27,7 +27,7 @@ const MyInventory = () => {
   const [index, setIndex] = useState(0);
   const [page, setPage] = useState(1);
   const [foodsPerPage, setFoodsPerPage] = useState<number>(5);
-  const isRefreshed = useAppSelector((state) => state.freezer.refreshed);
+  const isRefreshed = useAppSelector((state) => state.inventory.refreshed);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,

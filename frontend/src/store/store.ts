@@ -21,7 +21,7 @@ const reducers = combineReducers({
   auth: authSlice,
   meals: mealsSlice,
   foods: foodsSlice,
-  freezer: inventorySlice,
+  inventory: inventorySlice,
 });
 
 const persistConfig = {

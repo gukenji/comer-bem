@@ -28,7 +28,7 @@ const Inventory = () => {
   const [expanded, setExpanded] = React.useState(false);
   const [value, setValue] = React.useState("1");
   const dispatch = useAppDispatch();
-  const success = useAppSelector((state) => state.freezer.success);
+  const success = useAppSelector((state) => state.inventory.success);
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };

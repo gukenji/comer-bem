@@ -5,6 +5,7 @@ import {
   IGetInventory,
   IIncludeToInventory,
   IInputQuantity,
+  IUpdateToInventory,
 } from "../../interfaces/InventoryInterfaces";
 import { IGetFood } from "../../interfaces/FoodInterfaces";
 
@@ -18,7 +19,7 @@ const initialState: IGetInventory &
   success: null,
 };
 
-export const getInventory = createAsyncThunk("get_my_freezer", async () => {
+export const getInventory = createAsyncThunk("get_my_inventory", async () => {
   const response = await axiosInstance.get("/inventory/get/");
   const resData = response.data;
   return resData;
@@ -28,6 +29,18 @@ export const includeToInventory = createAsyncThunk(
   "include_to_inventory",
   async (data: IIncludeToInventory) => {
     const response = await axiosInstance.post("/inventory/include/", data);
+    const resData = response.data;
+    return resData;
+  }
+);
+
+export const updateInventory = createAsyncThunk(
+  "update_inventory",
+  async (data: IUpdateToInventory) => {
+    const response = await axiosInstance.post(
+      `/inventory/update/${data.id}/`,
+      data
+    );
     const resData = response.data;
     return resData;
   }
@@ -45,6 +58,9 @@ const inventorySlice = createSlice({
     },
     eraseSucessAlert(state) {
       state.success = null;
+    },
+    resetRefresh(state) {
+      state.refreshed = false;
     },
   },
   extraReducers: (builder) => {
@@ -74,10 +90,21 @@ const inventorySlice = createSlice({
       )
       .addCase(includeToInventory.rejected, (state, action) => {
         state.success = false;
+      })
+      .addCase(updateInventory.pending, (state) => {})
+      .addCase(
+        updateInventory.fulfilled,
+        (state, action: PayloadAction<IFetchInventory[]>) => {
+          state.refreshed = false;
+          state.success = true;
+        }
+      )
+      .addCase(updateInventory.rejected, (state, action) => {
+        state.success = false;
       });
   },
 });
-export const { selectQuantity, selectFood, eraseSucessAlert } =
+export const { selectQuantity, selectFood, eraseSucessAlert, resetRefresh } =
   inventorySlice.actions;
 
 export default inventorySlice.reducer;

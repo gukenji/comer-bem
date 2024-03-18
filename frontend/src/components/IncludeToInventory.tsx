@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   eraseSucessAlert,
@@ -6,7 +6,11 @@ import {
 } from "../store/features/inventorySlice";
 import { IIncludeToInventory } from "../interfaces/InventoryInterfaces";
 import { IGetFood } from "../interfaces/FoodInterfaces";
-import { selectFood, selectQuantity } from "../store/features/inventorySlice";
+import {
+  selectFood,
+  selectQuantity,
+  updateInventory,
+} from "../store/features/inventorySlice";
 import {
   Box,
   CardActions,
@@ -25,13 +29,33 @@ import {
   Input,
   InputAdornment,
 } from "@mui/material";
+import { IFetchInventory } from "../interfaces/InventoryInterfaces";
 
 const IncludeToInventory = () => {
-  const quantity = useAppSelector((state) => state.freezer.value);
-  const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
-  const success = useAppSelector((state) => state.freezer.success);
   const dispatch = useAppDispatch();
-  const food = useAppSelector((state) => state.freezer.food);
+  const quantity = useAppSelector((state) => state.inventory.value);
+  const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
+  const success = useAppSelector((state) => state.inventory.success);
+  const selected_food = useAppSelector((state) => state.inventory.food);
+  const [foodExist, setFoodExist] = useState(false);
+  const my_inventory = useAppSelector((state) => state.inventory.food_list);
+
+  const checkIfFoodExist = (key: number) => {
+    const result = (my_inventory as IFetchInventory[]).some(
+      (item) => item.food.id === key
+    );
+    setFoodExist(result);
+  };
+
+  const getFoodAtInventory = (key: number) => {
+    const inventory = my_inventory?.find((x) => x.food.id === key);
+    return inventory;
+  };
+
+  useEffect(() => {
+    selected_food ? checkIfFoodExist(selected_food.id) : setFoodExist(false);
+  }, [selected_food]);
+
   const handleQuantityInput = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -48,17 +72,38 @@ const IncludeToInventory = () => {
     dispatch(selectFood(null));
   };
 
-  const handleIncludeToFreezer = async () => {
+  const updateToInventory = async () => {
+    try {
+      const inventory = getFoodAtInventory((selected_food as IGetFood).id);
+      const inventory_json = JSON.parse(JSON.stringify(inventory));
+      const updated_inventory = {
+        user: userProfileInfo?.user_id as number,
+        food: selected_food?.id as number,
+        quantity: inventory_json?.quantity + quantity,
+        id: inventory_json?.id,
+      };
+      await dispatch(updateInventory(updated_inventory)).unwrap();
+      clearForm();
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const addToInventory = async () => {
     try {
       const new_food: IIncludeToInventory = {
         user: userProfileInfo?.user_id,
-        food: food?.id as number,
+        food: selected_food?.id as number,
         quantity: quantity as number,
       };
       await dispatch(includeToInventory(new_food)).unwrap();
       clearForm();
     } catch (e) {
       console.log(e);
+    }
+  };
+  const handleIncludeToInventory = async () => {
+    {
+      foodExist ? updateToInventory() : addToInventory();
     }
   };
 
@@ -86,7 +131,7 @@ const IncludeToInventory = () => {
   return (
     <Card
       sx={{
-        display: food ? "inherit" : "none",
+        display: selected_food ? "inherit" : "none",
         border: "none",
         boxShadow: "none",
       }}
@@ -197,13 +242,13 @@ const IncludeToInventory = () => {
                   sx={{ fontFamily: "VT323", padding: 0 }}
                   align="center"
                 >
-                  {calculateMacros(quantity as number, food).kcal}
+                  {calculateMacros(quantity as number, selected_food).kcal}
                 </TableCell>
                 <TableCell
                   sx={{ fontFamily: "VT323", padding: 0 }}
                   align="center"
                 >
-                  {calculateMacros(100, food).kcal}
+                  {calculateMacros(100, selected_food).kcal}
                 </TableCell>
               </TableRow>
               <TableRow
@@ -226,13 +271,13 @@ const IncludeToInventory = () => {
                   sx={{ fontFamily: "VT323", padding: 0 }}
                   align="center"
                 >
-                  {calculateMacros(quantity as number, food).carbs}
+                  {calculateMacros(quantity as number, selected_food).carbs}
                 </TableCell>
                 <TableCell
                   sx={{ fontFamily: "VT323", padding: 0 }}
                   align="center"
                 >
-                  {calculateMacros(100, food).carbs}
+                  {calculateMacros(100, selected_food).carbs}
                 </TableCell>
               </TableRow>
               <TableRow
@@ -255,13 +300,13 @@ const IncludeToInventory = () => {
                   sx={{ fontFamily: "VT323", padding: 0 }}
                   align="center"
                 >
-                  {calculateMacros(quantity as number, food).protein}
+                  {calculateMacros(quantity as number, selected_food).protein}
                 </TableCell>
                 <TableCell
                   sx={{ fontFamily: "VT323", padding: 0 }}
                   align="center"
                 >
-                  {calculateMacros(100, food).protein}
+                  {calculateMacros(100, selected_food).protein}
                 </TableCell>
               </TableRow>
               <TableRow
@@ -284,13 +329,13 @@ const IncludeToInventory = () => {
                   sx={{ fontFamily: "VT323", padding: 0 }}
                   align="center"
                 >
-                  {calculateMacros(quantity as number, food).fat}
+                  {calculateMacros(quantity as number, selected_food).fat}
                 </TableCell>
                 <TableCell
                   sx={{ fontFamily: "VT323", padding: 0 }}
                   align="center"
                 >
-                  {calculateMacros(100, food).fat}
+                  {calculateMacros(100, selected_food).fat}
                 </TableCell>
               </TableRow>
             </TableBody>
@@ -300,7 +345,7 @@ const IncludeToInventory = () => {
       <CardActions>
         <Button
           sx={{ fontFamily: "VT323", margin: "0 auto", fontSize: 22 }}
-          onClick={handleIncludeToFreezer}
+          onClick={handleIncludeToInventory}
         >
           CADASTRAR
         </Button>

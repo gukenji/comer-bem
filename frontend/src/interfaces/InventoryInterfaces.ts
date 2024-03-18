@@ -5,6 +5,10 @@ export interface IIncludeToInventory {
   food: number;
   quantity: number;
 }
+export interface IUpdateToInventory extends IIncludeToInventory {
+  id: number;
+}
+
 export interface IGetInventory {
   food_list: IFetchInventory[] | null;
   error: string | null;

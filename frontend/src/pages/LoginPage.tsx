@@ -1,5 +1,6 @@
-import { useAppDispatch, useAppSelector } from "../store/store";
+import { useAppDispatch } from "../store/store";
 import { useState } from "react";
+import { resetRefresh } from "../store/features/inventorySlice";
 import { login } from "../store/features/authSlice";
 import { Link } from "react-router-dom";
 import {
@@ -26,6 +27,7 @@ const LoginPage = () => {
     if (email && password) {
       try {
         await dispatch(login({ email, password })).unwrap();
+        await dispatch(resetRefresh());
       } catch (e) {
         setError(true);
         console.log(e);

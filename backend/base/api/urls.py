@@ -13,5 +13,6 @@ urlpatterns = [
     path("foods/create/", views.createFood),
     path("inventory/get/", views.getInventory),
     path("inventory/include/", views.includeToInventory),
+    path("inventory/update/<str:pk>/", views.updateInventory),
     path("meals/get/", views.getMyMeals),
 ]

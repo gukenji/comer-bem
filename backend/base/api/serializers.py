@@ -31,5 +31,3 @@ class InventorySerializer(ModelSerializer):
     class Meta:
         model = Inventory
         fields = "__all__"
-
-    # def update(self, instance, validated_data):

@@ -9,7 +9,7 @@ from .serializers import (
     InventorySerializer,
     GetInventorySerializer,
 )
-from base.models import Food
+from base.models import Food, Inventory
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -39,6 +39,9 @@ def getRoutes(request):
         "/api/token/refresh",
         "/api/meals",
         "/api/foods",
+        "/api/inventory/get/",
+        "/api/inventory/include/<str:pk>/",
+        "/api/inventory/update/<str:pk>/",
     ]
     return Response(routes)
 
@@ -81,16 +84,26 @@ def getInventory(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def includeToInventory(request):
+    print(request.data)
     serializer = InventorySerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(serializer.data)
 
 
-@api_view(["PUT"])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def updateInventory(request):
-    serializer = InventorySerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response(serializer.data)
+def updateInventory(request, pk):
+    inventory = Inventory.objects.get(id=pk, user=request.user)
+    serializer = InventorySerializer(instance=inventory, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors)
+
+
+def checkFoodExist(data):
+    food_id = data["id"]
+    food_inventory = Inventory.objects.filter(id=food_id)
+    return True if food_inventory else False
