@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { getFoods } from "../store/features/foodsSlice";
 import { useEffect } from "react";
-import { getFreezer } from "../store/features/freezerSlice";
+import { getInventory } from "../store/features/inventorySlice";
 import { IGetFood } from "../interfaces/FoodInterfaces";
 import {
   Box,
@@ -11,9 +11,9 @@ import {
   Autocomplete,
   FormHelperText,
 } from "@mui/material";
-import { eraseSucessAlert, selectFood } from "../store/features/freezerSlice";
+import { eraseSucessAlert, selectFood } from "../store/features/inventorySlice";
 import { useState } from "react";
-import { IFetchFreezer } from "../interfaces/FreezerInterfaces";
+import { IFetchInventory } from "../interfaces/InventoryInterfaces";
 
 const SearchFoodFreezer = () => {
   const dispatch = useAppDispatch();
@@ -26,7 +26,7 @@ const SearchFoodFreezer = () => {
   const [foodExist, setFoodExist] = useState(false);
 
   const checkIfFoodExist = (key: number) => {
-    const result = (my_freezer as IFetchFreezer[]).some(
+    const result = (my_freezer as IFetchInventory[]).some(
       (item) => item.food.id === key
     );
     setFoodExist(result);
@@ -46,7 +46,7 @@ const SearchFoodFreezer = () => {
   useEffect(() => {
     const fetchFreezer = async () => {
       try {
-        await dispatch(getFreezer()).unwrap();
+        await dispatch(getInventory()).unwrap();
       } catch (e) {
         console.error(e);
       }

@@ -1,4 +1,4 @@
-import { IFetchFreezer } from "../interfaces/FreezerInterfaces";
+import { IFetchFreezer } from "../interfaces/InventoryInterfaces";
 
 export function quickSort(arr: IFetchFreezer[]): IFetchFreezer[] | null {
   if (arr == null) {

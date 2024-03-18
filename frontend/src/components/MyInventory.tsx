@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../store/store";
-import { getFreezer } from "../store/features/freezerSlice";
+import { getInventory } from "../store/features/inventorySlice";
 import { IGetFood } from "../interfaces/FoodInterfaces";
 import {
   Stack,
@@ -15,13 +15,13 @@ import {
 } from "@mui/material";
 import { EditNote, Delete, LocalDining } from "@mui/icons-material";
 import { quickSort } from "../utils/quickSort";
-import { IFetchFreezer } from "../interfaces/FreezerInterfaces";
-const MyFreezer = () => {
+import { IFetchInventory } from "../interfaces/InventoryInterfaces";
+const MyInventory = () => {
   const my_freezer = useAppSelector((state) => state.freezer.food_list);
-  const [sortedFreezer, setSortedFreezer] = useState<IFetchFreezer[] | null>(
+  const [sortedFreezer, setSortedFreezer] = useState<IFetchInventory[] | null>(
     null
   );
-  const [currentFoods, setCurrentFoods] = useState<IFetchFreezer[] | null>(
+  const [currentFoods, setCurrentFoods] = useState<IFetchInventory[] | null>(
     null
   );
   const [index, setIndex] = useState(0);
@@ -42,7 +42,7 @@ const MyFreezer = () => {
   useEffect(() => {
     const fetchFreezer = async () => {
       try {
-        await dispatch(getFreezer()).unwrap();
+        await dispatch(getInventory()).unwrap();
       } catch (e) {
         console.error(e);
       }
@@ -52,7 +52,7 @@ const MyFreezer = () => {
 
   useEffect(() => {
     isRefreshed
-      ? setSortedFreezer(quickSort(my_freezer as IFetchFreezer[]))
+      ? setSortedFreezer(quickSort(my_freezer as IFetchInventory[]))
       : null;
   }, [isRefreshed, my_freezer]);
 
@@ -335,4 +335,4 @@ const MyFreezer = () => {
   );
 };
 
-export default MyFreezer;
+export default MyInventory;

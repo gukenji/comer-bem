@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import authSlice from "./features/authSlice";
 import mealsSlice from "./features/mealsSlice";
 import foodsSlice from "./features/foodsSlice";
-import freezerSlice from "./features/freezerSlice";
+import inventorySlice from "./features/inventorySlice";
 import storage from "redux-persist/lib/storage";
 import {
   persistStore,
@@ -21,7 +21,7 @@ const reducers = combineReducers({
   auth: authSlice,
   meals: mealsSlice,
   foods: foodsSlice,
-  freezer: freezerSlice,
+  freezer: inventorySlice,
 });
 
 const persistConfig = {

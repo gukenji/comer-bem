@@ -70,7 +70,7 @@ class MyMeals(models.Model):
     quantity = models.FloatField(blank=False)
 
 
-class Freezer(models.Model):
+class Inventory(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
     food = models.ForeignKey(Food, on_delete=models.CASCADE, null=False, blank=False)
     quantity = models.FloatField(blank=True)

@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from base.models import Meal, Food, MyMeals, Freezer
+from base.models import Meal, Food, MyMeals, Inventory
 
 
 class FoodSerializer(ModelSerializer):
@@ -20,14 +20,16 @@ class MyMealsSerializer(ModelSerializer):
         fields = "__all__"
 
 
-class GetFreezerSerializer(ModelSerializer):
+class GetInventorySerializer(ModelSerializer):
     class Meta:
-        model = Freezer
+        model = Inventory
         fields = ["food", "id", "quantity"]
         depth = 1
 
 
-class FreezerSerializer(ModelSerializer):
+class InventorySerializer(ModelSerializer):
     class Meta:
-        model = Freezer
+        model = Inventory
         fields = "__all__"
+
+    # def update(self, instance, validated_data):

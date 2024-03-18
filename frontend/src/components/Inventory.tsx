@@ -1,11 +1,11 @@
 import React from "react";
-import MyFreezer from "./MyFreezer";
+import MyInventory from "./MyInventory";
 import SearchFoodFreezer from "./SearchFoodFreezer";
-import IncludeToFreezer from "./IncludeToFreezer";
+import IncludeToInventory from "./IncludeToInventory";
 import { useAppSelector, useAppDispatch } from "../store/store";
 import { useEffect } from "react";
 import { Info, ExpandMore } from "@mui/icons-material";
-import { eraseSucessAlert } from "../store/features/freezerSlice";
+import { eraseSucessAlert } from "../store/features/inventorySlice";
 import { AccordionSummaryStyled } from "../styles/AccordionSummaryStyled";
 import {
   Box,
@@ -23,7 +23,7 @@ import {
 import { TabList, TabPanel, TabContext } from "@mui/lab";
 import AlertInput from "./AlertInput";
 
-const Freezer = () => {
+const Inventory = () => {
   const [open, setOpen] = React.useState(false);
   const [expanded, setExpanded] = React.useState(false);
   const [value, setValue] = React.useState("1");
@@ -152,10 +152,10 @@ const Freezer = () => {
         <TabPanel value="1">
           <AlertInput result={success} />
           <SearchFoodFreezer />
-          <IncludeToFreezer />
+          <IncludeToInventory />
         </TabPanel>
         <TabPanel value="2">
-          <MyFreezer />
+          <MyInventory />
         </TabPanel>
         <TabPanel value="3">Item Three</TabPanel>
       </TabContext>
@@ -163,4 +163,4 @@ const Freezer = () => {
   );
 };
 
-export default Freezer;
+export default Inventory;

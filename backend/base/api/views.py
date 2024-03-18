@@ -6,8 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import (
     MealSerializer,
     FoodSerializer,
-    FreezerSerializer,
-    GetFreezerSerializer,
+    InventorySerializer,
+    GetInventorySerializer,
 )
 from base.models import Food
 
@@ -71,17 +71,26 @@ def getMyMeals(request):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-def getFreezer(request):
+def getInventory(request):
     user = request.user
-    freezer = user.freezer_set.all()
-    serializer = GetFreezerSerializer(freezer, many=True)
+    inventory = user.inventory_set.all()
+    serializer = GetInventorySerializer(inventory, many=True)
     return Response(serializer.data)
 
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
-def includeToFreezer(request):
-    serializer = FreezerSerializer(data=request.data)
+def includeToInventory(request):
+    serializer = InventorySerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data)
+
+
+@api_view(["PUT"])
+@permission_classes([IsAuthenticated])
+def updateInventory(request):
+    serializer = InventorySerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(serializer.data)

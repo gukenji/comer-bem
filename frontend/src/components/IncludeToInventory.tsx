@@ -2,11 +2,11 @@ import React from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   eraseSucessAlert,
-  includeToFreezer,
-} from "../store/features/freezerSlice";
-import { IIncludeToFreezer } from "../interfaces/FreezerInterfaces";
+  includeToInventory,
+} from "../store/features/inventorySlice";
+import { IIncludeToInventory } from "../interfaces/InventoryInterfaces";
 import { IGetFood } from "../interfaces/FoodInterfaces";
-import { selectFood, selectQuantity } from "../store/features/freezerSlice";
+import { selectFood, selectQuantity } from "../store/features/inventorySlice";
 import {
   Box,
   CardActions,
@@ -26,7 +26,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 
-const IncludeToFreezer = () => {
+const IncludeToInventory = () => {
   const quantity = useAppSelector((state) => state.freezer.value);
   const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
   const success = useAppSelector((state) => state.freezer.success);
@@ -50,12 +50,12 @@ const IncludeToFreezer = () => {
 
   const handleIncludeToFreezer = async () => {
     try {
-      const new_food: IIncludeToFreezer = {
+      const new_food: IIncludeToInventory = {
         user: userProfileInfo?.user_id,
         food: food?.id as number,
         quantity: quantity as number,
       };
-      await dispatch(includeToFreezer(new_food)).unwrap();
+      await dispatch(includeToInventory(new_food)).unwrap();
       clearForm();
     } catch (e) {
       console.log(e);
@@ -309,4 +309,4 @@ const IncludeToFreezer = () => {
   );
 };
 
-export default IncludeToFreezer;
+export default IncludeToInventory;
