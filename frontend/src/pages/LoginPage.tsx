@@ -121,7 +121,7 @@ const LoginPage = () => {
             {error && password.length < 1 ? helperText : <></>}
             <LoginButton
               fullWidth
-              className={error ? "error" : null}
+              className={error ? "error" : ""}
               disabled={
                 loading || password.length < 1 || email.length < 1
                   ? true

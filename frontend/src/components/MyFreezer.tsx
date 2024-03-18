@@ -27,6 +27,7 @@ const MyFreezer = () => {
   const [index, setIndex] = useState(0);
   const [page, setPage] = useState(1);
   const [foodsPerPage, setFoodsPerPage] = useState<number>(5);
+  const isRefreshed = useAppSelector((state) => state.freezer.refreshed);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -36,7 +37,6 @@ const MyFreezer = () => {
     setIndex((prev) => (value - 1) * foodsPerPage);
   };
 
-  const isRefreshed = useAppSelector((state) => state.freezer.refreshed);
   const dispatch = useAppDispatch();
 
   useEffect(() => {

@@ -6,6 +6,7 @@ import { useAppSelector, useAppDispatch } from "../store/store";
 import { useEffect } from "react";
 import { Info, ExpandMore } from "@mui/icons-material";
 import { eraseSucessAlert } from "../store/features/freezerSlice";
+import { AccordionSummaryStyled } from "../styles/AccordionSummaryStyled";
 import {
   Box,
   styled,
@@ -86,7 +87,7 @@ const Freezer = () => {
         },
       }}
     >
-      <AccordionSummary
+      <AccordionSummaryStyled
         expandIcon={<ExpandMore onClick={handleExpansion} />}
         aria-controls="panel1-content"
         id="panel1-header"
@@ -116,7 +117,7 @@ const Freezer = () => {
         >
           MEUS ALIMENTOS
         </TypographyStyled>
-      </AccordionSummary>
+      </AccordionSummaryStyled>
       <TabContext value={value}>
         <Box
           sx={{

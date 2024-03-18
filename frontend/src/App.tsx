@@ -33,8 +33,6 @@ function App() {
         </Container>
         <Bottom />
       </Router>
-      {/* <Add />
-      <List /> */}
     </div>
   );
 }

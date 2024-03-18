@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { getFoods } from "../store/features/foodsSlice";
 import { useEffect } from "react";
+import { getFreezer } from "../store/features/freezerSlice";
 import { IGetFood } from "../interfaces/FoodInterfaces";
 import {
   Box,
@@ -8,16 +9,28 @@ import {
   Typography,
   TextField,
   Autocomplete,
+  FormHelperText,
 } from "@mui/material";
 import { eraseSucessAlert, selectFood } from "../store/features/freezerSlice";
 import { useState } from "react";
+import { IFetchFreezer } from "../interfaces/FreezerInterfaces";
 
 const SearchFoodFreezer = () => {
+  const dispatch = useAppDispatch();
   const [inputValue, setInputValue] = useState("");
   const isRefreshed = useAppSelector((state) => state.foods.refreshed);
   const foods = useAppSelector((state) => state.foods.food_list);
   const food = useAppSelector((state) => state.freezer.food);
-  const dispatch = useAppDispatch();
+  const my_freezer = useAppSelector((state) => state.freezer.food_list);
+  const isFreezerRefreshed = useAppSelector((state) => state.freezer.refreshed);
+  const [foodExist, setFoodExist] = useState(false);
+
+  const checkIfFoodExist = (key: number) => {
+    const result = (my_freezer as IFetchFreezer[]).some(
+      (item) => item.food.id === key
+    );
+    setFoodExist(result);
+  };
 
   useEffect(() => {
     const fetchFoods = async () => {
@@ -29,6 +42,39 @@ const SearchFoodFreezer = () => {
     };
     !isRefreshed ? fetchFoods() : null;
   }, [isRefreshed, dispatch]);
+
+  useEffect(() => {
+    const fetchFreezer = async () => {
+      try {
+        await dispatch(getFreezer()).unwrap();
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    !isFreezerRefreshed ? fetchFreezer() : null;
+  }, [!isFreezerRefreshed, dispatch]);
+
+  const helperText = (
+    <Box>
+      <FormHelperText
+        id="standard-weight-helper-text"
+        sx={{ color: "red", fontFamily: "VT323", fontSize: 12 }}
+      >
+        ALIMENTO JÁ CADASTRADO EM SEU INVENTÁRIO.
+      </FormHelperText>
+      <FormHelperText
+        id="standard-weight-helper-text"
+        sx={{ color: "red", fontFamily: "VT323", fontSize: 12 }}
+      >
+        CADASTRA-LO NOVAMENTE SOMARA À QUANTIDADE EXISTENTE.
+      </FormHelperText>
+    </Box>
+  );
+
+  useEffect(() => {
+    food ? checkIfFoodExist(food.id) : setFoodExist(false);
+  }, [food]);
+
   return (
     <>
       <Box sx={{ p: 2 }}>
@@ -81,6 +127,7 @@ const SearchFoodFreezer = () => {
             />
           )}
         />
+        {foodExist ? helperText : <></>}
       </Box>
     </>
   );

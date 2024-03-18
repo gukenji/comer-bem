@@ -20,6 +20,7 @@ import {
   Alert,
   ClickAwayListener,
 } from "@mui/material";
+import { AccordionSummaryStyled } from "../styles/AccordionSummaryStyled";
 import { ExpandMore, Backup, Info } from "@mui/icons-material";
 import { createFood } from "../store/features/foodsSlice";
 import { IFood } from "../interfaces/FoodInterfaces";
@@ -139,13 +140,12 @@ export default function NewFood() {
           },
         }}
       >
-        <AccordionSummary
+        <AccordionSummaryStyled
           expandIcon={<ExpandMore onClick={handleExpansion} />}
           aria-controls="panel1-content"
           id="panel1-header"
           sx={{ maxHeight: 64, minHeight: 30 }}
         >
-          {" "}
           <ClickAwayListener onClickAway={handleTooltipClose}>
             <Tooltip
               PopperProps={{
@@ -170,7 +170,7 @@ export default function NewFood() {
           >
             CADASTRAR ALIMENTO{" "}
           </TypographyStyled>
-        </AccordionSummary>
+        </AccordionSummaryStyled>
         <AccordionDetails>
           <Box
             component="form"

@@ -21,6 +21,12 @@ html {
   --color-dark: #206;
   --radius: 0.25rem;
   font-family: "VT323";
+  cursor: url("./assets/cursor.png"), auto;
+}
+
+button:hover,
+ul > li:hover {
+  cursor: url("./assets/cursor_hovered.png"), auto;
 }
 
 body {
