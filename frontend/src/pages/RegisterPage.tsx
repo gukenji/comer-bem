@@ -108,14 +108,18 @@ const RegisterPage = () => {
             sx={{
               fontFamily: "VT323",
               fontSize: 30,
-              letterSpacing: 2,
-              paddingTop: 8,
+              letterSpacing: 5,
+              marginTop: 10,
+              paddingLeft: 2,
+              paddingRight: 2,
+              textShadow: "1px 1px 2px white, 0 0 1em blue, 0 0 0.2em yellow",
+              borderRadius: 1.5,
             }}
           >
             CRIAR USUÁRIO
           </Typography>
           {errorMessage}
-          <Box sx={{ mt: 1, width: "100%" }}>
+          <Box sx={{ mt: 1, width: "90%" }}>
             <TextField
               margin="normal"
               required
@@ -126,17 +130,27 @@ const RegisterPage = () => {
                   backgroundColor: "rgba(255,255,255,0)",
                 },
               }}
-              InputLabelProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
+              InputLabelProps={{
+                style: {
+                  fontFamily: "VT323",
+                  fontSize: 20,
+                  color: "rgba(0, 0, 0, 0.87)",
+                },
+              }}
               fullWidth
               id="email"
               label="EMAIL"
               name="email"
               sx={{
                 "& fieldset": { border: 0.1 },
+                "& input:focus": {
+                  boxShadow: "2.6px 5.3px 5.3px hsl(0deg 0% 0% / 0.42)",
+                },
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
                     borderColor: "black",
                   },
+
                   "&:hover fieldset": {
                     borderColor: "black",
                   },
@@ -165,7 +179,13 @@ const RegisterPage = () => {
                   backgroundColor: "rgba(255,255,255,0)",
                 },
               }}
-              InputLabelProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
+              InputLabelProps={{
+                style: {
+                  fontFamily: "VT323",
+                  fontSize: 20,
+                  color: "rgba(0, 0, 0, 0.87)",
+                },
+              }}
               id="password"
               name="password"
               label="SENHA"
@@ -173,6 +193,9 @@ const RegisterPage = () => {
               value={password}
               sx={{
                 "& fieldset": { border: 0.1 },
+                "& input:focus": {
+                  boxShadow: "2.6px 5.3px 5.3px hsl(0deg 0% 0% / 0.42)",
+                },
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
                     borderColor: "black",
@@ -203,13 +226,22 @@ const RegisterPage = () => {
                   backgroundColor: "rgba(255,255,255,0)",
                 },
               }}
-              InputLabelProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
+              InputLabelProps={{
+                style: {
+                  fontFamily: "VT323",
+                  fontSize: 20,
+                  color: "rgba(0, 0, 0, 0.87)",
+                },
+              }}
               id="password_confirmation"
               name="password_confirmation"
               label="CONFIRME A SENHA"
               type="password"
               sx={{
                 "& fieldset": { border: 0.1 },
+                "& input:focus": {
+                  boxShadow: "2.6px 5.3px 5.3px hsl(0deg 0% 0% / 0.42)",
+                },
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
                     borderColor: "black",

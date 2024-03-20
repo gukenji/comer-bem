@@ -94,14 +94,18 @@ const LoginPage = () => {
             sx={{
               fontFamily: "VT323",
               fontSize: 30,
-              letterSpacing: 2,
-              paddingTop: 8,
+              letterSpacing: 5,
+              marginTop: 10,
+              paddingLeft: 2,
+              paddingRight: 2,
+              textShadow: "1px 1px 2px white, 0 0 1em blue, 0 0 0.2em yellow",
+              borderRadius: 1.5,
             }}
           >
             LOGIN
           </Typography>
           {errorMessage}
-          <Box sx={{ mt: 1, width: "100%" }}>
+          <Box sx={{ mt: 1, width: "90%" }}>
             <TextField
               margin="normal"
               required
@@ -112,7 +116,13 @@ const LoginPage = () => {
                   backgroundColor: "rgba(255,255,255,0)",
                 },
               }}
-              InputLabelProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
+              InputLabelProps={{
+                style: {
+                  fontFamily: "VT323",
+                  fontSize: 20,
+                  color: "rgba(0, 0, 0, 0.87)",
+                },
+              }}
               fullWidth
               id="email"
               label="EMAIL"
@@ -121,6 +131,9 @@ const LoginPage = () => {
               value={email}
               sx={{
                 "& fieldset": { border: 0.1 },
+                "& input:focus": {
+                  boxShadow: "2.6px 5.3px 5.3px hsl(0deg 0% 0% / 0.42)",
+                },
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
                     borderColor: "black",
@@ -154,6 +167,9 @@ const LoginPage = () => {
               }}
               sx={{
                 "& fieldset": { border: 0.1 },
+                "& input:focus": {
+                  boxShadow: "2.6px 5.3px 5.3px hsl(0deg 0% 0% / 0.42)",
+                },
                 "& .MuiOutlinedInput-root": {
                   "& fieldset": {
                     borderColor: "black",
@@ -167,7 +183,13 @@ const LoginPage = () => {
                   },
                 },
               }}
-              InputLabelProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
+              InputLabelProps={{
+                style: {
+                  fontFamily: "VT323",
+                  fontSize: 20,
+                  color: "rgba(0, 0, 0, 0.87)",
+                },
+              }}
               id="password"
               name="password"
               label="SENHA"
