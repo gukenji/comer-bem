@@ -16,7 +16,6 @@ import {
 import { LoginButton } from "../styles/LoginButton";
 import Certificate from "../assets/certificate.png";
 import { ReactTyped } from "react-typed";
-import { IJWTDecode } from "../interfaces/AuthInterfaces";
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
@@ -39,11 +38,11 @@ const LoginPage = () => {
       } else {
         setError(true);
       }
-    }, 2000);
+    }, email.split("@")[0].length * 180);
 
     setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, email.split("@")[0].length * 150);
   };
 
   const helperText = (
@@ -82,7 +81,7 @@ const LoginPage = () => {
         <CssBaseline />
         <Box
           sx={{
-            mt: 20,
+            mt: 15,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -242,12 +241,21 @@ const LoginPage = () => {
                     display: "flex",
                     flex: 1,
                     gap: 3,
+                    overflow: "hidden",
                   }}
                 >
                   <span>X</span>
                   <ReactTyped
-                    strings={[email]}
-                    style={{ color: "black", transparency: 1 }}
+                    strings={[email.split("@")[0]]}
+                    style={{
+                      color: "black",
+                      transparency: 1,
+                      width: "100%",
+                      overflowX: "hidden",
+                      textOverflow: " [...]",
+                      whitespace: "nowrap",
+                      direction: "rtl",
+                    }}
                     typeSpeed={70}
                     showCursor={false}
                   />
