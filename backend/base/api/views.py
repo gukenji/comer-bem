@@ -8,8 +8,9 @@ from .serializers import (
     FoodSerializer,
     InventorySerializer,
     GetInventorySerializer,
+    RegistrationSerializer,
 )
-from base.models import Food, Inventory
+from base.models import Food, Inventory, User
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -24,12 +25,32 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token["age"] = user.age
         token["is_male"] = user.is_male
         token["level"] = user.level
-
         return token
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+@api_view(["POST"])
+def registration_view(request):
+    if request.method == "POST":
+        print("==========")
+        print(request.data)
+        print("==========")
+        serializer = RegistrationSerializer(data=request.data)
+        print(serializer)
+        print("==========")
+        data = {}
+        if serializer.is_valid():
+            serializer.save()
+            user = User.objects.get(email=request.data["email"])
+            data["response"] = "usuário registrado com sucesso!"
+            data["email"] = user.email
+            data["name"] = user.name
+        else:
+            data = serializer.errors
+        return Response(data)
 
 
 @api_view(["GET"])

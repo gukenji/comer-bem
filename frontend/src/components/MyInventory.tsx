@@ -81,7 +81,7 @@ const MyInventory = () => {
           )
         : Math.ceil(index / foodsPerPage + 1);
     setPage((prev) => (new_page > 0 ? new_page : 1));
-  }, [foodsPerPage]);
+  }, [foodsPerPage, index]);
 
   const calculateMacros = (input_quantity: number, food: IGetFood | null) => {
     const carbs: string = food

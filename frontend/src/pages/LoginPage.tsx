@@ -14,8 +14,10 @@ import {
   FormHelperText,
   CircularProgress,
 } from "@mui/material";
-import { PadlockIcon } from "../styles/PadlockIcon";
+import PadlockIcon from "../styles/PadlockIcon";
 import { LoginButton } from "../styles/LoginButton";
+import Certificate from "../assets/certificate.png";
+
 const LoginPage = () => {
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");
@@ -71,17 +73,31 @@ const LoginPage = () => {
     <Box>
       <Container maxWidth="xs">
         <CssBaseline />
-
         <Box
           sx={{
             mt: 20,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            borderRadius: 0.5,
+            padding: 3,
+            paddingBottom: 15,
+            boxShadow: "2.6px 5.3px 5.3px hsl(0deg 0% 0% / 0.42)",
+            backgroundImage: `url(${Certificate})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "100% 100%",
+            opacity: 1,
           }}
         >
-          <PadlockIcon fontSize="large" />
-          <Typography variant="h5" sx={{ fontFamily: "VT323" }}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontFamily: "VT323",
+              fontSize: 30,
+              letterSpacing: 2,
+              paddingTop: 8,
+            }}
+          >
             LOGIN
           </Typography>
           {errorMessage}
@@ -89,14 +105,35 @@ const LoginPage = () => {
             <TextField
               margin="normal"
               required
-              inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
+              inputProps={{
+                style: {
+                  fontFamily: "VT323",
+                  fontSize: 20,
+                  backgroundColor: "rgba(255,255,255,0)",
+                },
+              }}
               InputLabelProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
               fullWidth
               id="email"
-              label="Email"
+              label="EMAIL"
               name="email"
               autoFocus
               value={email}
+              sx={{
+                "& fieldset": { border: 0.1 },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "black",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "black",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "black",
+                    border: 1,
+                  },
+                },
+              }}
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
@@ -108,11 +145,32 @@ const LoginPage = () => {
               margin="normal"
               required
               fullWidth
-              inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
+              inputProps={{
+                style: {
+                  fontFamily: "VT323",
+                  fontSize: 20,
+                  backgroundColor: "rgba(255,255,255,0)",
+                },
+              }}
+              sx={{
+                "& fieldset": { border: 0.1 },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "black",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "black",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "black",
+                    border: 1,
+                  },
+                },
+              }}
               InputLabelProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
               id="password"
               name="password"
-              label="Password"
+              label="SENHA"
               type="password"
               value={password}
               onChange={(e) => {
@@ -134,7 +192,7 @@ const LoginPage = () => {
                 mt: 3,
                 mb: 2,
                 fontFamily: "VT323",
-                fontSize: { xs: 20, md: 25 },
+                fontSize: { xs: 25, md: 25 },
                 background: !error ? "#3ca370" : "#c32454",
               }}
               onClick={handleLogin}
