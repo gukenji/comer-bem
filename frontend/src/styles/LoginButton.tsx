@@ -3,42 +3,63 @@ import { Button } from "@mui/material";
 export const LoginButton = styled(Button)(({ theme }) => ({
   "&:active": {
     [theme.breakpoints.up("xs")]: {
-      background: "#3ca370",
+      background: "transparent",
+      boxShadow: "none",
     },
     [theme.breakpoints.up("md")]: {
-      background: "#3ca370",
+      background: "transparent",
+      boxShadow: "none",
     },
   },
   "&:active.error": {
     [theme.breakpoints.up("xs")]: {
-      background: "#c32454",
+      background: "transparent",
+      boxShadow: "none",
     },
     [theme.breakpoints.up("md")]: {
-      background: "#c32454",
+      background: "transparent",
+      boxShadow: "none",
     },
   },
   "&:hover": {
     [theme.breakpoints.up("xs")]: {
-      background: "#3ca370",
+      background: "transparent",
+      boxShadow: "none",
     },
     [theme.breakpoints.up("md")]: {
-      background: "#3ca370",
+      background: "transparent",
+      boxShadow: "none",
     },
   },
   "&:hover.error": {
     [theme.breakpoints.up("xs")]: {
-      background: "#c32454",
+      background: "transparent",
+      boxShadow: "none",
     },
     [theme.breakpoints.up("md")]: {
-      background: "#c32454",
+      background: "transparent",
+      boxShadow: "none",
     },
   },
   "&:disabled": {
     [theme.breakpoints.up("xs")]: {
-      background: "#3ca370",
+      background: "transparent",
+      boxShadow: "none",
+      color: "black",
     },
     [theme.breakpoints.up("md")]: {
-      background: "#3ca370",
+      background: "transparent",
+      boxShadow: "none",
+    },
+  },
+  "&:focus": {
+    [theme.breakpoints.up("xs")]: {
+      background: "transparent",
+      boxShadow: "none",
+    },
+    [theme.breakpoints.up("md")]: {
+      background: "transparent",
+      boxShadow: "none",
     },
   },
 }));

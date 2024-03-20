@@ -8,6 +8,5 @@ export const AccordionSummaryStyled = styled(AccordionSummary)(({ theme }) => ({
   },
   "&.MuiAccordionSummary-root button,&.MuiAccordionSummary-root svg": {
     cursor: `url(${hovered}),auto`,
-    // url("./assets/cursor_hovered.png"), auto;
   },
 }));

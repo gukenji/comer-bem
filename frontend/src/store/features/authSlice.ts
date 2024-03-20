@@ -64,7 +64,6 @@ export const login = createAsyncThunk("login", async (data: IUserLogin) => {
   const response = await axiosInstance.post("/token/", data);
   const resData = response.data;
   localStorage.setItem("tokenInfo", JSON.stringify(resData));
-
   return resData;
 });
 
@@ -111,7 +110,6 @@ const authSlice = createSlice({
           is_male: jwtDecode<IJWTDecode>(state.tokenInfo.access).is_male,
           level: jwtDecode<IJWTDecode>(state.tokenInfo.access).level,
         };
-        console.log(state.userProfileData);
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";

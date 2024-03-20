@@ -1,5 +1,5 @@
-import { useAppDispatch } from "../store/store";
-import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import { useEffect, useState } from "react";
 import { resetRefresh } from "../store/features/inventorySlice";
 import { login } from "../store/features/authSlice";
 import { Link } from "react-router-dom";
@@ -12,11 +12,11 @@ import {
   Alert,
   Grid,
   FormHelperText,
-  CircularProgress,
 } from "@mui/material";
-import PadlockIcon from "../styles/PadlockIcon";
 import { LoginButton } from "../styles/LoginButton";
 import Certificate from "../assets/certificate.png";
+import { ReactTyped } from "react-typed";
+import { IJWTDecode } from "../interfaces/AuthInterfaces";
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
@@ -25,19 +25,25 @@ const LoginPage = () => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const handleLogin = async () => {
+    setError(false);
     setLoading(true);
-    if (email && password) {
-      try {
-        await dispatch(login({ email, password })).unwrap();
-        await dispatch(resetRefresh());
-      } catch (e) {
+    setTimeout(async () => {
+      if (email && password) {
+        try {
+          await dispatch(login({ email, password })).unwrap();
+          await dispatch(resetRefresh());
+        } catch (e) {
+          setError(true);
+          console.log(e);
+        }
+      } else {
         setError(true);
-        console.log(e);
       }
-    } else {
-      setError(true);
-    }
-    setLoading(false);
+    }, 2000);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   };
 
   const helperText = (
@@ -49,7 +55,7 @@ const LoginPage = () => {
     </FormHelperText>
   );
   const errorMessage = (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "90%" }}>
       {error ? (
         <Alert
           severity="error"
@@ -60,6 +66,7 @@ const LoginPage = () => {
             display: "flex",
             justifyContent: "center",
             textAlign: "center",
+            backgroundColor: "rgba(253, 237, 237,0.7)",
           }}
         >
           ERRO NO LOGIN!
@@ -71,7 +78,7 @@ const LoginPage = () => {
   );
   return (
     <Box>
-      <Container maxWidth="xs">
+      <Container maxWidth="xs" sx={{ position: "relative" }}>
         <CssBaseline />
         <Box
           sx={{
@@ -202,28 +209,84 @@ const LoginPage = () => {
             />
             {error && password.length < 1 ? helperText : <></>}
             <LoginButton
-              fullWidth
               className={error ? "error" : ""}
-              disabled={
-                loading || password.length < 1 || email.length < 1
-                  ? true
-                  : false
-              }
+              disabled={password.length < 1 || email.length < 1 ? true : false}
               variant="contained"
               sx={{
-                mt: 3,
+                mt: 4,
+                width: "80%",
+                display: "flex",
+                flex: 1,
                 mb: 2,
+                float: "right",
                 fontFamily: "VT323",
                 fontSize: { xs: 25, md: 25 },
-                background: !error ? "#3ca370" : "#c32454",
+                color: !error ? "black" : "#c32454",
+                background: "transparent",
+                boxShadow: "none",
+                justifyContent: "flex-end",
+                justifyItems: "flex-end",
+                alignContent: "flex-end",
+                alignItems: "flex-end",
+                borderBottom: 1,
+                borderRadius: 0,
               }}
               onClick={handleLogin}
             >
-              {loading ? <CircularProgress color="success" /> : "LOGIN"}{" "}
+              {loading ? (
+                <Typography
+                  component={"span"}
+                  sx={{
+                    fontFamily: "VT323",
+                    fontSize: 25,
+                    display: "flex",
+                    flex: 1,
+                    gap: 3,
+                  }}
+                >
+                  <span>X</span>
+                  <ReactTyped
+                    strings={[email]}
+                    style={{ color: "black", transparency: 1 }}
+                    typeSpeed={70}
+                    showCursor={false}
+                  />
+                </Typography>
+              ) : (
+                <Typography
+                  component={"span"}
+                  sx={{
+                    fontFamily: "VT323",
+                    fontSize: 25,
+                    display: "flex",
+                    flex: 1,
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <span>X</span>
+                  <span>ASSINATURA</span>
+                </Typography>
+              )}
             </LoginButton>
             <Grid container justifyContent={"flex-end"}>
-              <Grid item>
-                <Link to="/register">Não possui conta? Clique aqui</Link>
+              <Grid item position={"absolute"} bottom={-35} right={20}>
+                <Link
+                  to="/register"
+                  style={{ textDecorationColor: "white", color: "white" }}
+                >
+                  <Typography
+                    component={"span"}
+                    sx={{
+                      fontFamily: "VT323",
+                      letterSpacing: 1,
+                      fontSize: 20,
+                      textShadow:
+                        "0px 0px 0px white, 0 0 1em green, 0 0 0.2em green",
+                    }}
+                  >
+                    NÃO POSSUI CONTA? CLIQUE AQUI
+                  </Typography>
+                </Link>
               </Grid>
             </Grid>
           </Box>

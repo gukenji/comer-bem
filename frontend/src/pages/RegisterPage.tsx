@@ -63,7 +63,7 @@ const RegisterPage = () => {
     </FormHelperText>
   );
   const errorMessage = (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "90%" }}>
       {error ? (
         <Alert
           severity="error"
@@ -74,6 +74,7 @@ const RegisterPage = () => {
             display: "flex",
             justifyContent: "center",
             textAlign: "center",
+            backgroundColor: "rgba(253, 237, 237,0.7)",
           }}
         >
           ERRO NO LOGIN!
@@ -85,7 +86,7 @@ const RegisterPage = () => {
   );
   return (
     <Box sx={{}}>
-      <Container maxWidth="xs">
+      <Container maxWidth="xs" sx={{ position: "relative" }}>
         <CssBaseline />
 
         <Box
@@ -292,8 +293,24 @@ const RegisterPage = () => {
               {loading ? <CircularProgress color="success" /> : "AVANÇAR"}{" "}
             </LoginButton>
             <Grid container justifyContent={"flex-end"}>
-              <Grid item>
-                <Link to="/login">Já possui conta? Clique aqui</Link>
+              <Grid item position={"absolute"} bottom={-35} right={20}>
+                <Link
+                  to="/login"
+                  style={{ textDecorationColor: "white", color: "white" }}
+                >
+                  <Typography
+                    component={"span"}
+                    sx={{
+                      fontFamily: "VT323",
+                      letterSpacing: 1,
+                      fontSize: 20,
+                      textShadow:
+                        "0px 0px 0px white, 0 0 1em green, 0 0 0.2em green",
+                    }}
+                  >
+                    JÁ POSSUI CONTA? CLIQUE AQUI
+                  </Typography>
+                </Link>{" "}
               </Grid>
             </Grid>
           </Box>

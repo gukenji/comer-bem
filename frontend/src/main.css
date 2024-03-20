@@ -25,11 +25,9 @@ html {
 }
 
 button:hover,
-ul > li:hover {
+ul > li:hover,
+a:hover {
   cursor: url("./assets/cursor_hovered.png"), auto;
-}
-
-body {
 }
 
 body,
