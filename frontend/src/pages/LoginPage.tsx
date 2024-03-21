@@ -38,12 +38,12 @@ const LoginPage = () => {
       } else {
         setError(true);
       }
-    }, email.split("@")[0].length * 180);
-
-    setTimeout(() => {
-      setLoading(false);
     }, email.split("@")[0].length * 150);
   };
+
+  useEffect(() => {
+    error ? setLoading((prev) => false) : null;
+  }, [error]);
 
   const helperText = (
     <FormHelperText

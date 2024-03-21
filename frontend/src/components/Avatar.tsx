@@ -14,6 +14,7 @@ import {
 import { useAppSelector, useAppDispatch } from "../store/store";
 import profile_pic from "../assets/profile.jpeg";
 import { logout } from "../store/features/authSlice";
+import { IconButtonStyled } from "../styles/IconButtonStyled";
 const Avatar = () => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -41,37 +42,38 @@ const Avatar = () => {
   };
   return (
     <Box sx={{ display: userProfileInfo ? "inherit" : "none" }}>
-      <IconButton
+      <IconButtonStyled
         aria-label="my account"
         aria-controls="menu-appbar"
         aria-haspopup="true"
         onClick={handleMenu}
-        sx={{ display: "flex", flexDirection: "column" }}
+        sx={{ display: "flex", flexDirection: "column", boxShadow: "none" }}
       >
         <Icon
           sx={{
-            width: { xs: 65, md: 65 },
-            height: { xs: 65, md: 65 },
-            borderRadius: 50,
+            width: greaterThanMid ? 100 : 80,
+            height: greaterThanMid ? 100 : 80,
+            borderRadius: 2,
           }}
         >
           <Pixelify
             src={profile_pic}
             pixelSize={2}
             centered={true}
-            width={greaterThanMid ? 65 : 65}
-            height={greaterThanMid ? 65 : 65}
+            width={greaterThanMid ? 100 : 80}
+            height={greaterThanMid ? 100 : 80}
           />
         </Icon>
         <Typography
           sx={{
             color: "black",
             fontFamily: "VT323",
+            fontSize: 18,
           }}
         >
-          <span>{userProfileInfo?.name}</span>
+          LEVEL {userProfileInfo?.level}
         </Typography>
-      </IconButton>
+      </IconButtonStyled>
       <Menu
         id="menu-appbar"
         anchorEl={anchorEl}

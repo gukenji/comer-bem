@@ -12,11 +12,16 @@ import {
   linearProgressClasses,
   Typography,
 } from "@mui/material";
+import rg from "../assets/rg_pixelated2.png";
+import { useEffect, useRef, useState } from "react";
 export default function Header() {
   const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
   const consumed_kcal = 1000;
   const meta_kcal = 2700;
-
+  const box = useRef<HTMLDivElement>();
+  const [width, setWidth] = useState<number | null>(0);
+  const [height, setHeight] = useState<number | null>(0);
+  const rg_ref = useRef<HTMLImageElement | null>(null);
   const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 15,
     borderRadius: 10,
@@ -31,122 +36,184 @@ export default function Header() {
     },
   }));
 
+  useEffect(() => {
+    if (box.current) {
+      box.current.style.width = `${width}px`;
+      box.current.style.height = `${height}px`;
+    }
+  }, [height, width]);
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar
-        position="static"
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        flex: 1,
+      }}
+      onLoad={(e) => {
+        if (rg_ref.current) {
+          setWidth(rg_ref.current.getBoundingClientRect().width);
+          setHeight(rg_ref.current.getBoundingClientRect().height);
+        }
+      }}
+    >
+      <img
+        src={rg}
+        ref={rg_ref}
+        style={{
+          maxWidth: "100%",
+          border: "3px",
+          borderColor: "white",
+          borderStyle: "solid",
+          borderRadius: 5,
+          opacity: 0.7,
+          boxShadow: "2.6px 5.3px 5.3px hsl(0deg 0% 0% / 0.42)",
+          display: userProfileInfo ? "inherit" : "none",
+          height: "auto",
+          padding: 0,
+          margin: 0,
+          position: "absolute",
+        }}
+      ></img>
+      <Box
+        ref={box}
+        display={userProfileInfo ? "flex" : "none"}
         sx={{
-          bgcolor: "transparent",
-          boxShadow: "none",
-          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          alignItems: "center",
+          width: `${width}px`,
+          height: `${height}px`,
+          padding: 0,
+          margin: 0,
         }}
       >
-        <Toolbar>
-          {userProfileInfo && (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                flexGrow: 1,
-              }}
-            >
-              {userProfileInfo ? (
-                <Container
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 0.4,
-                  }}
-                >
-                  <Container>
-                    <Typography
-                      sx={{
-                        color: "black",
-                        fontFamily: "VT323",
-                        fontSize: 18,
-                      }}
-                    >
-                      LEVEL {userProfileInfo.level}
-                    </Typography>
-
-                    <BorderLinearProgress
-                      variant="determinate"
-                      value={(consumed_kcal / meta_kcal) * 100}
-                    />
-                    <Typography
-                      sx={{
-                        color: "black",
-                        fontFamily: "VT323",
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <span
-                        style={{
+        <AppBar
+          sx={{
+            bgcolor: "transparent",
+            borderRadius: 5,
+            boxShadow: "none",
+            zIndex: 10,
+            position: "relative",
+            display: "flex",
+            marginTop: 5,
+          }}
+        >
+          <Toolbar>
+            <Avatar />
+            {userProfileInfo && (
+              <div
+                style={{
+                  display: "flex",
+                  padding: 0,
+                  margin: 0,
+                  flex: 1,
+                  marginTop: 5,
+                }}
+              >
+                {userProfileInfo ? (
+                  <Container
+                    style={{ padding: 0.5, margin: 0.5, marginTop: 12 }}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 0.4,
+                    }}
+                  >
+                    <Container style={{ padding: 0.5, margin: 0.5 }}>
+                      <Typography
+                        sx={{
                           color: "black",
-                          fontSize: 16,
+                          fontFamily: "VT323",
+                          fontSize: 20,
                           display: "flex",
-                          alignItems: "center",
-                          gap: 2,
+                          lineHeight: 1.2,
+                          flexDirection: "column",
+                          letterSpacing: 1,
+                          marginBottom: 1,
                         }}
                       >
-                        <img src={kcal_pic} width={12} height={14} />
-                        {consumed_kcal}/{meta_kcal}
-                      </span>
-                      <span
-                        style={{
+                        <span style={{}}>Nome / Name</span>
+                        <span>{userProfileInfo.name.toUpperCase()}</span>
+                      </Typography>
+                      <BorderLinearProgress
+                        variant="determinate"
+                        value={(consumed_kcal / meta_kcal) * 100}
+                      />
+                      <Typography
+                        sx={{
                           color: "black",
-                          fontSize: 16,
-                        }}
-                      >
-                        KCAL
-                      </span>
-                    </Typography>
-                  </Container>
-                  <Container>
-                    <BorderLinearProgress
-                      variant="determinate"
-                      value={(consumed_kcal / meta_kcal) * 100}
-                    />
-                    <Typography
-                      sx={{
-                        color: "black",
-                        fontFamily: "VT323",
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <span
-                        style={{
-                          color: "black",
-                          fontSize: 16,
+                          fontFamily: "VT323",
                           display: "flex",
-                          alignItems: "center",
-                          gap: 2,
+                          justifyContent: "space-between",
                         }}
                       >
-                        <img src={level_pic} width={12} height={14} />
-                        {consumed_kcal}/{meta_kcal}
-                      </span>
-                      <span
-                        style={{
+                        <span
+                          style={{
+                            color: "black",
+                            fontSize: 16,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 2,
+                          }}
+                        >
+                          <img src={kcal_pic} width={12} height={14} />
+                          {consumed_kcal}/{meta_kcal}
+                        </span>
+                        <span
+                          style={{
+                            color: "black",
+                            fontSize: 16,
+                          }}
+                        >
+                          KCAL
+                        </span>
+                      </Typography>
+                    </Container>
+                    <Container style={{ padding: 0, margin: 0 }}>
+                      <BorderLinearProgress
+                        variant="determinate"
+                        value={(consumed_kcal / meta_kcal) * 100}
+                      />
+                      <Typography
+                        sx={{
                           color: "black",
-                          fontSize: 16,
+                          fontFamily: "VT323",
+                          display: "flex",
+                          justifyContent: "space-between",
                         }}
                       >
-                        EXP
-                      </span>
-                    </Typography>
+                        <span
+                          style={{
+                            color: "black",
+                            fontSize: 16,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 2,
+                          }}
+                        >
+                          <img src={level_pic} width={12} height={14} />
+                          {consumed_kcal}/{meta_kcal}
+                        </span>
+                        <span
+                          style={{
+                            color: "black",
+                            fontSize: 16,
+                          }}
+                        >
+                          EXP
+                        </span>
+                      </Typography>
+                    </Container>
                   </Container>
-                </Container>
-              ) : (
-                <></>
-              )}
-            </div>
-          )}
-          <Avatar />
-        </Toolbar>
-      </AppBar>
+                ) : (
+                  <></>
+                )}
+              </div>
+            )}
+          </Toolbar>
+        </AppBar>
+      </Box>
     </Box>
   );
 }
