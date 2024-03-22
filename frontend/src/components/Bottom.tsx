@@ -36,11 +36,21 @@ export default function FixedBottomNavigation() {
     <Box sx={{ pb: 7 }} ref={ref}>
       <CssBaseline />
       <Paper
-        sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
+        sx={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+        }}
         elevation={3}
       >
         <BottomNavigation
           showLabels
+          sx={{
+            borderBottomLeftRadius: 2,
+            borderBottomRightRadius: 2,
+          }}
+          style={{ borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}
           value={tab}
           onChange={(event, newValue) => {
             userProfileInfo ? dispatch(selectTab(newValue)) : null;

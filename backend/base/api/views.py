@@ -124,7 +124,8 @@ def updateInventory(request, pk):
         return Response(serializer.errors)
 
 
-def checkFoodExist(data):
-    food_id = data["id"]
-    food_inventory = Inventory.objects.filter(id=food_id)
-    return True if food_inventory else False
+@api_view(["GET"])
+def checkAccountExist(request, email):
+    user = User.objects.filter(email=email)
+    response = True if user else False
+    return Response(response)

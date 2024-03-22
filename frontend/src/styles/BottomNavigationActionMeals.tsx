@@ -3,7 +3,14 @@ import { styled } from "@mui/material/styles";
 
 export const BottomNavigationActionMeals = styled(BottomNavigationAction)(
   ({ theme }) => ({
+    "&:hover": {
+      boxShadow: "0 0 0 3px var(--color-light), 0 0 0 4px var(--color)",
+      background: "#80366b",
+      color: "white",
+    },
     "&.MuiButtonBase-root.Mui-selected": {
+      boxShadow: "0 0 0 3px var(--color-light), 0 0 0 4px var(--color)",
+
       [theme.breakpoints.up("xs")]: {
         background: "#80366b",
       },

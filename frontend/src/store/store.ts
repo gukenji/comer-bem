@@ -16,12 +16,14 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
+import registerSlice from "./features/registerSlice";
 
 const reducers = combineReducers({
   auth: authSlice,
   meals: mealsSlice,
   foods: foodsSlice,
   inventory: inventorySlice,
+  register: registerSlice,
 });
 
 const persistConfig = {

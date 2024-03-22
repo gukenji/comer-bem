@@ -3,7 +3,14 @@ import { styled } from "@mui/material/styles";
 
 export const BottomNavigationActionStatistics = styled(BottomNavigationAction)(
   ({ theme }) => ({
+    "&:hover": {
+      boxShadow: "0 0 0 3px var(--color-light), 0 0 0 4px var(--color)",
+      background: "#bd4882",
+      color: "white",
+    },
     "&.MuiButtonBase-root.Mui-selected": {
+      boxShadow: "0 0 0 3px var(--color-light), 0 0 0 4px var(--color)",
+
       [theme.breakpoints.up("xs")]: {
         background: "#bd4882",
       },

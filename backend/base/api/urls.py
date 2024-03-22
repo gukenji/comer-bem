@@ -15,4 +15,5 @@ urlpatterns = [
     path("inventory/update/<str:pk>/", views.updateInventory),
     path("meals/get/", views.getMyMeals),
     path("user/register/", views.registration_view, name="register"),
+    path("user/get/<str:email>/", views.checkAccountExist),
 ]

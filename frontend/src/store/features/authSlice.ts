@@ -67,6 +67,15 @@ export const login = createAsyncThunk("login", async (data: IUserLogin) => {
   return resData;
 });
 
+export const getUser = createAsyncThunk(
+  "get_user",
+  async (data: { email: string }) => {
+    const response = await axiosInstance.get(`/user/get/${data.email}/`);
+    const resData = response.data;
+    return resData;
+  }
+);
+
 export const refresh = createAsyncThunk("refresh", async (data: IRefresh) => {
   const response = await axiosInstance.post("/token/refresh/", data);
   const resData = response.data;
