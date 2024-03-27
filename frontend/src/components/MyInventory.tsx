@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../store/store";
-import { getInventory } from "../store/features/inventorySlice";
+import { getInventory, setOpenDialog } from "../store/features/inventorySlice";
 import { IGetFood } from "../interfaces/FoodInterfaces";
 import {
   Stack,
@@ -12,10 +12,13 @@ import {
   FormControl,
   Select,
   SelectChangeEvent,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 import { EditNote, Delete, LocalDining } from "@mui/icons-material";
 import { quickSort } from "../utils/quickSort";
 import { IFetchInventory } from "../interfaces/InventoryInterfaces";
+import EditInventoryItem from "./EditInventoryItem";
 const MyInventory = () => {
   const my_freezer = useAppSelector((state) => state.inventory.food_list);
   const [sortedFreezer, setSortedFreezer] = useState<IFetchInventory[] | null>(
@@ -24,10 +27,12 @@ const MyInventory = () => {
   const [currentFoods, setCurrentFoods] = useState<IFetchInventory[] | null>(
     null
   );
+  const open_dialog = useAppSelector((state) => state.inventory.open_dialog);
   const [index, setIndex] = useState(0);
   const [page, setPage] = useState(1);
   const [foodsPerPage, setFoodsPerPage] = useState<number>(5);
   const isRefreshed = useAppSelector((state) => state.inventory.refreshed);
+  const [selectedFood, setSelectFood] = useState<IFetchInventory | null>(null);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -36,7 +41,6 @@ const MyInventory = () => {
     setPage(value);
     setIndex((prev) => (value - 1) * foodsPerPage);
   };
-
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -82,6 +86,10 @@ const MyInventory = () => {
         : Math.ceil(index / foodsPerPage + 1);
     setPage((prev) => (new_page > 0 ? new_page : 1));
   }, [foodsPerPage, index]);
+
+  useEffect(() => {
+    console.log(selectedFood);
+  }, [selectedFood]);
 
   const calculateMacros = (input_quantity: number, food: IGetFood | null) => {
     const carbs: string = food
@@ -166,6 +174,9 @@ const MyInventory = () => {
           onChange={handlePageChange}
         />
       </Stack>
+      {open_dialog ? (
+        <EditInventoryItem food={selectedFood as IFetchInventory} />
+      ) : null}
       {currentFoods ? (
         currentFoods.map((props) => {
           return (
@@ -319,9 +330,31 @@ const MyInventory = () => {
                       gap: 3,
                     }}
                   >
-                    <EditNote />
-                    <Delete />
-                    <LocalDining />
+                    <EditNote
+                      onClick={() => {
+                        setSelectFood((prev) => props);
+                        dispatch(setOpenDialog());
+                      }}
+                      sx={{
+                        boxShadow: "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
+                        borderRadius: 5,
+                        fontSize: 30,
+                      }}
+                    />
+                    <Delete
+                      sx={{
+                        boxShadow: "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
+                        borderRadius: 5,
+                        fontSize: 30,
+                      }}
+                    />
+                    <LocalDining
+                      sx={{
+                        boxShadow: "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
+                        borderRadius: 5,
+                        fontSize: 30,
+                      }}
+                    />
                   </Box>
                 </Box>
               </Box>

@@ -1,6 +1,6 @@
 import React from "react";
 import MyInventory from "./MyInventory";
-import SearchFoodFreezer from "./SearchFoodFreezer";
+import SearchFood from "./SearchFood";
 import IncludeToInventory from "./IncludeToInventory";
 import { useAppSelector, useAppDispatch } from "../store/store";
 import { useEffect } from "react";
@@ -152,7 +152,7 @@ const Inventory = () => {
         </Box>
         <TabPanel value="1">
           <AlertInput result={success} />
-          <SearchFoodFreezer />
+          <SearchFood />
           <IncludeToInventory />
         </TabPanel>
         <TabPanel value="2">

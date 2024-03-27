@@ -31,6 +31,7 @@ export const registerUser = createAsyncThunk("register", async (args, api) => {
     age: state.register.age,
     is_male: state.register.is_male,
   };
+  console.log(data);
   const response = await axiosInstance.post("/user/register/", data);
   const resData = response.data;
   // localStorage.setItem("tokenInfo", JSON.stringify(resData));
@@ -60,6 +61,7 @@ const registerSlice = createSlice({
       .addCase(registerUser.pending, (state) => {})
       .addCase(registerUser.fulfilled, (state, action) => {
         state.step = 1;
+        console.log("teste");
       })
       .addCase(registerUser.rejected, (state, action) => {});
   },

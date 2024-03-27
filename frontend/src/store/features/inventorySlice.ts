@@ -10,13 +10,14 @@ import {
 import { IGetFood } from "../../interfaces/FoodInterfaces";
 
 const initialState: IGetInventory &
-  IInputQuantity & { success: boolean | null } = {
+  IInputQuantity & { success: boolean | null; open_dialog: boolean } = {
   food: null,
   value: "",
   food_list: null,
   error: null,
   refreshed: false,
   success: null,
+  open_dialog: false,
 };
 
 export const getInventory = createAsyncThunk("get_my_inventory", async () => {
@@ -62,6 +63,9 @@ const inventorySlice = createSlice({
     resetRefresh(state) {
       state.refreshed = false;
     },
+    setOpenDialog(state) {
+      state.open_dialog = !state.open_dialog;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -104,7 +108,12 @@ const inventorySlice = createSlice({
       });
   },
 });
-export const { selectQuantity, selectFood, eraseSucessAlert, resetRefresh } =
-  inventorySlice.actions;
+export const {
+  selectQuantity,
+  selectFood,
+  eraseSucessAlert,
+  resetRefresh,
+  setOpenDialog,
+} = inventorySlice.actions;
 
 export default inventorySlice.reducer;

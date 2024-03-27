@@ -190,7 +190,7 @@ export default function NewFood() {
               inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
               variant="standard"
               onChange={(e) => {
-                setBrand(e.target.value);
+                setBrand(e.target.value.toUpperCase());
               }}
             />
             <TextField
@@ -209,7 +209,7 @@ export default function NewFood() {
               value={name}
               variant="standard"
               onChange={(e) => {
-                setName(e.target.value);
+                setName(e.target.value.toUpperCase());
               }}
             />
             <div style={{ paddingTop: 20 }}>
@@ -282,7 +282,7 @@ export default function NewFood() {
                 },
               }}
               onChange={(e) => {
-                setPortionDescription(e.target.value);
+                setPortionDescription(e.target.value.toUpperCase());
               }}
               value={portionDescription}
               variant="standard"

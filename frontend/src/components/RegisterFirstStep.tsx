@@ -15,6 +15,7 @@ const RegisterFirstStep = () => {
   const step = useAppSelector((state) => state.register.step);
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [error, setError] = useState(false);
@@ -27,28 +28,42 @@ const RegisterFirstStep = () => {
     password: password,
     password_confirmation: passwordConfirmation,
   };
+
+  const validateEmail = (email: string) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
   const emailHelperText = (
     <FormHelperText
       id="standard-weight-helper-text"
       sx={{ color: "red", fontFamily: "VT323", fontSize: 17 }}
     >
-      {userExist && error ? "EMAIL JÁ CADASTRADO!" : null}
+      {emailError !== "" ? emailError : null}
     </FormHelperText>
   );
 
   const handleNextStep = async () => {
     setLoading(true);
+    setEmailError("");
     setUserExist(null);
-    if (email && password && passwordConfirmation == password && step == 1) {
+    const isEmailCorrect = validateEmail(email);
+    !isEmailCorrect ? setEmailError("EMAIL INVÁLIDO") : null;
+    if (
+      email &&
+      password &&
+      passwordConfirmation == password &&
+      step == 1 &&
+      isEmailCorrect
+    ) {
       try {
         const result = await dispatch(getUser({ email })).unwrap();
         setUserExist((prev) => result);
       } catch (e) {
         setError(true);
-        console.log(e);
       }
-    } else if (step == 2) {
-      console.log("step 2");
     } else {
       setError(true);
     }
@@ -57,7 +72,9 @@ const RegisterFirstStep = () => {
 
   useEffect(() => {
     if (userExist !== null) {
-      userExist ? setError((prev) => true) : dispatch(setFirstStep(first_step));
+      userExist
+        ? setEmailError("EMAIL JÁ CADASTRADO!")
+        : dispatch(setFirstStep(first_step));
     }
   }, [userExist]);
 
@@ -116,7 +133,7 @@ const RegisterFirstStep = () => {
         onChange={(e) => {
           setEmail(e.target.value);
         }}
-        onClick={(e) => setError(false)}
+        onClick={(e) => setEmailError("")}
       />
       {emailHelperText}
       <TextField

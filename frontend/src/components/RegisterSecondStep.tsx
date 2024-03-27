@@ -45,7 +45,6 @@ const RegisterSecondStep = () => {
   };
 
   const handleRegister = async () => {
-    console.log(second_step);
     setLoading(true);
     if (name && height && weight && age && isMale && step == 2) {
       dispatch(setSecondStep(second_step));
@@ -55,16 +54,12 @@ const RegisterSecondStep = () => {
         await dispatch(resetRefresh());
       } catch (e) {
         setError(true);
-        console.log(e);
       }
-    } else if (step == 2) {
-      console.log("step 2");
     } else {
       setError(true);
     }
     setLoading(false);
   };
-  console.log(isMale);
   return (
     <Box display={step == 2 ? "inherit" : "none"}>
       <FileUploader images={images} setImages={setImages}></FileUploader>
@@ -122,9 +117,8 @@ const RegisterSecondStep = () => {
           defaultValue={isMale}
           name="radio-buttons-group"
           row
-          value={isMale && isMale == true ? "male" : "female"}
+          value={isMale == true ? "male" : isMale == null ? "null" : "female"}
           onChange={(e) => {
-            console.log(e.target.value);
             e.target.value === "female" ? setIsMale(false) : setIsMale(true);
           }}
         >
@@ -150,6 +144,7 @@ const RegisterSecondStep = () => {
         <FormControl variant="standard" sx={{ m: 1, mt: 3, width: "25%" }}>
           <Input
             id="standard-adornment-weight"
+            type="number"
             endAdornment={
               <InputAdornment position="end">
                 {" "}
@@ -163,6 +158,17 @@ const RegisterSecondStep = () => {
               ":after": {
                 borderBottom: "2px solid black",
                 boxShadow: "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
+              },
+              "& input[type=number]": {
+                "-moz-appearance": "textfield",
+              },
+              "& input[type=number]::-webkit-outer-spin-button": {
+                "-webkit-appearance": "none",
+                margin: 0,
+              },
+              "& input[type=number]::-webkit-inner-spin-button": {
+                "-webkit-appearance": "none",
+                margin: 0,
               },
             }}
             aria-describedby="standard-weight-helper-text"
@@ -184,6 +190,7 @@ const RegisterSecondStep = () => {
         <FormControl variant="standard" sx={{ m: 1, mt: 3, width: "25%" }}>
           <Input
             id="standard-adornment-weight"
+            type="number"
             endAdornment={
               <InputAdornment position="end">
                 {" "}
@@ -197,6 +204,17 @@ const RegisterSecondStep = () => {
               ":after": {
                 borderBottom: "2px solid black",
                 boxShadow: "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
+              },
+              "& input[type=number]": {
+                "-moz-appearance": "textfield",
+              },
+              "& input[type=number]::-webkit-outer-spin-button": {
+                "-webkit-appearance": "none",
+                margin: 0,
+              },
+              "& input[type=number]::-webkit-inner-spin-button": {
+                "-webkit-appearance": "none",
+                margin: 0,
               },
             }}
             aria-describedby="standard-weight-helper-text"
@@ -218,6 +236,7 @@ const RegisterSecondStep = () => {
         </FormControl>
         <FormControl variant="standard" sx={{ m: 1, mt: 3, width: "25%" }}>
           <Input
+            type="number"
             id="standard-adornment-weight"
             endAdornment={
               <InputAdornment position="end">
@@ -232,6 +251,17 @@ const RegisterSecondStep = () => {
               ":after": {
                 borderBottom: "2px solid black",
                 boxShadow: "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
+              },
+              "& input[type=number]": {
+                "-moz-appearance": "textfield",
+              },
+              "& input[type=number]::-webkit-outer-spin-button": {
+                "-webkit-appearance": "none",
+                margin: 0,
+              },
+              "& input[type=number]::-webkit-inner-spin-button": {
+                "-webkit-appearance": "none",
+                margin: 0,
               },
             }}
             aria-describedby="standard-weight-helper-text"

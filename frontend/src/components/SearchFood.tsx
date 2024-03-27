@@ -15,7 +15,7 @@ import { eraseSucessAlert, selectFood } from "../store/features/inventorySlice";
 import { useState } from "react";
 import { IFetchInventory } from "../interfaces/InventoryInterfaces";
 
-const SearchFoodFreezer = () => {
+const SearchFood = () => {
   const dispatch = useAppDispatch();
   const [inputValue, setInputValue] = useState("");
   const isRefreshed = useAppSelector((state) => state.foods.refreshed);
@@ -64,22 +64,22 @@ const SearchFoodFreezer = () => {
     <Box>
       <FormHelperText
         id="standard-weight-helper-text"
-        sx={{ color: "red", fontFamily: "VT323", fontSize: 12 }}
+        sx={{ color: "red", fontFamily: "VT323", fontSize: 14 }}
       >
         ALIMENTO JÁ CADASTRADO EM SEU INVENTÁRIO.
       </FormHelperText>
       <FormHelperText
         id="standard-weight-helper-text"
-        sx={{ color: "red", fontFamily: "VT323", fontSize: 12 }}
+        sx={{ color: "red", fontFamily: "VT323", fontSize: 14 }}
       >
-        CADASTRA-LO NOVAMENTE SOMARA À QUANTIDADE EXISTENTE.
+        CADASTRA-LO NOVAMENTE SOMARÁ À QUANTIDADE EXISTENTE.
       </FormHelperText>
     </Box>
   );
 
   return (
     <>
-      <Box sx={{ p: 2 }}>
+      <Box>
         <Autocomplete
           value={food}
           filterSelectedOptions
@@ -126,6 +126,10 @@ const SearchFoodFreezer = () => {
               label="BUSCAR ALIMENTO"
               onClick={() => dispatch(eraseSucessAlert())}
               InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
+              inputProps={{
+                ...params.inputProps,
+                style: { fontFamily: "VT323", fontSize: 20 },
+              }}
             />
           )}
         />
@@ -135,4 +139,4 @@ const SearchFoodFreezer = () => {
   );
 };
 
-export default SearchFoodFreezer;
+export default SearchFood;

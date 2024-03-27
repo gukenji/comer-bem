@@ -30,6 +30,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { IFetchInventory } from "../interfaces/InventoryInterfaces";
+import { NutritionalTable } from "./NutritionalTable";
 
 const IncludeToInventory = () => {
   const dispatch = useAppDispatch();
@@ -166,6 +167,24 @@ const IncludeToInventory = () => {
               fontFamily: "VT323",
               fontSize: 20,
               width: 100,
+              "& input:focus": {
+                boxShadow: "none",
+              },
+              ":after": {
+                borderBottom: "2px solid black",
+                boxShadow: "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
+              },
+              "& input[type=number]": {
+                "-moz-appearance": "textfield",
+              },
+              "& input[type=number]::-webkit-outer-spin-button": {
+                "-webkit-appearance": "none",
+                margin: 0,
+              },
+              "& input[type=number]::-webkit-inner-spin-button": {
+                "-webkit-appearance": "none",
+                margin: 0,
+              },
             }}
             inputProps={{ style: { textAlign: "end" } }}
           />
@@ -177,171 +196,11 @@ const IncludeToInventory = () => {
           </FormHelperText>
         </FormControl>
       </Box>
-      <Box sx={{ width: "auto" }}>
-        <TableContainer component={Paper}>
-          <Typography
-            sx={{
-              fontFamily: "VT323",
-              fontSize: 23,
-              textAlign: "center",
-              borderBottom: 1,
-              margin: 1,
-            }}
-          >
-            INFORMAÇÃO NUTRICIONAL
-          </Typography>
-          <Table size="small" aria-label="a dense table">
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  sx={{ fontFamily: "VT323", padding: 0, width: "100px" }}
-                  align="center"
-                ></TableCell>
-                <TableCell
-                  sx={{
-                    fontFamily: "VT323",
-                    padding: 0,
-                    fontSize: 16,
-                    width: "70px",
-                  }}
-                  align="center"
-                >
-                  {quantity ? quantity : 0} G
-                </TableCell>
-                <TableCell
-                  sx={{
-                    fontFamily: "VT323",
-                    padding: 0,
-                    fontSize: 16,
-                    width: "70px",
-                  }}
-                  align="center"
-                >
-                  100 G
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                }}
-              >
-                <TableCell
-                  sx={{
-                    fontFamily: "VT323",
-                    padding: 0,
-                    paddingLeft: 1,
-                    fontSize: 15,
-                  }}
-                  align="left"
-                >
-                  CALORIAS (KCAL)
-                </TableCell>
-                <TableCell
-                  sx={{ fontFamily: "VT323", padding: 0 }}
-                  align="center"
-                >
-                  {calculateMacros(quantity as number, selected_food).kcal}
-                </TableCell>
-                <TableCell
-                  sx={{ fontFamily: "VT323", padding: 0 }}
-                  align="center"
-                >
-                  {calculateMacros(100, selected_food).kcal}
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                }}
-              >
-                <TableCell
-                  sx={{
-                    fontFamily: "VT323",
-                    padding: 0,
-                    fontSize: 15,
-                    paddingLeft: 1,
-                  }}
-                  align="left"
-                >
-                  CARBOÍDRATOS (G)
-                </TableCell>
-                <TableCell
-                  sx={{ fontFamily: "VT323", padding: 0 }}
-                  align="center"
-                >
-                  {calculateMacros(quantity as number, selected_food).carbs}
-                </TableCell>
-                <TableCell
-                  sx={{ fontFamily: "VT323", padding: 0 }}
-                  align="center"
-                >
-                  {calculateMacros(100, selected_food).carbs}
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                }}
-              >
-                <TableCell
-                  sx={{
-                    fontFamily: "VT323",
-                    padding: 0,
-                    fontSize: 15,
-                    paddingLeft: 1,
-                  }}
-                  align="left"
-                >
-                  PROTEÍNAS (G)
-                </TableCell>
-                <TableCell
-                  sx={{ fontFamily: "VT323", padding: 0 }}
-                  align="center"
-                >
-                  {calculateMacros(quantity as number, selected_food).protein}
-                </TableCell>
-                <TableCell
-                  sx={{ fontFamily: "VT323", padding: 0 }}
-                  align="center"
-                >
-                  {calculateMacros(100, selected_food).protein}
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                }}
-              >
-                <TableCell
-                  sx={{
-                    fontFamily: "VT323",
-                    padding: 0,
-                    fontSize: 15,
-                    paddingLeft: 1,
-                  }}
-                  align="left"
-                >
-                  GORDURAS (G)
-                </TableCell>
-                <TableCell
-                  sx={{ fontFamily: "VT323", padding: 0 }}
-                  align="center"
-                >
-                  {calculateMacros(quantity as number, selected_food).fat}
-                </TableCell>
-                <TableCell
-                  sx={{ fontFamily: "VT323", padding: 0 }}
-                  align="center"
-                >
-                  {calculateMacros(100, selected_food).fat}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
+      <NutritionalTable
+        quantity={quantity as number}
+        food={selected_food as IGetFood}
+      />
+
       <CardActions>
         <Button
           sx={{ fontFamily: "VT323", margin: "0 auto", fontSize: 22 }}
