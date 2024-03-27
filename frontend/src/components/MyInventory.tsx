@@ -14,11 +14,13 @@ import {
   SelectChangeEvent,
   Backdrop,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
 import { EditNote, Delete, LocalDining } from "@mui/icons-material";
 import { quickSort } from "../utils/quickSort";
 import { IFetchInventory } from "../interfaces/InventoryInterfaces";
 import EditInventoryItem from "./EditInventoryItem";
+import { IconButtonStyled } from "../styles/IconButtonStyled";
 const MyInventory = () => {
   const my_freezer = useAppSelector((state) => state.inventory.food_list);
   const [sortedFreezer, setSortedFreezer] = useState<IFetchInventory[] | null>(
@@ -330,31 +332,85 @@ const MyInventory = () => {
                       gap: 3,
                     }}
                   >
-                    <EditNote
-                      onClick={() => {
-                        setSelectFood((prev) => props);
-                        dispatch(setOpenDialog());
-                      }}
-                      sx={{
-                        boxShadow: "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
-                        borderRadius: 5,
-                        fontSize: 30,
-                      }}
-                    />
-                    <Delete
-                      sx={{
-                        boxShadow: "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
-                        borderRadius: 5,
-                        fontSize: 30,
-                      }}
-                    />
-                    <LocalDining
-                      sx={{
-                        boxShadow: "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
-                        borderRadius: 5,
-                        fontSize: 30,
-                      }}
-                    />
+                    <IconButtonStyled>
+                      <LocalDining
+                        sx={{
+                          "&:hover, &:active": {
+                            fontSize: 40,
+                          },
+                          "&:hover": {
+                            md: {
+                              boxShadow:
+                                "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
+                              background: "#30e1b9",
+                              color: "white",
+                            },
+                          },
+                          "&:active": {
+                            boxShadow: "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
+                            background: "#30e1b9",
+                            color: "white",
+                          },
+                          borderRadius: 5,
+                          padding: 0.5,
+                          fontSize: 35,
+                        }}
+                      />
+                    </IconButtonStyled>
+                    <IconButtonStyled>
+                      <EditNote
+                        onClick={() => {
+                          setSelectFood((prev) => props);
+                          dispatch(setOpenDialog());
+                        }}
+                        sx={{
+                          "&:hover, &:active": {
+                            fontSize: 40,
+                          },
+                          "&:hover": {
+                            md: {
+                              boxShadow:
+                                "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
+                              background: "#9babb2",
+                              color: "white",
+                            },
+                          },
+                          "&:active": {
+                            boxShadow: "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
+                            background: "#9babb2",
+                            color: "white",
+                          },
+                          borderRadius: 5,
+                          padding: 0.5,
+                          fontSize: 35,
+                        }}
+                      />
+                    </IconButtonStyled>
+                    <IconButtonStyled>
+                      <Delete
+                        sx={{
+                          "&:hover, &:active": {
+                            fontSize: 40,
+                          },
+                          "&:hover": {
+                            md: {
+                              boxShadow:
+                                "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
+                              background: "#f04f78",
+                              color: "white",
+                            },
+                          },
+                          "&:active": {
+                            boxShadow: "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
+                            background: "#f04f78",
+                            color: "white",
+                          },
+                          borderRadius: 5,
+                          padding: 0.5,
+                          fontSize: 35,
+                        }}
+                      />
+                    </IconButtonStyled>
                   </Box>
                 </Box>
               </Box>

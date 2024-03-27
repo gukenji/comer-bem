@@ -1,12 +1,7 @@
 import {
   Box,
-  Card,
-  Chip,
   Dialog,
-  DialogContent,
   Divider,
-  FormHelperText,
-  IconButton,
   Input,
   InputAdornment,
   Stack,
@@ -158,9 +153,29 @@ const EditInventoryItem = (props: { food: IFetchInventory }) => {
               }}
               inputProps={{ style: { textAlign: "end" } }}
             />
-          </Box>
+          </Box>{" "}
           <PublishedWithChanges
-            sx={{ alignSelf: "center", fontSize: 30 }}
+            sx={{
+              alignSelf: "center",
+              "&:hover, &:active": {
+                fontSize: 40,
+              },
+              "&:hover": {
+                md: {
+                  boxShadow: "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
+                  background: "#9babb2",
+                  color: "white",
+                },
+              },
+              "&:active": {
+                boxShadow: "2.6px 5.3px 3px hsl(0deg 0% 0% / 0.42)",
+                background: "#9babb2",
+                color: "white",
+              },
+              borderRadius: 5,
+              padding: 0.5,
+              fontSize: 35,
+            }}
             onClick={updateToInventory}
           />
         </Stack>
