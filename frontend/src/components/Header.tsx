@@ -133,7 +133,6 @@ export default function Header() {
                           marginBottom: 1,
                         }}
                       >
-                        <span style={{}}>Nome / Name</span>
                         <span>{userProfileInfo.name.toUpperCase()}</span>
                       </Typography>
                       <BorderLinearProgress

@@ -1,6 +1,6 @@
-import { IFetchFreezer } from "../interfaces/InventoryInterfaces";
+import { IFetchInventory } from "../interfaces/InventoryInterfaces";
 
-export function quickSort(arr: IFetchFreezer[]): IFetchFreezer[] | null {
+export function quickSort(arr: IFetchInventory[]): IFetchInventory[] | null {
   if (arr == null) {
     return null;
   }
@@ -8,7 +8,7 @@ export function quickSort(arr: IFetchFreezer[]): IFetchFreezer[] | null {
     return arr;
   }
 
-  const pivot: IFetchFreezer = arr[arr.length - 1];
+  const pivot: IFetchInventory = arr[arr.length - 1];
   const leftArr = [];
   const rightArr = [];
 

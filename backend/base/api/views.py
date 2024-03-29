@@ -36,6 +36,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @api_view(["POST"])
 def registration_view(request):
     if request.method == "POST":
+        print(request.data)
         serializer = RegistrationSerializer(data=request.data)
         data = {}
         if serializer.is_valid():

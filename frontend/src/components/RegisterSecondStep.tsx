@@ -45,11 +45,9 @@ const RegisterSecondStep = () => {
     is_male: isMale,
   };
   const integer_regex = /^[0-9]+(?!\.,)$/;
-
   const handleRegister = async () => {
     setLoading(true);
-    console.log(second_step);
-    if (name && height && weight && age && isMale && step == 2) {
+    if (name && height && weight && age && isMale != null && step == 2) {
       dispatch(setSecondStep(second_step));
       try {
         const result = await dispatch(registerUser()).unwrap();
@@ -123,6 +121,7 @@ const RegisterSecondStep = () => {
           value={isMale == true ? "male" : isMale == null ? "null" : "female"}
           onChange={(e) => {
             e.target.value === "female" ? setIsMale(false) : setIsMale(true);
+            console.log(isMale);
           }}
         >
           <FormControlLabel

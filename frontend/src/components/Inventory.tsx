@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import { TabList, TabPanel, TabContext } from "@mui/lab";
 import AlertInput from "./AlertInput";
+import InventoryOverview from "./InventoryOverview";
 
 const Inventory = () => {
   const [open, setOpen] = React.useState(false);
@@ -177,7 +178,9 @@ const Inventory = () => {
         <TabPanel value="2">
           <MyInventory />
         </TabPanel>
-        <TabPanel value="3">Item Three</TabPanel>
+        <TabPanel value="3">
+          <InventoryOverview />
+        </TabPanel>
       </TabContext>
     </Accordion>
   );

@@ -27,7 +27,7 @@ import DeleteItemFromInventory from "./DeleteItemFromInventory";
 import AlertInput from "./AlertInput";
 
 const MyInventory = () => {
-  const my_freezer = useAppSelector((state) => state.inventory.food_list);
+  const my_inventory = useAppSelector((state) => state.inventory.food_list);
   const [sortedFreezer, setSortedFreezer] = useState<IFetchInventory[] | null>(
     null
   );
@@ -73,9 +73,9 @@ const MyInventory = () => {
 
   useEffect(() => {
     isRefreshed
-      ? setSortedFreezer(quickSort(my_freezer as IFetchInventory[]))
+      ? setSortedFreezer(quickSort(my_inventory as IFetchInventory[]))
       : null;
-  }, [isRefreshed, my_freezer]);
+  }, [isRefreshed, my_inventory]);
 
   useEffect(() => {
     const selectedFoods = sortedFreezer?.slice(

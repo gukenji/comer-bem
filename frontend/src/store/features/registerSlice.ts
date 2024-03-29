@@ -60,7 +60,6 @@ const registerSlice = createSlice({
       .addCase(registerUser.pending, (state) => {})
       .addCase(registerUser.fulfilled, (state, action) => {
         state.step = 1;
-        console.log("teste");
       })
       .addCase(registerUser.rejected, (state, action) => {});
   },
