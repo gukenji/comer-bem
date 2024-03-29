@@ -3,6 +3,8 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   eraseSucessAlert,
   includeToInventory,
+  setCurrentTab,
+  updateErrorFrom,
 } from "../store/features/inventorySlice";
 import { IIncludeToInventory } from "../interfaces/InventoryInterfaces";
 import { IGetFood } from "../interfaces/FoodInterfaces";
@@ -16,15 +18,8 @@ import {
   CardActions,
   Typography,
   Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   FormHelperText,
   Card,
-  Paper,
   FormControl,
   Input,
   InputAdornment,
@@ -40,6 +35,7 @@ const IncludeToInventory = () => {
   const selected_food = useAppSelector((state) => state.inventory.food);
   const [foodExist, setFoodExist] = useState(false);
   const my_inventory = useAppSelector((state) => state.inventory.food_list);
+  const message_tab = useAppSelector((state) => state.inventory.tab);
 
   const checkIfFoodExist = (key: number) => {
     const result = (my_inventory as IFetchInventory[]).some(
@@ -74,6 +70,9 @@ const IncludeToInventory = () => {
   };
 
   const updateToInventory = async () => {
+    if (quantity == "" || quantity == "0") {
+      return dispatch(updateErrorFrom("INCLUDE"));
+    }
     try {
       const inventory = getFoodAtInventory((selected_food as IGetFood).id);
       const inventory_json = JSON.parse(JSON.stringify(inventory));
@@ -84,12 +83,16 @@ const IncludeToInventory = () => {
         id: inventory_json?.id,
       };
       await dispatch(updateInventory(updated_inventory)).unwrap();
+      dispatch(setCurrentTab("INCLUDE"));
       clearForm();
     } catch (e) {
       console.log(e);
     }
   };
   const addToInventory = async () => {
+    if (quantity == "" || quantity == "0") {
+      return dispatch(updateErrorFrom("INCLUDE"));
+    }
     try {
       const new_food: IIncludeToInventory = {
         user: userProfileInfo?.user_id,
@@ -97,6 +100,8 @@ const IncludeToInventory = () => {
         quantity: quantity as number,
       };
       await dispatch(includeToInventory(new_food)).unwrap();
+      dispatch(setCurrentTab("INCLUDE"));
+
       clearForm();
     } catch (e) {
       console.log(e);
@@ -139,7 +144,7 @@ const IncludeToInventory = () => {
     >
       <Box sx={{ p: 1, display: "flex", justifyContent: "flex-end" }}>
         <FormControl variant="standard">
-          {success == false ? (
+          {success == false && message_tab == "INCLUDE" ? (
             <FormHelperText
               id="standard-weight-helper-text"
               sx={{ color: "red", fontFamily: "VT323" }}

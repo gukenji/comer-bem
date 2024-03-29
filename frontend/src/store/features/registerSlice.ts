@@ -34,7 +34,6 @@ export const registerUser = createAsyncThunk("register", async (args, api) => {
   console.log(data);
   const response = await axiosInstance.post("/user/register/", data);
   const resData = response.data;
-  // localStorage.setItem("tokenInfo", JSON.stringify(resData));
   return resData;
 });
 

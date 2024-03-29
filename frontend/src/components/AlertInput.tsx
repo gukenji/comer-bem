@@ -1,25 +1,38 @@
-import { Alert } from "@mui/material";
-const AlertInput = ({ result }: { result: boolean | null }) => {
+import { Alert, Box } from "@mui/material";
+const AlertInput = ({
+  result,
+  successMessage,
+  errorMessage,
+}: {
+  result: boolean | null;
+  successMessage: string;
+  errorMessage: string;
+}) => {
   return (
-    <div>
+    <Box sx={{ "&.MuiPaper-root": { justifyContent: "center" } }}>
       {result ? (
         <Alert
           severity="success"
-          sx={{ mt: 2, fontFamily: "VT323", fontSize: 15 }}
+          sx={{
+            mt: 2,
+            fontFamily: "VT323",
+            fontSize: 15,
+            justifyContent: "center",
+          }}
         >
-          ALIMENTO CADASTRADO COM SUCESSO!
+          {successMessage}
         </Alert>
       ) : result == false ? (
         <Alert
           severity="error"
           sx={{ mt: 2, fontFamily: "VT323", fontSize: 15 }}
         >
-          ERRO AO CADASTRAR ALIMENTO!
+          {errorMessage}
         </Alert>
       ) : (
         <></>
       )}
-    </div>
+    </Box>
   );
 };
 

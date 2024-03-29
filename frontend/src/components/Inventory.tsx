@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import MyInventory from "./MyInventory";
 import SearchFood from "./SearchFood";
 import IncludeToInventory from "./IncludeToInventory";
@@ -29,9 +29,18 @@ const Inventory = () => {
   const [value, setValue] = React.useState("1");
   const dispatch = useAppDispatch();
   const success = useAppSelector((state) => state.inventory.success);
+  const message_tab = useAppSelector((state) => state.inventory.tab);
+  const request_type = useAppSelector((state) => state.inventory.request_type);
+  const success_message = useAppSelector(
+    (state) => state.inventory.success_message
+  );
+  const error_message = useAppSelector(
+    (state) => state.inventory.error_message
+  );
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+
   const toolTipText = (
     <Typography sx={{ fontFamily: "VT323" }}>
       CADASTRE, EDITE E UTILIZE ALIMENTOS QUE VOCÊ POSSUI EM SUA
@@ -40,6 +49,7 @@ const Inventory = () => {
       CONSUMIR E UMA VISÃO MACRO DOS NUTRIENTES DISPONÍVEIS.
     </Typography>
   );
+
   const handleTooltipClose = () => {
     setOpen(false);
   };
@@ -47,6 +57,7 @@ const Inventory = () => {
   const handleTooltipOpen = () => {
     setOpen(true);
   };
+
   const TypographyStyled = styled(Typography)(({ theme }) => ({
     position: "relative",
     textDecoration: "none",
@@ -62,17 +73,18 @@ const Inventory = () => {
       transform: expanded ? "scaleX(1) " : "scaleX(0)",
     },
   }));
+
   const handleExpansion = () => {
     setExpanded((prevExpanded) => !prevExpanded);
   };
 
   useEffect(() => {
-    success == true
-      ? setTimeout(() => {
-          dispatch(eraseSucessAlert());
-        }, 6000)
-      : null;
+    const timer = setTimeout(() => {
+      dispatch(eraseSucessAlert());
+    }, 6000);
+    return () => clearTimeout(timer);
   }, [success, dispatch]);
+
   return (
     <Accordion
       expanded={expanded}
@@ -151,7 +163,14 @@ const Inventory = () => {
           </TabList>
         </Box>
         <TabPanel value="1">
-          <AlertInput result={success} />
+          {(request_type == "POST" || request_type == "UPDATE") &&
+          message_tab == "INCLUDE" ? (
+            <AlertInput
+              result={success}
+              successMessage={success_message}
+              errorMessage={error_message}
+            />
+          ) : null}
           <SearchFood />
           <IncludeToInventory />
         </TabPanel>

@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../store/store";
-import { getInventory, setOpenDialog } from "../store/features/inventorySlice";
+import {
+  eraseSucessAlert,
+  getInventory,
+  setOpenDeleteDialog,
+  setOpenEditDialog,
+} from "../store/features/inventorySlice";
 import { IGetFood } from "../interfaces/FoodInterfaces";
 import {
   Stack,
@@ -12,15 +17,15 @@ import {
   FormControl,
   Select,
   SelectChangeEvent,
-  Backdrop,
-  CircularProgress,
-  IconButton,
 } from "@mui/material";
 import { EditNote, Delete, LocalDining } from "@mui/icons-material";
 import { quickSort } from "../utils/quickSort";
 import { IFetchInventory } from "../interfaces/InventoryInterfaces";
 import EditInventoryItem from "./EditInventoryItem";
 import { IconButtonStyled } from "../styles/IconButtonStyled";
+import DeleteItemFromInventory from "./DeleteItemFromInventory";
+import AlertInput from "./AlertInput";
+
 const MyInventory = () => {
   const my_freezer = useAppSelector((state) => state.inventory.food_list);
   const [sortedFreezer, setSortedFreezer] = useState<IFetchInventory[] | null>(
@@ -29,12 +34,22 @@ const MyInventory = () => {
   const [currentFoods, setCurrentFoods] = useState<IFetchInventory[] | null>(
     null
   );
-  const open_dialog = useAppSelector((state) => state.inventory.open_dialog);
+  const open_edit = useAppSelector((state) => state.inventory.open_edit);
+  const open_delete = useAppSelector((state) => state.inventory.open_delete);
   const [index, setIndex] = useState(0);
   const [page, setPage] = useState(1);
   const [foodsPerPage, setFoodsPerPage] = useState<number>(5);
   const isRefreshed = useAppSelector((state) => state.inventory.refreshed);
-  const [selectedFood, setSelectFood] = useState<IFetchInventory | null>(null);
+  const [food, setFood] = useState<IFetchInventory | null>(null);
+  const success = useAppSelector((state) => state.inventory.success);
+  const message_tab = useAppSelector((state) => state.inventory.tab);
+  const success_message = useAppSelector(
+    (state) => state.inventory.success_message
+  );
+  const error_message = useAppSelector(
+    (state) => state.inventory.error_message
+  );
+  const request_type = useAppSelector((state) => state.inventory.request_type);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -90,8 +105,11 @@ const MyInventory = () => {
   }, [foodsPerPage, index]);
 
   useEffect(() => {
-    console.log(selectedFood);
-  }, [selectedFood]);
+    const timer = setTimeout(() => {
+      dispatch(eraseSucessAlert());
+    }, 6000);
+    return () => clearTimeout(timer);
+  }, [success, dispatch]);
 
   const calculateMacros = (input_quantity: number, food: IGetFood | null) => {
     const carbs: string = food
@@ -117,6 +135,13 @@ const MyInventory = () => {
   return (
     <>
       <Stack spacing={2}>
+        {request_type == "DELETE" && message_tab == "INVENTORY" ? (
+          <AlertInput
+            result={success}
+            successMessage={success_message}
+            errorMessage={error_message}
+          />
+        ) : null}
         <Box
           sx={{
             display: "flex",
@@ -176,8 +201,9 @@ const MyInventory = () => {
           onChange={handlePageChange}
         />
       </Stack>
-      {open_dialog ? (
-        <EditInventoryItem food={selectedFood as IFetchInventory} />
+      {open_edit ? <EditInventoryItem food={food as IFetchInventory} /> : null}
+      {open_delete ? (
+        <DeleteItemFromInventory food={food as IFetchInventory} />
       ) : null}
       {currentFoods ? (
         currentFoods.map((props) => {
@@ -360,8 +386,8 @@ const MyInventory = () => {
                     <IconButtonStyled>
                       <EditNote
                         onClick={() => {
-                          setSelectFood((prev) => props);
-                          dispatch(setOpenDialog());
+                          setFood((prev) => props);
+                          dispatch(setOpenEditDialog());
                         }}
                         sx={{
                           "&:hover, &:active": {
@@ -388,6 +414,10 @@ const MyInventory = () => {
                     </IconButtonStyled>
                     <IconButtonStyled>
                       <Delete
+                        onClick={() => {
+                          setFood((prev) => props);
+                          dispatch(setOpenDeleteDialog());
+                        }}
                         sx={{
                           "&:hover, &:active": {
                             fontSize: 40,

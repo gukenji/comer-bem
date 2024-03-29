@@ -14,7 +14,8 @@ import {
 import { eraseSucessAlert, selectFood } from "../store/features/inventorySlice";
 import { useState } from "react";
 import { IFetchInventory } from "../interfaces/InventoryInterfaces";
-
+import { ThemeProvider, useTheme } from "@mui/material/styles";
+import { customTheme } from "../styles/SearchFieldTheme";
 const SearchFood = () => {
   const dispatch = useAppDispatch();
   const [inputValue, setInputValue] = useState("");
@@ -26,6 +27,7 @@ const SearchFood = () => {
     (state) => state.inventory.refreshed
   );
   const [foodExist, setFoodExist] = useState(false);
+  const outerTheme = useTheme();
 
   const checkIfFoodExist = (key: number) => {
     const result = (my_freezer as IFetchInventory[]).some(
@@ -82,6 +84,9 @@ const SearchFood = () => {
       <Box>
         <Autocomplete
           value={food}
+          ListboxProps={{
+            style: { boxShadow: "2.6px 5.3px 20px hsl(0deg 0% 0% / 0.42)" },
+          }}
           filterSelectedOptions
           noOptionsText={
             <Typography
@@ -120,17 +125,27 @@ const SearchFood = () => {
             </div>
           )}
           renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="standard"
-              label="BUSCAR ALIMENTO"
-              onClick={() => dispatch(eraseSucessAlert())}
-              InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
-              inputProps={{
-                ...params.inputProps,
-                style: { fontFamily: "VT323", fontSize: 20 },
-              }}
-            />
+            <ThemeProvider theme={customTheme(outerTheme)}>
+              <TextField
+                {...params}
+                variant="standard"
+                label="BUSCAR ALIMENTO"
+                onClick={() => dispatch(eraseSucessAlert())}
+                InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
+                inputProps={{
+                  ...params.inputProps,
+                  style: {
+                    fontFamily: "VT323",
+                    fontSize: 20,
+                  },
+                }}
+                sx={{
+                  "& input:focus": {
+                    boxShadow: "none",
+                  },
+                }}
+              />
+            </ThemeProvider>
           )}
         />
         {foodExist ? helperText : <></>}

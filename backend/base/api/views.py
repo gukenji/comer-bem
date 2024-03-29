@@ -11,6 +11,7 @@ from .serializers import (
     RegistrationSerializer,
 )
 from base.models import Food, Inventory, User
+from rest_framework import status
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -35,12 +36,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @api_view(["POST"])
 def registration_view(request):
     if request.method == "POST":
-        print("==========")
-        print(request.data)
-        print("==========")
         serializer = RegistrationSerializer(data=request.data)
-        print(serializer)
-        print("==========")
         data = {}
         if serializer.is_valid():
             serializer.save()
@@ -105,11 +101,21 @@ def getInventory(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def includeToInventory(request):
-    print(request.data)
     serializer = InventorySerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(serializer.data)
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def deleteFromInventory(request, pk):
+    inventory = Inventory.objects.get(id=pk, user=request.user)
+    if inventory:
+        inventory.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    else:
+        return Response({"msg": "teste"})
 
 
 @api_view(["POST"])

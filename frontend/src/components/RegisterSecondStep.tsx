@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import FileUploader from "./FileUploader";
 import { useAppDispatch, useAppSelector } from "../store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NextButton } from "../styles/NextButton";
 import { registerUser, setSecondStep } from "../store/features/registerSlice";
 import { IRegisterSecondStep } from "../interfaces/RegisterInterfaces";
@@ -27,12 +27,13 @@ const RegisterSecondStep = () => {
   const password = useAppSelector((state) => state.register.password) as string;
 
   const [name, setName] = useState("");
-  const [height, setHeight] = useState(31);
-  const [weight, setWeight] = useState(31);
-  const [age, setAge] = useState(32);
+  const [height, setHeight] = useState<number | null>(null);
+  const [weight, setWeight] = useState<number | null>(null);
+  const [age, setAge] = useState<number | null>(null);
   const [isMale, setIsMale] = useState<boolean | null>(null);
   const [images, setImages] = useState<File[]>([]);
   const [error, setError] = useState(false);
+  const [isDot, setIsDot] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -43,9 +44,11 @@ const RegisterSecondStep = () => {
     age: age,
     is_male: isMale,
   };
+  const integer_regex = /^[0-9]+(?!\.,)$/;
 
   const handleRegister = async () => {
     setLoading(true);
+    console.log(second_step);
     if (name && height && weight && age && isMale && step == 2) {
       dispatch(setSecondStep(second_step));
       try {
@@ -145,6 +148,9 @@ const RegisterSecondStep = () => {
           <Input
             id="standard-adornment-weight"
             type="number"
+            onChange={(e) => {
+              setWeight(parseFloat(e.target.value));
+            }}
             endAdornment={
               <InputAdornment position="end">
                 {" "}
@@ -191,6 +197,26 @@ const RegisterSecondStep = () => {
           <Input
             id="standard-adornment-weight"
             type="number"
+            value={height ? height : ""}
+            onKeyDown={(e) => {
+              e.key == "." || e.key == ","
+                ? setIsDot((prev) => true)
+                : setIsDot((prev) => false);
+            }}
+            onChange={(e) => {
+              if (e.target.value == "" && isDot) {
+                setHeight((prev) => prev);
+              }
+              if (
+                (e.target.value == "" && !isDot) ||
+                parseFloat(e.target.value) < 1
+              ) {
+                setHeight((prev) => null);
+              }
+              if (integer_regex.test(e.target.value)) {
+                setHeight((prev) => parseInt(e.target.value));
+              }
+            }}
             endAdornment={
               <InputAdornment position="end">
                 {" "}
@@ -237,6 +263,26 @@ const RegisterSecondStep = () => {
         <FormControl variant="standard" sx={{ m: 1, mt: 3, width: "25%" }}>
           <Input
             type="number"
+            value={age ? age : ""}
+            onKeyDown={(e) => {
+              e.key == "." || e.key == ","
+                ? setIsDot((prev) => true)
+                : setIsDot((prev) => false);
+            }}
+            onChange={(e) => {
+              if (e.target.value == "" && isDot) {
+                setAge((prev) => prev);
+              }
+              if (
+                (e.target.value == "" && !isDot) ||
+                parseFloat(e.target.value) < 1
+              ) {
+                setAge((prev) => null);
+              }
+              if (integer_regex.test(e.target.value)) {
+                setAge((prev) => parseInt(e.target.value));
+              }
+            }}
             id="standard-adornment-weight"
             endAdornment={
               <InputAdornment position="end">

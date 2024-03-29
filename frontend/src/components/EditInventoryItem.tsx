@@ -2,6 +2,7 @@ import {
   Box,
   Dialog,
   Divider,
+  FormHelperText,
   Input,
   InputAdornment,
   Stack,
@@ -11,7 +12,9 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import {
   eraseSucessAlert,
-  setOpenDialog,
+  setOpenEditDialog,
+  updateErrorFrom,
+  setCurrentTab,
 } from "../store/features/inventorySlice";
 import { NutritionalTable } from "./NutritionalTable";
 import { IFetchInventory } from "../interfaces/InventoryInterfaces";
@@ -20,15 +23,27 @@ import { updateInventory } from "../store/features/inventorySlice";
 import AlertInput from "./AlertInput";
 const EditInventoryItem = (props: { food: IFetchInventory }) => {
   const { food, id, quantity } = props.food;
-  const open_dialog = useAppSelector((state) => state.inventory.open_dialog);
+  const open_edit = useAppSelector((state) => state.inventory.open_edit);
+  const success = useAppSelector((state) => state.inventory.success);
+  const request_type = useAppSelector((state) => state.inventory.request_type);
   const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
-  const [result, setResult] = useState<boolean | null>(null);
   const [newQuantity, setNewQuantity] = useState<number | string>(quantity);
+  const message_tab = useAppSelector((state) => state.inventory.tab);
+
+  const success_message = useAppSelector(
+    (state) => state.inventory.success_message
+  );
+  const error_message = useAppSelector(
+    (state) => state.inventory.error_message
+  );
   const dispatch = useAppDispatch();
   const handleClose = () => {
-    dispatch(setOpenDialog());
+    dispatch(setOpenEditDialog());
   };
   const updateToInventory = async () => {
+    if (newQuantity == "" || newQuantity == "0") {
+      return dispatch(updateErrorFrom("INVENTORY"));
+    }
     try {
       const updated_inventory = {
         user: userProfileInfo?.user_id as number,
@@ -37,19 +52,22 @@ const EditInventoryItem = (props: { food: IFetchInventory }) => {
         id: id as number,
       };
       await dispatch(updateInventory(updated_inventory)).unwrap();
-      setResult(true);
+      dispatch(setCurrentTab("INVENTORY"));
     } catch (e) {
-      console.log(e);
-      setResult(false);
+      return dispatch(updateErrorFrom("INVENTORY"));
     }
   };
+
   useEffect(() => {
-    setResult(null);
-  }, [newQuantity]);
+    const timer = setTimeout(() => {
+      dispatch(eraseSucessAlert());
+    }, 6000);
+    return () => clearTimeout(timer);
+  }, [success, dispatch]);
 
   return (
     <Dialog
-      open={open_dialog}
+      open={open_edit}
       onClose={handleClose}
       sx={{
         "& .MuiPaper-root": {
@@ -81,11 +99,18 @@ const EditInventoryItem = (props: { food: IFetchInventory }) => {
               <span> {food.brand}</span>
             </Typography>
           ) : null}
+          {request_type == "UPDATE" && message_tab == "INVENTORY" ? (
+            <AlertInput
+              result={success}
+              successMessage={success_message}
+              errorMessage={error_message}
+            />
+          ) : null}
         </Stack>
         <NutritionalTable quantity={newQuantity} food={food} />
       </Box>
       <Divider />
-      <AlertInput result={result} />
+
       <Box
         sx={{
           p: 2,
@@ -110,12 +135,13 @@ const EditInventoryItem = (props: { food: IFetchInventory }) => {
         >
           QUANTIDADE
         </Typography>
+
         <Stack direction="row" spacing={1}>
           <Box>
             <Input
               autoFocus
               value={newQuantity}
-              onClick={() => setResult((prev) => null)}
+              onClick={() => dispatch(eraseSucessAlert())}
               onChange={(e) => setNewQuantity((prev) => e.target.value)}
               type="number"
               id="standard-adornment-weight"
@@ -134,6 +160,7 @@ const EditInventoryItem = (props: { food: IFetchInventory }) => {
                 width: 100,
                 "& input:focus": {
                   boxShadow: "none",
+                  borderBottom: "2px solid black",
                 },
                 ":after": {
                   borderBottom: "2px solid black",
@@ -153,6 +180,14 @@ const EditInventoryItem = (props: { food: IFetchInventory }) => {
               }}
               inputProps={{ style: { textAlign: "end" } }}
             />
+            {success == false && message_tab == "INVENTORY" ? (
+              <FormHelperText
+                id="standard-weight-helper-text"
+                sx={{ color: "red", fontFamily: "VT323" }}
+              >
+                PREENCHA ESTE CAMPO
+              </FormHelperText>
+            ) : null}
           </Box>{" "}
           <PublishedWithChanges
             sx={{
