@@ -18,6 +18,7 @@ const AlertInput = ({
             fontFamily: "VT323",
             fontSize: 15,
             justifyContent: "center",
+            textAlign: "center",
           }}
         >
           {successMessage}
@@ -25,7 +26,7 @@ const AlertInput = ({
       ) : result == false ? (
         <Alert
           severity="error"
-          sx={{ mt: 2, fontFamily: "VT323", fontSize: 15 }}
+          sx={{ mt: 2, fontFamily: "VT323", fontSize: 15, textAlign: "center" }}
         >
           {errorMessage}
         </Alert>

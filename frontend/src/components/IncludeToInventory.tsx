@@ -84,7 +84,6 @@ const IncludeToInventory = () => {
       };
       await dispatch(updateInventory(updated_inventory)).unwrap();
       dispatch(setCurrentTab("INCLUDE"));
-      clearForm();
     } catch (e) {
       console.log(e);
     }
@@ -101,7 +100,6 @@ const IncludeToInventory = () => {
       };
       await dispatch(includeToInventory(new_food)).unwrap();
       dispatch(setCurrentTab("INCLUDE"));
-
       clearForm();
     } catch (e) {
       console.log(e);
@@ -112,6 +110,13 @@ const IncludeToInventory = () => {
       foodExist ? updateToInventory() : addToInventory();
     }
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      dispatch(eraseSucessAlert());
+    }, 6000);
+    return () => clearTimeout(timer);
+  }, [success, dispatch]);
 
   const calculateMacros = (input_quantity: number, food: IGetFood | null) => {
     const carbs: string = food

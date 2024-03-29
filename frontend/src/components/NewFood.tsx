@@ -44,6 +44,8 @@ export default function NewFood() {
   const [carbs, setCarbs] = useState<number | string>("");
   const [fat, setFat] = useState<number | string>("");
   const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSucesssMessage] = useState("");
   const formRef = useRef<HTMLFormElement>();
   const dispatch = useAppDispatch();
   const handleExpansion = () => {
@@ -82,9 +84,11 @@ export default function NewFood() {
       };
       await dispatch(createFood(food)).unwrap();
       setFormResult(true);
+      setSucesssMessage("ALIMENTO ENVIADO PARA O BANCO DE DADOS COM SUCESSO!");
       clearForm();
     } catch (e) {
       setFormResult(false);
+      setErrorMessage("ERRO AO CADASTRAR ALIMENTO");
     }
   };
   const toolTipText = (
@@ -118,12 +122,11 @@ export default function NewFood() {
     setOpen(true);
   };
   useEffect(() => {
-    formResult == true
-      ? setTimeout(() => {
-          setFormResult(null);
-        }, 6000)
-      : null;
-  }, [formResult]);
+    const timer = setTimeout(() => {
+      setFormResult(null);
+    }, 6000);
+    return () => clearTimeout(timer);
+  }, [formResult, dispatch]);
 
   return (
     <>
@@ -180,7 +183,13 @@ export default function NewFood() {
             sx={{ display: "flex", flexDirection: "column", p: 1 }}
             onChange={() => setFormResult(null)}
           >
-            <AlertInput result={formResult} />
+            {formResult !== null ? (
+              <AlertInput
+                result={formResult}
+                successMessage={successMessage}
+                errorMessage={errorMessage}
+              />
+            ) : null}
             <TextField
               fullWidth
               id="brand"
@@ -413,9 +422,7 @@ export default function NewFood() {
               }}
             />
             <Button
-              variant="outlined"
-              endIcon={<Backup />}
-              sx={{ width: "50%", alignSelf: "center", mt: 3 }}
+              sx={{ fontFamily: "VT323", margin: "0 auto", fontSize: 22 }}
               onClick={handleCreateFood}
             >
               CADASTRAR
