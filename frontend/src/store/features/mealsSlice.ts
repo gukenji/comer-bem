@@ -12,9 +12,11 @@ interface IMealsList {
   error: string | null;
 }
 
-const initialState: IMealsList = {
+const initialState: IMealsList & { open_icon: boolean; icon: string | null } = {
   meal_list: null,
   error: null,
+  open_icon: false,
+  icon: null,
 };
 
 export const getMeals = createAsyncThunk("meals", async () => {
@@ -26,7 +28,14 @@ export const getMeals = createAsyncThunk("meals", async () => {
 const mealsSlice = createSlice({
   name: "meals",
   initialState,
-  reducers: {},
+  reducers: {
+    setOpenIcon(state) {
+      state.open_icon = !state.open_icon;
+    },
+    selectIcon(state, action) {
+      state.icon = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getMeals.pending, (state) => {
@@ -42,5 +51,7 @@ const mealsSlice = createSlice({
       });
   },
 });
+
+export const { setOpenIcon, selectIcon } = mealsSlice.actions;
 
 export default mealsSlice.reducer;

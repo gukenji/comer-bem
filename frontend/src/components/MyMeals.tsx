@@ -1,10 +1,7 @@
 import React, { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../store/store";
 import { getFoods } from "../store/features/foodsSlice";
-import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
-import { Divider } from "@mui/material";
-import Typography from "@mui/material/Typography";
 const MyMeals = () => {
   const dispatch = useAppDispatch();
   const fetchFood = async () => {
@@ -15,7 +12,7 @@ const MyMeals = () => {
     }
   };
 
-  return <div>MYMEALS</div>;
+  return <Box>MYMEALS.TSX</Box>;
 };
 
 export default MyMeals;
