@@ -14,13 +14,12 @@ import { useState } from "react";
 const SelectMealIcon = () => {
   const dispatch = useAppDispatch();
   const open_icon = useAppSelector((state) => state.meals.open_icon);
-  const [badgeIndex, setBadgeIndex] = useState<number | null>(null);
-  const [icon, setIcon] = useState<string | null>(null);
-  console.log(icon);
+  const selected_icon = useAppSelector((state) => state.meals.icon);
+  const [icon, setIcon] = useState<string | null>(selected_icon);
+
   const images = Object.values(
     import.meta.glob("../assets/food_icons/*", { eager: true, as: "url" })
   );
-
   const handleClose = () => {
     dispatch(setOpenIcon());
   };
@@ -67,10 +66,9 @@ const SelectMealIcon = () => {
               color="success"
               onClick={() => {
                 setIcon(image);
-                setBadgeIndex(index);
               }}
               badgeContent={
-                badgeIndex == index ? <Check sx={{ fontSize: 10 }} /> : null
+                icon == image ? <Check sx={{ fontSize: 10 }} /> : null
               }
               key={index}
             >

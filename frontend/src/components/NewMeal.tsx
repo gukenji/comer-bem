@@ -4,24 +4,21 @@ import { useTheme } from "@mui/material/styles";
 import {
   Box,
   TextField,
-  AccordionSummary,
   Typography,
   AccordionSlots,
   Accordion,
   useMediaQuery,
   Fade,
   AccordionDetails,
-  MenuItem,
-  Icon,
   ClickAwayListener,
   IconButton,
   Tooltip,
   FormHelperText,
   Avatar,
+  Button,
+  styled,
 } from "@mui/material";
-import { Pixelify } from "react-pixelify";
 import { setOpenIcon } from "../store/features/mealsSlice";
-import { styled } from "@mui/material/styles";
 import { Info } from "@mui/icons-material";
 import { AccordionSummaryStyled } from "../styles/AccordionSummaryStyled";
 import { useAppDispatch, useAppSelector } from "../store/store";
@@ -30,9 +27,6 @@ import SelectMealIcon from "./SelectMealIcon";
 export default function NewMeal() {
   const [expanded, setExpanded] = React.useState(false);
   const theme = useTheme();
-  const greaterThanMid = useMediaQuery(theme.breakpoints.up("md"));
-  const smallToMid = useMediaQuery(theme.breakpoints.between("sm", "md"));
-  const lessThanSmall = useMediaQuery(theme.breakpoints.down("sm"));
   const [open, setOpen] = React.useState(false);
   const dispatch = useAppDispatch();
   const open_icon = useAppSelector((state) => state.meals.open_icon);
@@ -122,49 +116,68 @@ export default function NewMeal() {
         </AccordionSummaryStyled>
         <AccordionDetails>
           <Box
-            component="form"
-            noValidate
-            autoComplete="off"
-            sx={{ display: "flex", gap: 3 }}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              justifyItems: "flex-end",
+              alignContent: "flex-end",
+              alignItems: "flex-end",
+            }}
           >
             <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-              onClick={() => dispatch(setOpenIcon())}
+              component="form"
+              noValidate
+              autoComplete="off"
+              sx={{ display: "flex", gap: 3, flex: 1, width: "100%" }}
             >
-              {icon ? (
-                <Avatar
-                  alt="Selected Icon"
-                  src={icon}
-                  variant="square"
-                  sx={{ width: "auto", height: "auto" }}
-                />
-              ) : (
-                <AddCircle />
-              )}
-
-              <FormHelperText
-                id="standard-weight-helper-text"
-                sx={{ fontFamily: "VT323", fontSize: 17 }}
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+                onClick={() => dispatch(setOpenIcon())}
               >
-                ÍCONE
-              </FormHelperText>
-            </Box>
-            {open_icon ? <SelectMealIcon /> : null}
+                {icon ? (
+                  <Avatar
+                    alt="Selected Icon"
+                    src={icon}
+                    variant="square"
+                    sx={{ width: "auto", height: "auto" }}
+                  />
+                ) : (
+                  <AddCircle />
+                )}
 
-            <TextField
-              fullWidth
-              id="name"
-              InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
-              label="REFEIÇÃO"
-              inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
-              required
-              variant="standard"
-            />
-            <div style={{ paddingTop: 20 }}></div>
+                <FormHelperText
+                  id="standard-weight-helper-text"
+                  sx={{ fontFamily: "VT323", fontSize: 17 }}
+                >
+                  ÍCONE
+                </FormHelperText>
+              </Box>
+              {open_icon ? <SelectMealIcon /> : null}
+
+              <TextField
+                fullWidth
+                id="name"
+                InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
+                label="REFEIÇÃO"
+                inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
+                required
+                variant="standard"
+              />
+            </Box>
+            <Button
+              sx={{
+                fontFamily: "VT323",
+                fontSize: 22,
+                paddingRight: 0,
+              }}
+            >
+              CADASTRAR
+            </Button>
           </Box>
         </AccordionDetails>
       </Accordion>
