@@ -89,7 +89,6 @@ const FileUploader = (props: Props) => {
         <input
           id={inputId}
           type="file"
-          multiple
           accept="image/*,.png,.jpg,.jpeg,.gif"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             handleOnAddImage(e)

@@ -19,6 +19,7 @@ class RegistrationSerializer(ModelSerializer):
             "weight",
             "age",
             "is_male",
+            "profile_pic",
         ]
         extra_kwargs = {"password": {"write_only": True}}
 
@@ -31,6 +32,7 @@ class RegistrationSerializer(ModelSerializer):
             weight=self.validated_data["weight"],
             age=self.validated_data["age"],
             is_male=self.validated_data["is_male"],
+            profile_pic=self.validated_data["profile_pic"],
         )
         password = self.validated_data["password"]
         password_confirmation = self.validated_data["password_confirmation"]

@@ -1,12 +1,17 @@
 import { IGetFood } from "./FoodInterfaces";
 
 export interface IIncludeToInventory {
-  user: number | undefined;
+  token: string | undefined;
   food: number;
   quantity: number;
 }
 export interface IUpdateToInventory extends IIncludeToInventory {
   id: number;
+}
+
+export interface IExcludeFromInventory {
+  id: number;
+  token: string | undefined;
 }
 
 export interface IInventoryStatus {

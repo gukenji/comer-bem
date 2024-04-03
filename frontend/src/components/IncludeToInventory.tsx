@@ -30,7 +30,8 @@ import { NutritionalTable } from "./NutritionalTable";
 const IncludeToInventory = () => {
   const dispatch = useAppDispatch();
   const quantity = useAppSelector((state) => state.inventory.value);
-  const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
+  const access_token = useAppSelector((state) => state.auth.tokenInfo?.access);
+
   const success = useAppSelector((state) => state.inventory.success);
   const selected_food = useAppSelector((state) => state.inventory.food);
   const [foodExist, setFoodExist] = useState(false);
@@ -77,7 +78,7 @@ const IncludeToInventory = () => {
       const inventory = getFoodAtInventory((selected_food as IGetFood).id);
       const inventory_json = JSON.parse(JSON.stringify(inventory));
       const updated_inventory = {
-        user: userProfileInfo?.user_id as number,
+        token: access_token,
         food: selected_food?.id as number,
         quantity: inventory_json?.quantity + quantity,
         id: inventory_json?.id,
@@ -94,7 +95,7 @@ const IncludeToInventory = () => {
     }
     try {
       const new_food: IIncludeToInventory = {
-        user: userProfileInfo?.user_id,
+        token: access_token,
         food: selected_food?.id as number,
         quantity: quantity as number,
       };

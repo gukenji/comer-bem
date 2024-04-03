@@ -36,13 +36,13 @@ const RegisterSecondStep = () => {
   const [isDot, setIsDot] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
-
   const second_step: IRegisterSecondStep = {
     name: name,
     height: height,
     weight: weight,
     age: age,
     is_male: isMale,
+    profile_pic: images[0],
   };
   const integer_regex = /^[0-9]+(?!\.,)$/;
   const handleRegister = async () => {

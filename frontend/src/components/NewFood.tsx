@@ -43,7 +43,8 @@ export default function NewFood() {
   const [protein, setProtein] = useState<number | string>("");
   const [carbs, setCarbs] = useState<number | string>("");
   const [fat, setFat] = useState<number | string>("");
-  const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
+  const access_token = useAppSelector((state) => state.auth.tokenInfo?.access);
+
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSucesssMessage] = useState("");
   const formRef = useRef<HTMLFormElement>();
@@ -80,7 +81,7 @@ export default function NewFood() {
         protein: protein,
         carbs: carbs,
         fat: fat,
-        user: userProfileInfo?.user_id,
+        token: access_token,
       };
       await dispatch(createFood(food)).unwrap();
       setFormResult(true);

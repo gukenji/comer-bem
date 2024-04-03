@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Pixelify } from "react-pixelify";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -9,24 +9,26 @@ import {
   useTheme,
   Menu,
   MenuItem,
-  IconButton,
 } from "@mui/material";
 import { useAppSelector, useAppDispatch } from "../store/store";
-import profile_pic from "../assets/profile.jpeg";
 import { logout } from "../store/features/authSlice";
 import { IconButtonStyled } from "../styles/IconButtonStyled";
+import default_avatar_female from "../assets/default_avatar_female.png";
+import default_avatar_male from "../assets/default_avatar_male.png";
 const Avatar = () => {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
+  const [profilePic, setProfilePic] = useState<File | null>(null);
+  const PROFILE_PIC_ENDPOINT = "http://localhost:8000/media/";
   const greaterThanMid = useMediaQuery(theme.breakpoints.up("md"));
-  const smallToMid = useMediaQuery(theme.breakpoints.between("sm", "md"));
-  const lessThanSmall = useMediaQuery(theme.breakpoints.down("sm"));
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  console.log(profilePic);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleLogout = async () => {
     setAnchorEl(null);
     try {
@@ -40,6 +42,14 @@ const Avatar = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+    userProfileInfo?.profile_pic
+      ? setProfilePic((prev) => userProfileInfo.profile_pic)
+      : setProfilePic(null);
+    console.log(profilePic);
+  }, [userProfileInfo]);
+
   return (
     <Box sx={{ display: userProfileInfo ? "inherit" : "none" }}>
       <IconButtonStyled
@@ -56,13 +66,28 @@ const Avatar = () => {
             borderRadius: 2,
           }}
         >
-          <Pixelify
-            src={profile_pic}
-            pixelSize={2}
-            centered={true}
-            width={greaterThanMid ? 100 : 80}
-            height={greaterThanMid ? 100 : 80}
-          />
+          {profilePic ? (
+            <Pixelify
+              src={`${PROFILE_PIC_ENDPOINT + profilePic}`}
+              pixelSize={0}
+              centered={true}
+              width={greaterThanMid ? 100 : 80}
+              height={greaterThanMid ? 100 : 80}
+            />
+          ) : (
+            <Pixelify
+              src={
+                userProfileInfo?.is_male
+                  ? default_avatar_male
+                  : default_avatar_female
+              }
+              pixelSize={0}
+              fillTransparencyColor={"transparent"}
+              centered={true}
+              width={greaterThanMid ? 100 : 80}
+              height={greaterThanMid ? 100 : 80}
+            />
+          )}
         </Icon>
         <Typography
           sx={{

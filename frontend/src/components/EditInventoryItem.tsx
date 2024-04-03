@@ -26,7 +26,7 @@ const EditInventoryItem = (props: { food: IFetchInventory }) => {
   const open_edit = useAppSelector((state) => state.inventory.open_edit);
   const success = useAppSelector((state) => state.inventory.success);
   const request_type = useAppSelector((state) => state.inventory.request_type);
-  const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
+  const access_token = useAppSelector((state) => state.auth.tokenInfo?.access);
   const [newQuantity, setNewQuantity] = useState<number | string>(quantity);
   const message_tab = useAppSelector((state) => state.inventory.tab);
 
@@ -46,7 +46,7 @@ const EditInventoryItem = (props: { food: IFetchInventory }) => {
     }
     try {
       const updated_inventory = {
-        user: userProfileInfo?.user_id as number,
+        token: access_token,
         food: food.id as number,
         quantity: newQuantity as number,
         id: id as number,

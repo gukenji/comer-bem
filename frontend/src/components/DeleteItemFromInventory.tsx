@@ -13,14 +13,20 @@ import AlertInput from "./AlertInput";
 const DeleteItemFromInventory = (props: { food: IFetchInventory }) => {
   const { food, id, quantity } = props.food;
   const open_delete = useAppSelector((state) => state.inventory.open_delete);
-  const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
+
+  const access_token = useAppSelector((state) => state.auth.tokenInfo?.access);
+
   const dispatch = useAppDispatch();
   const handleClose = () => {
     dispatch(setOpenDeleteDialog());
   };
   const deleteItem = async () => {
     try {
-      await dispatch(deleteFromInventory(id)).unwrap();
+      const data = {
+        id: id,
+        token: access_token,
+      };
+      await dispatch(deleteFromInventory(data)).unwrap();
       dispatch(setCurrentTab("INVENTORY"));
       handleClose();
     } catch (e) {

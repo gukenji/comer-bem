@@ -5,6 +5,7 @@ import {
 } from "../../interfaces/RegisterInterfaces";
 import axiosInstance from "../../api/axiosInstance";
 import { RootState } from "../store";
+import axios from "axios";
 
 const initialState: IRegisterFirstStep &
   IRegisterSecondStep & { step: number } = {
@@ -17,6 +18,7 @@ const initialState: IRegisterFirstStep &
   weight: null,
   age: null,
   is_male: null,
+  profile_pic: null,
 };
 
 export const registerUser = createAsyncThunk("register", async (args, api) => {
@@ -30,9 +32,18 @@ export const registerUser = createAsyncThunk("register", async (args, api) => {
     weight: state.register.weight,
     age: state.register.age,
     is_male: state.register.is_male,
+    profile_pic: state.register.profile_pic,
   };
   console.log(data);
-  const response = await axiosInstance.post("/user/register/", data);
+
+  const response = await axios.post(
+    "http://localhost:8000/api/user/register/",
+    data,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
+
   const resData = response.data;
   return resData;
 });
@@ -53,6 +64,7 @@ const registerSlice = createSlice({
       state.weight = action.payload.weight;
       state.age = action.payload.age;
       state.is_male = action.payload.is_male;
+      state.profile_pic = action.payload.profile_pic;
     },
   },
   extraReducers: (builder) => {

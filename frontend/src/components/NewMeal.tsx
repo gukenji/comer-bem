@@ -1,13 +1,11 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { ExpandMore, AddCircle } from "@mui/icons-material";
-import { useTheme } from "@mui/material/styles";
 import {
   Box,
   TextField,
   Typography,
   AccordionSlots,
   Accordion,
-  useMediaQuery,
   Fade,
   AccordionDetails,
   ClickAwayListener,
@@ -18,20 +16,23 @@ import {
   Button,
   styled,
 } from "@mui/material";
-import { setOpenIcon } from "../store/features/mealsSlice";
+import { createMeal, setOpenIcon } from "../store/features/mealsSlice";
 import { Info } from "@mui/icons-material";
 import { AccordionSummaryStyled } from "../styles/AccordionSummaryStyled";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import SelectMealIcon from "./SelectMealIcon";
+import { ICreateMeal } from "../interfaces/MealsInterfaces";
 
 export default function NewMeal() {
-  const [expanded, setExpanded] = React.useState(false);
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
+  const access_token = useAppSelector((state) => state.auth.tokenInfo?.access);
   const open_icon = useAppSelector((state) => state.meals.open_icon);
   const icon = useAppSelector((state) => state.meals.icon);
-  console.log(icon);
+  const [data, setData] = useState<ICreateMeal | null>(null);
+  const [name, setName] = useState<string | null>(null);
+
   const toolTipText = (
     <Typography sx={{ fontFamily: "VT323" }}>
       CADASTRE E EDITE AS REFEIÇÕES COM OS RESPECTIVOS ALIMENTOS DO SEU
@@ -68,6 +69,14 @@ export default function NewMeal() {
     },
   }));
 
+  useEffect(() => {
+    setData({
+      token: access_token as string,
+      icon: icon as string,
+      name: name as string,
+    });
+    console.log(data);
+  }, [icon, name]);
   return (
     <>
       <Accordion
@@ -75,8 +84,7 @@ export default function NewMeal() {
         slots={{ transition: Fade as AccordionSlots["transition"] }}
         slotProps={{ transition: { timeout: 400 } }}
         sx={{
-          boxShadow:
-            "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+          boxShadow: "2.6px 5.3px 5.3px hsl(0deg 0% 0% / 0.42)",
           "& .MuiAccordion-region": { height: expanded ? "auto" : 0 },
           "& .MuiAccordionDetails-root": {
             display: expanded ? "block" : "none",
@@ -167,6 +175,9 @@ export default function NewMeal() {
                 inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
                 required
                 variant="standard"
+                onChange={(e) => {
+                  setName(e.target.value.toUpperCase());
+                }}
               />
             </Box>
             <Button
@@ -175,6 +186,7 @@ export default function NewMeal() {
                 fontSize: 22,
                 paddingRight: 0,
               }}
+              onClick={() => dispatch(createMeal(data as ICreateMeal))}
             >
               CADASTRAR
             </Button>

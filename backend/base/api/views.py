@@ -10,8 +10,9 @@ from .serializers import (
     GetInventorySerializer,
     RegistrationSerializer,
 )
-from base.models import Food, Inventory, User
+from base.models import Food, Inventory, User, Meal
 from rest_framework import status
+from rest_framework_simplejwt.tokens import AccessToken
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -26,6 +27,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token["age"] = user.age
         token["is_male"] = user.is_male
         token["level"] = user.level
+        token["profile_pic"] = str(user.profile_pic) if user.profile_pic else None
         return token
 
 
@@ -36,7 +38,6 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @api_view(["POST"])
 def registration_view(request):
     if request.method == "POST":
-        print(request.data)
         serializer = RegistrationSerializer(data=request.data)
         data = {}
         if serializer.is_valid():
@@ -67,9 +68,12 @@ def getRoutes(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def createFood(request):
+    token = AccessToken(request.data["token"])
+    user_id = token.payload["user_id"]
+    user = User.objects.get(id=user_id)
     serializer = FoodSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    serializer.save()
+    serializer.save(user=user)
     return Response(serializer.data)
 
 
@@ -85,8 +89,20 @@ def getFoods(request):
 @permission_classes([IsAuthenticated])
 def getMyMeals(request):
     user = request.user
-    meals = user.my_meals_set.all()
+    meals = Meal.objects.filter(user=user)
     serializer = MealSerializer(meals, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def createMeal(request):
+    token = AccessToken(request.data["token"])
+    user_id = token.payload["user_id"]
+    user = User.objects.get(id=user_id)
+    serializer = MealSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save(user=user)
     return Response(serializer.data)
 
 
@@ -102,16 +118,22 @@ def getInventory(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def includeToInventory(request):
+    token = AccessToken(request.data["token"])
+    user_id = token.payload["user_id"]
+    user = User.objects.get(id=user_id)
     serializer = InventorySerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    serializer.save()
+    serializer.save(user=user)
     return Response(serializer.data)
 
 
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
 def deleteFromInventory(request, pk):
-    inventory = Inventory.objects.get(id=pk, user=request.user)
+    token = AccessToken(request.data["token"])
+    user_id = token.payload["user_id"]
+    user = User.objects.get(id=user_id)
+    inventory = Inventory.objects.get(id=pk, user=user)
     if inventory:
         inventory.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -122,7 +144,10 @@ def deleteFromInventory(request, pk):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def updateInventory(request, pk):
-    inventory = Inventory.objects.get(id=pk, user=request.user)
+    token = AccessToken(request.data["token"])
+    user_id = token.payload["user_id"]
+    user = User.objects.get(id=user_id)
+    inventory = Inventory.objects.get(id=pk, user=user)
     serializer = InventorySerializer(instance=inventory, data=request.data)
     if serializer.is_valid():
         serializer.save()

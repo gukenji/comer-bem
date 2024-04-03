@@ -12,11 +12,10 @@ import { useAppDispatch, useAppSelector } from "../store/store";
 import { selectIcon, setOpenIcon } from "../store/features/mealsSlice";
 import { useState } from "react";
 const SelectMealIcon = () => {
-  const dispatch = useAppDispatch();
   const open_icon = useAppSelector((state) => state.meals.open_icon);
   const selected_icon = useAppSelector((state) => state.meals.icon);
   const [icon, setIcon] = useState<string | null>(selected_icon);
-
+  const dispatch = useAppDispatch();
   const images = Object.values(
     import.meta.glob("../assets/food_icons/*", { eager: true, as: "url" })
   );

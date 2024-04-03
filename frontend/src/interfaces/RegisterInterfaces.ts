@@ -10,4 +10,5 @@ export interface IRegisterSecondStep {
   weight: number | null;
   age: number | null;
   is_male: boolean | null;
+  profile_pic: File | null;
 }

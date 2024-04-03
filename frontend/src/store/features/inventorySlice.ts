@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosInstance";
 import {
+  IExcludeFromInventory,
   IFetchInventory,
   IGetInventory,
   IIncludeToInventory,
@@ -58,8 +59,11 @@ export const updateInventory = createAsyncThunk(
 
 export const deleteFromInventory = createAsyncThunk(
   "delete_from_inventory",
-  async (id: number) => {
-    const response = await axiosInstance.delete(`/inventory/delete/${id}/`);
+  async (data: IExcludeFromInventory) => {
+    const response = await axiosInstance.delete(
+      `/inventory/delete/${data.id}/`,
+      { data: { token: data.token } }
+    );
     const resData = response.data;
     return resData;
   }

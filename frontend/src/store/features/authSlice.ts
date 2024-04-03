@@ -14,8 +14,8 @@ interface IRefresh {
 }
 
 interface IAuthApiState {
-  tokenInfo?: ITokenInfo | null;
-  userProfileData?: IUserData | null;
+  tokenInfo: ITokenInfo | null;
+  userProfileData: IUserData | null;
   status: "idle" | "loading" | "failed";
   error: string | null;
 }
@@ -53,6 +53,9 @@ const initialState: IAuthApiState & { tab: null | number } = {
         level: jwtDecode<IJWTDecode>(
           JSON.parse(localStorage.getItem("tokenInfo") as string).access
         ).level,
+        profile_pic: jwtDecode<IJWTDecode>(
+          JSON.parse(localStorage.getItem("tokenInfo") as string).access
+        ).profile_pic,
       }
     : null,
   status: "idle",
@@ -118,6 +121,8 @@ const authSlice = createSlice({
           age: jwtDecode<IJWTDecode>(state.tokenInfo.access).age,
           is_male: jwtDecode<IJWTDecode>(state.tokenInfo.access).is_male,
           level: jwtDecode<IJWTDecode>(state.tokenInfo.access).level,
+          profile_pic: jwtDecode<IJWTDecode>(state.tokenInfo.access)
+            .profile_pic,
         };
       })
       .addCase(login.rejected, (state, action) => {
@@ -146,6 +151,8 @@ const authSlice = createSlice({
             age: jwtDecode<IJWTDecode>(state.tokenInfo.access).age,
             is_male: jwtDecode<IJWTDecode>(state.tokenInfo.access).is_male,
             level: jwtDecode<IJWTDecode>(state.tokenInfo.access).level,
+            profile_pic: jwtDecode<IJWTDecode>(state.tokenInfo.access)
+              .profile_pic,
           };
         }
       )

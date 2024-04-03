@@ -15,6 +15,7 @@ urlpatterns = [
     path("inventory/update/<str:pk>/", views.updateInventory),
     path("inventory/delete/<str:pk>/", views.deleteFromInventory),
     path("meals/get/", views.getMyMeals),
+    path("meals/create/", views.createMeal),
     path("user/register/", views.registration_view, name="register"),
     path("user/get/<str:email>/", views.checkAccountExist),
 ]
