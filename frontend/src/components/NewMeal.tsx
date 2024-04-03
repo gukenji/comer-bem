@@ -1,48 +1,54 @@
-import * as React from "react";
-import Accordion, { AccordionSlots } from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Fade from "@mui/material/Fade";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useTheme } from "@mui/material/styles";
-import Autocomplete from "@mui/material/Autocomplete";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { ExpandMore, AddCircle } from "@mui/icons-material";
 import {
-  Button,
   Box,
   TextField,
-  Container,
-  MenuItem,
-  Icon,
+  Typography,
+  AccordionSlots,
+  Accordion,
+  Fade,
+  AccordionDetails,
+  ClickAwayListener,
+  IconButton,
+  Tooltip,
+  FormHelperText,
+  Avatar,
+  Button,
+  styled,
 } from "@mui/material";
-import dinner_icon from "../assets/dinner.png";
-import { Pixelify } from "react-pixelify";
-
-import { styled } from "@mui/material/styles";
-
-const icons = [
-  {
-    value: "dinner",
-    icon: dinner_icon,
-  },
-  {
-    value: "dinner",
-    icon: dinner_icon,
-  },
-  {
-    value: "dinner",
-    icon: dinner_icon,
-  },
-];
+import { createMeal, setOpenIcon } from "../store/features/mealsSlice";
+import { Info } from "@mui/icons-material";
+import { AccordionSummaryStyled } from "../styles/AccordionSummaryStyled";
+import { useAppDispatch, useAppSelector } from "../store/store";
+import SelectMealIcon from "./SelectMealIcon";
+import { ICreateMeal } from "../interfaces/MealsInterfaces";
 
 export default function NewMeal() {
-  const [expanded, setExpanded] = React.useState(false);
-  const theme = useTheme();
-  const greaterThanMid = useMediaQuery(theme.breakpoints.up("md"));
-  const smallToMid = useMediaQuery(theme.breakpoints.between("sm", "md"));
-  const lessThanSmall = useMediaQuery(theme.breakpoints.down("sm"));
+  const [expanded, setExpanded] = useState(false);
+  const [open, setOpen] = useState(false);
+  const dispatch = useAppDispatch();
+  const access_token = useAppSelector((state) => state.auth.tokenInfo?.access);
+  const open_icon = useAppSelector((state) => state.meals.open_icon);
+  const icon = useAppSelector((state) => state.meals.icon);
+  const [data, setData] = useState<ICreateMeal | null>(null);
+  const [name, setName] = useState<string | null>(null);
+
+  const toolTipText = (
+    <Typography sx={{ fontFamily: "VT323" }}>
+      CADASTRE E EDITE AS REFEIÇÕES COM OS RESPECTIVOS ALIMENTOS DO SEU
+      DIA-A-DIA PARA FACILITAR O CONTROLE DA SUA ALIMENTAÇÃO. <br />
+      ATRAVÉS DESSA FUNÇÃO VOCÊ TERÁ UMA VISÃO GERAL DA INGESTÃO TOTAL DE
+      MACRONUTRIENTES POR REFEIÇÃO.
+    </Typography>
+  );
+
+  const handleTooltipClose = () => {
+    setOpen(false);
+  };
+
+  const handleTooltipOpen = () => {
+    setOpen(true);
+  };
 
   const handleExpansion = () => {
     setExpanded((prevExpanded) => !prevExpanded);
@@ -62,78 +68,128 @@ export default function NewMeal() {
       transform: expanded ? "scaleX(1) " : "scaleX(0)",
     },
   }));
+
+  useEffect(() => {
+    setData({
+      token: access_token as string,
+      icon: icon as string,
+      name: name as string,
+    });
+    console.log(data);
+  }, [icon, name]);
   return (
     <>
       <Accordion
         expanded={expanded}
-        onChange={handleExpansion}
         slots={{ transition: Fade as AccordionSlots["transition"] }}
         slotProps={{ transition: { timeout: 400 } }}
         sx={{
-          boxShadow:
-            "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+          boxShadow: "2.6px 5.3px 5.3px hsl(0deg 0% 0% / 0.42)",
           "& .MuiAccordion-region": { height: expanded ? "auto" : 0 },
           "& .MuiAccordionDetails-root": {
             display: expanded ? "block" : "none",
           },
         }}
       >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
+        <AccordionSummaryStyled
+          expandIcon={<ExpandMore onClick={handleExpansion} />}
           aria-controls="panel1-content"
           id="panel1-header"
           sx={{ maxHeight: 64, minHeight: 30 }}
         >
+          <ClickAwayListener onClickAway={handleTooltipClose}>
+            <Tooltip
+              PopperProps={{
+                disablePortal: true,
+              }}
+              onClose={handleTooltipClose}
+              open={open}
+              disableFocusListener
+              disableHoverListener
+              disableTouchListener
+              placement="bottom-start"
+              title={toolTipText}
+              arrow
+            >
+              <IconButton onClick={handleTooltipOpen}>
+                <Info />
+              </IconButton>
+            </Tooltip>
+          </ClickAwayListener>
           <TypographyStyled
             sx={{ fontFamily: "VT323", fontSize: { xs: 25, md: 35 } }}
           >
             CADASTRAR REFEIÇÃO
           </TypographyStyled>
-        </AccordionSummary>
+        </AccordionSummaryStyled>
         <AccordionDetails>
-          <Box component="form" noValidate autoComplete="off">
-            <TextField
-              fullWidth
-              variant="standard"
-              id="icon"
-              select
-              InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
-              label="ÍCONE"
-              inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
-              helperText="SELECIONE O ÍCONE DA SUA REFEIÇÃO"
-              FormHelperTextProps={{
-                sx: { fontFamily: "VT323", fontSize: 15 },
-              }}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              justifyItems: "flex-end",
+              alignContent: "flex-end",
+              alignItems: "flex-end",
+            }}
+          >
+            <Box
+              component="form"
+              noValidate
+              autoComplete="off"
+              sx={{ display: "flex", gap: 3, flex: 1, width: "100%" }}
             >
-              {icons.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  <Icon
-                    sx={{
-                      width: { xs: 50, md: 65 },
-                      height: { xs: 50, md: 65 },
-                    }}
-                  >
-                    <Pixelify
-                      src={option.icon}
-                      pixelSize={1}
-                      centered={true}
-                      width={greaterThanMid ? 30 : 65}
-                      height={greaterThanMid ? 30 : 65}
-                    />
-                  </Icon>
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              fullWidth
-              id="name"
-              InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
-              label="REFEIÇÃO"
-              inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
-              required
-              variant="standard"
-            />
-            <div style={{ paddingTop: 20 }}></div>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+                onClick={() => dispatch(setOpenIcon())}
+              >
+                {icon ? (
+                  <Avatar
+                    alt="Selected Icon"
+                    src={icon}
+                    variant="square"
+                    sx={{ width: "auto", height: "auto" }}
+                  />
+                ) : (
+                  <AddCircle />
+                )}
+
+                <FormHelperText
+                  id="standard-weight-helper-text"
+                  sx={{ fontFamily: "VT323", fontSize: 17 }}
+                >
+                  ÍCONE
+                </FormHelperText>
+              </Box>
+              {open_icon ? <SelectMealIcon /> : null}
+
+              <TextField
+                fullWidth
+                id="name"
+                InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
+                label="REFEIÇÃO"
+                inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
+                required
+                variant="standard"
+                onChange={(e) => {
+                  setName(e.target.value.toUpperCase());
+                }}
+              />
+            </Box>
+            <Button
+              sx={{
+                fontFamily: "VT323",
+                fontSize: 22,
+                paddingRight: 0,
+              }}
+              onClick={() => dispatch(createMeal(data as ICreateMeal))}
+            >
+              CADASTRAR
+            </Button>
           </Box>
         </AccordionDetails>
       </Accordion>

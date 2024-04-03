@@ -8,7 +8,7 @@ export interface IFood {
   protein: number | string;
   carbs: number | string;
   fat: number | string;
-  user: number | undefined;
+  token: string | undefined;
 }
 export interface IGetFood extends IFood {
   id: number;
@@ -17,4 +17,5 @@ export interface IGetFood extends IFood {
 export interface IFoodList {
   food_list: IFood[] | null;
   error: string | null;
+  refreshed: boolean;
 }

@@ -1,25 +1,30 @@
 import * as React from "react";
 import { useEffect } from "react";
-import Accordion, { AccordionSlots } from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import Fade from "@mui/material/Fade";
-import { Button, Box, TextField, Container } from "@mui/material";
-import BackupIcon from "@mui/icons-material/Backup";
-import { styled } from "@mui/material/styles";
+import {
+  Accordion,
+  AccordionSlots,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+  Radio,
+  RadioGroup,
+  Fade,
+  Button,
+  Box,
+  TextField,
+  styled,
+  FormControlLabel,
+  FormLabel,
+  Tooltip,
+  IconButton,
+  Alert,
+  ClickAwayListener,
+} from "@mui/material";
+import { AccordionSummaryStyled } from "../styles/AccordionSummaryStyled";
+import { ExpandMore, Backup, Info } from "@mui/icons-material";
 import { createFood } from "../store/features/foodsSlice";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormLabel from "@mui/material/FormLabel";
 import { IFood } from "../interfaces/FoodInterfaces";
-import Tooltip from "@mui/material/Tooltip";
-import InfoIcon from "@mui/icons-material/Info";
-import IconButton from "@mui/material/IconButton";
-import Alert from "@mui/material/Alert";
-import ClickAwayListener from "@mui/material/ClickAwayListener";
+import AlertInput from "./AlertInput";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import { useState, useRef } from "react";
 export default function NewFood() {
@@ -38,7 +43,10 @@ export default function NewFood() {
   const [protein, setProtein] = useState<number | string>("");
   const [carbs, setCarbs] = useState<number | string>("");
   const [fat, setFat] = useState<number | string>("");
-  const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
+  const access_token = useAppSelector((state) => state.auth.tokenInfo?.access);
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSucesssMessage] = useState("");
   const formRef = useRef<HTMLFormElement>();
   const dispatch = useAppDispatch();
   const handleExpansion = () => {
@@ -73,13 +81,15 @@ export default function NewFood() {
         protein: protein,
         carbs: carbs,
         fat: fat,
-        user: userProfileInfo?.user_id,
+        token: access_token,
       };
       await dispatch(createFood(food)).unwrap();
       setFormResult(true);
+      setSucesssMessage("ALIMENTO ENVIADO PARA O BANCO DE DADOS COM SUCESSO!");
       clearForm();
     } catch (e) {
       setFormResult(false);
+      setErrorMessage("ERRO AO CADASTRAR ALIMENTO");
     }
   };
   const toolTipText = (
@@ -113,12 +123,11 @@ export default function NewFood() {
     setOpen(true);
   };
   useEffect(() => {
-    formResult == true
-      ? setTimeout(() => {
-          setFormResult(null);
-        }, 6000)
-      : null;
-  }, [formResult]);
+    const timer = setTimeout(() => {
+      setFormResult(null);
+    }, 6000);
+    return () => clearTimeout(timer);
+  }, [formResult, dispatch]);
 
   return (
     <>
@@ -127,21 +136,20 @@ export default function NewFood() {
         slots={{ transition: Fade as AccordionSlots["transition"] }}
         slotProps={{ transition: { timeout: 400 } }}
         sx={{
-          boxShadow:
-            "rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px",
+          boxShadow: "2.6px 5.3px 5.3px hsl(0deg 0% 0% / 0.42)",
+          borderRadiusTop: 0.5,
           "& .MuiAccordion-region": { height: expanded ? "auto" : 0 },
           "& .MuiAccordionDetails-root": {
             display: expanded ? "block" : "none",
           },
         }}
       >
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon onClick={handleExpansion} />}
+        <AccordionSummaryStyled
+          expandIcon={<ExpandMore onClick={handleExpansion} />}
           aria-controls="panel1-content"
           id="panel1-header"
           sx={{ maxHeight: 64, minHeight: 30 }}
         >
-          {" "}
           <ClickAwayListener onClickAway={handleTooltipClose}>
             <Tooltip
               PopperProps={{
@@ -157,7 +165,7 @@ export default function NewFood() {
               arrow
             >
               <IconButton onClick={handleTooltipOpen}>
-                <InfoIcon />
+                <Info />
               </IconButton>
             </Tooltip>
           </ClickAwayListener>
@@ -166,7 +174,7 @@ export default function NewFood() {
           >
             CADASTRAR ALIMENTO{" "}
           </TypographyStyled>
-        </AccordionSummary>
+        </AccordionSummaryStyled>
         <AccordionDetails>
           <Box
             component="form"
@@ -176,23 +184,13 @@ export default function NewFood() {
             sx={{ display: "flex", flexDirection: "column", p: 1 }}
             onChange={() => setFormResult(null)}
           >
-            {formResult ? (
-              <Alert
-                severity="success"
-                sx={{ mt: 2, fontFamily: "VT323", fontSize: 15 }}
-              >
-                ALIMENTO CADASTRADO COM SUCESSO!
-              </Alert>
-            ) : formResult == false ? (
-              <Alert
-                severity="error"
-                sx={{ mt: 2, fontFamily: "VT323", fontSize: 15 }}
-              >
-                ERRO AO CADASTRAR ALIMENTO!
-              </Alert>
-            ) : (
-              <></>
-            )}
+            {formResult !== null ? (
+              <AlertInput
+                result={formResult}
+                successMessage={successMessage}
+                errorMessage={errorMessage}
+              />
+            ) : null}
             <TextField
               fullWidth
               id="brand"
@@ -202,7 +200,7 @@ export default function NewFood() {
               inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
               variant="standard"
               onChange={(e) => {
-                setBrand(e.target.value);
+                setBrand(e.target.value.toUpperCase());
               }}
             />
             <TextField
@@ -221,7 +219,7 @@ export default function NewFood() {
               value={name}
               variant="standard"
               onChange={(e) => {
-                setName(e.target.value);
+                setName(e.target.value.toUpperCase());
               }}
             />
             <div style={{ paddingTop: 20 }}>
@@ -294,7 +292,7 @@ export default function NewFood() {
                 },
               }}
               onChange={(e) => {
-                setPortionDescription(e.target.value);
+                setPortionDescription(e.target.value.toUpperCase());
               }}
               value={portionDescription}
               variant="standard"
@@ -425,9 +423,7 @@ export default function NewFood() {
               }}
             />
             <Button
-              variant="outlined"
-              endIcon={<BackupIcon />}
-              sx={{ width: "50%", alignSelf: "center", mt: 3 }}
+              sx={{ fontFamily: "VT323", margin: "0 auto", fontSize: 22 }}
               onClick={handleCreateFood}
             >
               CADASTRAR

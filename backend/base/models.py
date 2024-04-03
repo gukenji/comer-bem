@@ -13,6 +13,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     height = models.FloatField(blank=False)
     weight = models.FloatField(blank=False)
     age = models.IntegerField(blank=False)
+    profile_pic = models.ImageField(
+        null=True, blank=True, upload_to="images/profile_pics/"
+    )
 
     is_male = models.BooleanField(blank=False)
     is_active = models.BooleanField(default=True)
@@ -61,6 +64,7 @@ class Food(models.Model):
 class Meal(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=False)
     name = models.CharField(max_length=255, blank=False)
+    icon = models.CharField(blank=True, null=True)
 
 
 class MyMeals(models.Model):
@@ -70,7 +74,7 @@ class MyMeals(models.Model):
     quantity = models.FloatField(blank=False)
 
 
-class Freezer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
+class Inventory(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=False)
     food = models.ForeignKey(Food, on_delete=models.CASCADE, null=False, blank=False)
     quantity = models.FloatField(blank=True)

@@ -1,32 +1,44 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axiosInstance from "../../api/axiosInstance";
+import {
+  IMeals,
+  IMealsList,
+  ICreateMeal,
+} from "../../interfaces/MealsInterfaces";
 
-interface IMeals {
-  id?: number | null;
-  body?: string | null;
-  user?: number | null;
-}
-
-interface IMealsList {
-  meal_list: IMeals[] | null;
-  error: string | null;
-}
-
-const initialState: IMealsList = {
+const initialState: IMealsList & { open_icon: boolean; icon: string | null } = {
   meal_list: null,
   error: null,
+  open_icon: false,
+  icon: null,
 };
 
 export const getMeals = createAsyncThunk("meals", async () => {
-  const response = await axiosInstance.get("/meals/");
+  const response = await axiosInstance.get("/meals/get/");
   const resData = response.data;
   return resData;
 });
 
+export const createMeal = createAsyncThunk(
+  "create_food",
+  async (data: ICreateMeal) => {
+    const response = await axiosInstance.post("/meals/create/", data);
+    const resData = response.data;
+    return resData;
+  }
+);
+
 const mealsSlice = createSlice({
   name: "meals",
   initialState,
-  reducers: {},
+  reducers: {
+    setOpenIcon(state) {
+      state.open_icon = !state.open_icon;
+    },
+    selectIcon(state, action) {
+      state.icon = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getMeals.pending, (state) => {
@@ -39,8 +51,16 @@ const mealsSlice = createSlice({
       .addCase(getMeals.rejected, (state, action) => {
         state.meal_list = null;
         state.error = "falha ao recuperar refeições ";
-      });
+      })
+      .addCase(createMeal.pending, (state) => {})
+      .addCase(
+        createMeal.fulfilled,
+        (state, action: PayloadAction<IMeals[]>) => {}
+      )
+      .addCase(createMeal.rejected, (state, action) => {});
   },
 });
+
+export const { setOpenIcon, selectIcon } = mealsSlice.actions;
 
 export default mealsSlice.reducer;

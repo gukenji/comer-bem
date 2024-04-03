@@ -10,6 +10,7 @@ export interface IJWTDecode {
   age: number;
   is_male: boolean;
   level: number;
+  profile_pic: File;
 }
 export interface ITokenInfo {
   refresh: string;
@@ -26,6 +27,7 @@ export interface IUserData {
   age: number;
   is_male: boolean;
   level: number;
+  profile_pic: File;
 }
 
 export interface IUserLogin {

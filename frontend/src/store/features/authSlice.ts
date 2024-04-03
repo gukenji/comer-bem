@@ -14,8 +14,8 @@ interface IRefresh {
 }
 
 interface IAuthApiState {
-  tokenInfo?: ITokenInfo | null;
-  userProfileData?: IUserData | null;
+  tokenInfo: ITokenInfo | null;
+  userProfileData: IUserData | null;
   status: "idle" | "loading" | "failed";
   error: string | null;
 }
@@ -53,6 +53,9 @@ const initialState: IAuthApiState & { tab: null | number } = {
         level: jwtDecode<IJWTDecode>(
           JSON.parse(localStorage.getItem("tokenInfo") as string).access
         ).level,
+        profile_pic: jwtDecode<IJWTDecode>(
+          JSON.parse(localStorage.getItem("tokenInfo") as string).access
+        ).profile_pic,
       }
     : null,
   status: "idle",
@@ -64,9 +67,17 @@ export const login = createAsyncThunk("login", async (data: IUserLogin) => {
   const response = await axiosInstance.post("/token/", data);
   const resData = response.data;
   localStorage.setItem("tokenInfo", JSON.stringify(resData));
-
   return resData;
 });
+
+export const getUser = createAsyncThunk(
+  "get_user",
+  async (data: { email: string }) => {
+    const response = await axiosInstance.get(`/user/get/${data.email}/`);
+    const resData = response.data;
+    return resData;
+  }
+);
 
 export const refresh = createAsyncThunk("refresh", async (data: IRefresh) => {
   const response = await axiosInstance.post("/token/refresh/", data);
@@ -110,8 +121,9 @@ const authSlice = createSlice({
           age: jwtDecode<IJWTDecode>(state.tokenInfo.access).age,
           is_male: jwtDecode<IJWTDecode>(state.tokenInfo.access).is_male,
           level: jwtDecode<IJWTDecode>(state.tokenInfo.access).level,
+          profile_pic: jwtDecode<IJWTDecode>(state.tokenInfo.access)
+            .profile_pic,
         };
-        console.log(state.userProfileData);
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
@@ -139,6 +151,8 @@ const authSlice = createSlice({
             age: jwtDecode<IJWTDecode>(state.tokenInfo.access).age,
             is_male: jwtDecode<IJWTDecode>(state.tokenInfo.access).is_male,
             level: jwtDecode<IJWTDecode>(state.tokenInfo.access).level,
+            profile_pic: jwtDecode<IJWTDecode>(state.tokenInfo.access)
+              .profile_pic,
           };
         }
       )
@@ -150,6 +164,7 @@ const authSlice = createSlice({
       .addCase(logout.pending, (state) => {
         state.status = "loading";
         state.error = null;
+        state.tab = null;
       })
       .addCase(logout.fulfilled, (state, action) => {
         state.status = "idle";
