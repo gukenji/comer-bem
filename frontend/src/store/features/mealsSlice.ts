@@ -11,6 +11,7 @@ const initialState: IMealsList & { open_icon: boolean; icon: string | null } = {
   error: null,
   open_icon: false,
   icon: null,
+  refreshed: false,
 };
 
 export const getMeals = createAsyncThunk("meals", async () => {
@@ -38,6 +39,9 @@ const mealsSlice = createSlice({
     selectIcon(state, action) {
       state.icon = action.payload;
     },
+    resetIcon(state) {
+      state.icon = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -47,6 +51,7 @@ const mealsSlice = createSlice({
       .addCase(getMeals.fulfilled, (state, action: PayloadAction<IMeals[]>) => {
         state.meal_list = action.payload;
         state.error = null;
+        state.refreshed = true;
       })
       .addCase(getMeals.rejected, (state, action) => {
         state.meal_list = null;
@@ -55,12 +60,14 @@ const mealsSlice = createSlice({
       .addCase(createMeal.pending, (state) => {})
       .addCase(
         createMeal.fulfilled,
-        (state, action: PayloadAction<IMeals[]>) => {}
+        (state, action: PayloadAction<IMeals[]>) => {
+          state.refreshed = false;
+        }
       )
       .addCase(createMeal.rejected, (state, action) => {});
   },
 });
 
-export const { setOpenIcon, selectIcon } = mealsSlice.actions;
+export const { setOpenIcon, selectIcon, resetIcon } = mealsSlice.actions;
 
 export default mealsSlice.reducer;

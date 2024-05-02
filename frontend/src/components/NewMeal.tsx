@@ -16,17 +16,26 @@ import {
   Button,
   styled,
 } from "@mui/material";
-import { createMeal, setOpenIcon } from "../store/features/mealsSlice";
+import {
+  createMeal,
+  setOpenIcon,
+  resetIcon,
+} from "../store/features/mealsSlice";
 import { Info } from "@mui/icons-material";
 import { AccordionSummaryStyled } from "../styles/AccordionSummaryStyled";
 import { useAppDispatch, useAppSelector } from "../store/store";
 import SelectMealIcon from "./SelectMealIcon";
-import { ICreateMeal } from "../interfaces/MealsInterfaces";
+import { ICreateMeal, IMeals } from "../interfaces/MealsInterfaces";
+import AlertInput from "./AlertInput";
 
 export default function NewMeal() {
   const [expanded, setExpanded] = useState(false);
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
+  const [formResult, setFormResult] = useState<boolean | null>(null);
+
+  const [successMessage, setSucesssMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const access_token = useAppSelector((state) => state.auth.tokenInfo?.access);
   const open_icon = useAppSelector((state) => state.meals.open_icon);
   const icon = useAppSelector((state) => state.meals.icon);
@@ -53,6 +62,24 @@ export default function NewMeal() {
   const handleExpansion = () => {
     setExpanded((prevExpanded) => !prevExpanded);
   };
+  const clearForm = () => {
+    setName((prev) => "");
+    setData((prev) => null);
+    dispatch(resetIcon());
+  };
+
+  const handleCreateMeal = async () => {
+    try {
+      await dispatch(createMeal(data as ICreateMeal)).unwrap();
+      setFormResult(true);
+      setSucesssMessage("REFEIÇÃO CADASTRADA COM SUCESSO!");
+      clearForm();
+    } catch (e) {
+      setFormResult(false);
+      setErrorMessage("ERRO AO CADASTRAR REFEIÇÃO!");
+    }
+  };
+
   const TypographyStyled = styled(Typography)(({ theme }) => ({
     position: "relative",
     textDecoration: "none",
@@ -77,6 +104,13 @@ export default function NewMeal() {
     });
     console.log(data);
   }, [icon, name]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFormResult(null);
+    }, 6000);
+    return () => clearTimeout(timer);
+  }, [formResult, dispatch]);
   return (
     <>
       <Accordion
@@ -123,9 +157,17 @@ export default function NewMeal() {
           </TypographyStyled>
         </AccordionSummaryStyled>
         <AccordionDetails>
+          {formResult !== null ? (
+            <AlertInput
+              result={formResult}
+              successMessage={successMessage}
+              errorMessage={errorMessage}
+            />
+          ) : null}{" "}
           <Box
             sx={{
               display: "flex",
+              marginTop: 2,
               flexDirection: "column",
               justifyContent: "flex-end",
               justifyItems: "flex-end",
@@ -172,10 +214,12 @@ export default function NewMeal() {
                 id="name"
                 InputLabelProps={{ sx: { fontFamily: "VT323", fontSize: 20 } }}
                 label="REFEIÇÃO"
+                value={name}
                 inputProps={{ style: { fontFamily: "VT323", fontSize: 20 } }}
                 required
                 variant="standard"
                 onChange={(e) => {
+                  setFormResult(null);
                   setName(e.target.value.toUpperCase());
                 }}
               />
@@ -186,7 +230,7 @@ export default function NewMeal() {
                 fontSize: 22,
                 paddingRight: 0,
               }}
-              onClick={() => dispatch(createMeal(data as ICreateMeal))}
+              onClick={handleCreateMeal}
             >
               CADASTRAR
             </Button>

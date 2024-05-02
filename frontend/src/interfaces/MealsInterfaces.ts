@@ -8,6 +8,7 @@ export interface IMeals {
 export interface IMealsList {
   meal_list: IMeals[] | null;
   error: string | null;
+  refreshed: boolean;
 }
 
 export interface ICreateMeal {

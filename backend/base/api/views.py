@@ -26,7 +26,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token["weight"] = -user.weight
         token["age"] = user.age
         token["is_male"] = user.is_male
-        token["level"] = user.level
+        token["gcd"] = user.gcd
         token["profile_pic"] = str(user.profile_pic) if user.profile_pic else None
         return token
 
