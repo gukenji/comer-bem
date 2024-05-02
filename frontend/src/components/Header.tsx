@@ -16,8 +16,7 @@ import rg from "../assets/rg_pixelated2.png";
 import { useEffect, useRef, useState } from "react";
 export default function Header() {
   const userProfileInfo = useAppSelector((state) => state.auth.userProfileData);
-  const consumed_kcal = 1000;
-  const meta_kcal = 2700;
+  const consumed_kcal = 0;
   const box = useRef<HTMLDivElement>();
   const [width, setWidth] = useState<number | null>(0);
   const [height, setHeight] = useState<number | null>(0);
@@ -137,7 +136,7 @@ export default function Header() {
                       </Typography>
                       <BorderLinearProgress
                         variant="determinate"
-                        value={(consumed_kcal / meta_kcal) * 100}
+                        value={(consumed_kcal / userProfileInfo.gcd) * 100}
                       />
                       <Typography
                         sx={{
@@ -157,7 +156,7 @@ export default function Header() {
                           }}
                         >
                           <img src={kcal_pic} width={12} height={14} />
-                          {consumed_kcal}/{meta_kcal}
+                          {consumed_kcal}/{userProfileInfo.gcd}
                         </span>
                         <span
                           style={{
@@ -165,14 +164,14 @@ export default function Header() {
                             fontSize: 16,
                           }}
                         >
-                          KCAL
+                          ENERGIA
                         </span>
                       </Typography>
                     </Container>
                     <Container style={{ padding: 0, margin: 0 }}>
                       <BorderLinearProgress
                         variant="determinate"
-                        value={(consumed_kcal / meta_kcal) * 100}
+                        value={(consumed_kcal / userProfileInfo.gcd) * 100}
                       />
                       <Typography
                         sx={{
@@ -192,7 +191,7 @@ export default function Header() {
                           }}
                         >
                           <img src={level_pic} width={12} height={14} />
-                          {consumed_kcal}/{meta_kcal}
+                          {consumed_kcal}/{userProfileInfo.gcd}
                         </span>
                         <span
                           style={{

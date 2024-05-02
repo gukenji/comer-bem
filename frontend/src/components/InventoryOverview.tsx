@@ -50,16 +50,17 @@ const InventoryOverview = () => {
     ["GORDURAS", fat],
   ];
   const options = {
-    title: "RESUMO DOS MACRONUTRIENTES",
-    position: "right",
+    title: `RESUMO DOS MACRONUTRIENTES \nDISPONÍVEIS`,
+    position: "center",
     titleTextStyle: {
       bold: false,
       fontSize: 22,
     },
+    pieSliceText: "value-and-percentage",
     fontName: "VT323",
     chartArea: { left: 10, right: 0 },
     is3D: true,
-    pieSliceTextStyle: { fontSize: 17 },
+    pieSliceTextStyle: { fontSize: 14 },
     tooltip: {
       textStyle: {
         fontSize: 15,

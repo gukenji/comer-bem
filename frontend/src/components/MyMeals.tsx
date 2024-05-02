@@ -30,6 +30,7 @@ const MyMeals = () => {
   const dispatch = useAppDispatch();
   const [expanded, setExpanded] = useState(false);
   const meals_list = useAppSelector((state) => state.meals.meal_list);
+  const isRefreshed = useAppSelector((state) => state.meals.refreshed);
 
   const [open, setOpen] = useState(false);
   const handleTooltipClose = () => {
@@ -44,17 +45,16 @@ const MyMeals = () => {
     setExpanded((prevExpanded) => !prevExpanded);
   };
 
-  const fetchMeals = async () => {
-    try {
-      await dispatch(getMeals()).unwrap();
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   useEffect(() => {
-    fetchMeals();
-  }, []);
+    const fetchMeals = async () => {
+      try {
+        await dispatch(getMeals()).unwrap();
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    !isRefreshed ? fetchMeals() : null;
+  }, [isRefreshed, dispatch]);
 
   console.log(meals_list);
   const toolTipText = (

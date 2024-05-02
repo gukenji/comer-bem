@@ -9,7 +9,7 @@ export interface IJWTDecode {
   weight: number;
   age: number;
   is_male: boolean;
-  level: number;
+  gcd: number;
   profile_pic: File;
 }
 export interface ITokenInfo {
@@ -26,7 +26,7 @@ export interface IUserData {
   weight: number;
   age: number;
   is_male: boolean;
-  level: number;
+  gcd: number;
   profile_pic: File;
 }
 

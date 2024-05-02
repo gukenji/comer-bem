@@ -50,9 +50,9 @@ const initialState: IAuthApiState & { tab: null | number } = {
         is_male: jwtDecode<IJWTDecode>(
           JSON.parse(localStorage.getItem("tokenInfo") as string).access
         ).is_male,
-        level: jwtDecode<IJWTDecode>(
+        gcd: jwtDecode<IJWTDecode>(
           JSON.parse(localStorage.getItem("tokenInfo") as string).access
-        ).level,
+        ).gcd,
         profile_pic: jwtDecode<IJWTDecode>(
           JSON.parse(localStorage.getItem("tokenInfo") as string).access
         ).profile_pic,
@@ -120,7 +120,7 @@ const authSlice = createSlice({
           weight: jwtDecode<IJWTDecode>(state.tokenInfo.access).weight,
           age: jwtDecode<IJWTDecode>(state.tokenInfo.access).age,
           is_male: jwtDecode<IJWTDecode>(state.tokenInfo.access).is_male,
-          level: jwtDecode<IJWTDecode>(state.tokenInfo.access).level,
+          gcd: jwtDecode<IJWTDecode>(state.tokenInfo.access).gcd,
           profile_pic: jwtDecode<IJWTDecode>(state.tokenInfo.access)
             .profile_pic,
         };
@@ -150,7 +150,7 @@ const authSlice = createSlice({
             weight: jwtDecode<IJWTDecode>(state.tokenInfo.access).weight,
             age: jwtDecode<IJWTDecode>(state.tokenInfo.access).age,
             is_male: jwtDecode<IJWTDecode>(state.tokenInfo.access).is_male,
-            level: jwtDecode<IJWTDecode>(state.tokenInfo.access).level,
+            gcd: jwtDecode<IJWTDecode>(state.tokenInfo.access).gcd,
             profile_pic: jwtDecode<IJWTDecode>(state.tokenInfo.access)
               .profile_pic,
           };
