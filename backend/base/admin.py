@@ -1,10 +1,10 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import User, Meal, Food, MyMeals, Inventory
+from .models import User, Refeicao, Alimento, Ingestao, Dispensa
 
 admin.site.register(User)
-admin.site.register(Meal)
-admin.site.register(Food)
-admin.site.register(Inventory)
-admin.site.register(MyMeals)
+admin.site.register(Refeicao)
+admin.site.register(Alimento)
+admin.site.register(Ingestao)
+admin.site.register(Dispensa)

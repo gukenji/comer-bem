@@ -3,22 +3,24 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.forms import ValidationError
 from .managers import CustomUserManager
 from django.utils import timezone
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-
+    generos = ((1, "MASCULINO"), (2, "FEMININO"))
+    nome = models.CharField(max_length=255, blank=False, default="")
     email = models.EmailField(blank=False, default="", unique=True)
-    name = models.CharField(max_length=255, blank=False, default="")
-    height = models.IntegerField(blank=False)
-    weight = models.FloatField(blank=False)
-    age = models.IntegerField(blank=False)
+    peso = models.FloatField(blank=False)
+    altura = models.IntegerField(blank=False)
+    data_nascimento = models.DateField(blank=False)
     profile_pic = models.ImageField(
         null=True, blank=True, upload_to="images/profile_pics/"
     )
-    gcd = models.IntegerField(blank=True, default=0)
-    is_male = models.BooleanField(blank=False)
+    taxa_metabolica = models.FloatField(blank=True, default=1.3)
+    meta_calorias = models.IntegerField(blank=True, default=0)
+    genero = models.IntegerField(blank=False, choices=generos)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -30,67 +32,81 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "email"
     EMAIL_FIELD = "email"
-    REQUIRED_FIELDS = ["name", "height", "weight", "age", "is_male"]
+
+    REQUIRED_FIELDS = ["nome", "peso", "altura", "data_nascimento", "genero"]
 
     def save(self, *args, **kwargs):
-        if self.gcd == 0:
-            self.gcd = int(1.3 * (66.47 + (13.75 * self.weight) + (5 * self.height) - (6.8 * self.age)))
+        print(self)
+        if self.meta_calorias == 0:
+            self.meta_calorias = int(
+                self.taxa_metabolica
+                * (
+                    66.47
+                    + (13.75 * self.peso)
+                    + (5 * self.altura)
+                    - (6.8 * self.calculaIdade())
+                )
+            )
         super().save(*args, **kwargs)
+
+    def calculaIdade(self):
+        data_atual = timezone.now()
+        idade = (
+            data_atual.year
+            - self.data_nascimento.year
+            - (
+                (data_atual.month, data_atual.day)
+                < (self.data_nascimento.month, self.data_nascimento.day)
+            )
+        )
+        return idade
+
+    # def calculaMetaCalorias(self):
 
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
 
     def get_full_name(self):
-        return self.name
+        return self.nome
 
     def get_short_name(self):
-        return self.name or self.email.split("@")[0]
+        return self.nome or self.email.split("@")[0]
 
 
-class Food(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=False)
-    brand = models.CharField(max_length=255, blank=True)
-    name = models.CharField(max_length=255, blank=False)
-    portion_size = models.FloatField(blank=False)
-    is_custom_portion = models.BooleanField(blank=False)
-    portion_description = models.CharField(max_length=255, blank=True, default=None)
-    kcal = models.FloatField(blank=False)
-    protein = models.FloatField(blank=False)
-    carbs = models.FloatField(blank=False)
-    fat = models.FloatField(blank=False)
+class Alimento(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    nome = models.CharField(max_length=255, blank=False)
+    marca = models.CharField(max_length=255, blank=True)
+    peso_referencia = models.FloatField(blank=False)
+
+    carboidratos = models.FloatField(blank=False)
+    proteinas = models.FloatField(blank=False)
+    gorduras = models.FloatField(blank=False)
+    calorias = models.FloatField(blank=False)
+    codigo_barra = models.CharField(blank=True)
+    porcao_customizada = models.BooleanField(blank=False)
+    descricao_porcao = models.CharField(max_length=255, blank=True, default=None)
 
     def save(self, *args, **kwargs):
-        if self.is_custom_portion and len(self.portion_description) == 0:
-            raise ValidationError("You need to provide a portion description")
-        super(Food, self).save(*args, **kwargs)
+        if self.porcao_customizada and len(self.descricao_porcao) == 0:
+            raise ValidationError("É necessário incluir uma descrição.")
+        super(Alimento, self).save(*args, **kwargs)
 
 
-class Meal(models.Model):
+class Refeicao(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=False)
-    name = models.CharField(max_length=255, blank=False)
-    icon = models.CharField(blank=True, null=True)
+    nome = models.CharField(max_length=255, blank=False)
+    alimentos = models.ManyToManyField(Alimento)
+    icone = models.CharField(blank=True, null=True)
 
 
-class MyMeals(models.Model):
+class Dispensa(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=True)
-    meal = models.ForeignKey(Meal, on_delete=models.CASCADE, blank=False)
-    food = models.ForeignKey(Food, on_delete=models.CASCADE, blank=False)
-    quantity = models.FloatField(blank=False)
+    alimentos = models.ManyToManyField(Alimento)
 
 
-class Inventory(models.Model):
+class Ingestao(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=False)
-    food = models.ForeignKey(Food, on_delete=models.CASCADE, null=False, blank=False)
-    quantity = models.FloatField(blank=True)
-
-
-class Character(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=False)
-    level = models.IntegerField(default=1)
-    experience = models.IntegerField(default=0)
-
-
-class Level(models.Model):
-    level = models.IntegerField()
-    experience_needed = models.IntegerField()
+    data_ingestao = models.DateTimeField(default=timezone.now)
+    alimentos = models.ManyToManyField(Alimento)

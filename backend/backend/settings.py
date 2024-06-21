@@ -122,9 +122,9 @@ WSGI_APPLICATION = "backend.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "comer_bem",
-        "USER": "cb_admin",
-        "PASSWORD": "cbadmin",
+        "NAME": "fitwar",
+        "USER": "fitwar_admin",
+        "PASSWORD": "admin",
         "HOST": "localhost",
         "PORT": "5432",
     }

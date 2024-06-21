@@ -96,7 +96,7 @@ const Avatar = () => {
             fontSize: 18,
           }}
         >
-          LEVEL {userProfileInfo?.level}
+          LEVEL 1
         </Typography>
       </IconButtonStyled>
       <Menu

@@ -4,13 +4,9 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated
 from .serializers import (
-    MealSerializer,
-    FoodSerializer,
-    InventorySerializer,
-    GetInventorySerializer,
     RegistrationSerializer,
 )
-from base.models import Food, Inventory, User, Meal
+from base.models import Alimento, Refeicao, User, Dispensa, Ingestao
 from rest_framework import status
 from rest_framework_simplejwt.tokens import AccessToken
 
@@ -65,95 +61,95 @@ def getRoutes(request):
     return Response(routes)
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def createFood(request):
-    token = AccessToken(request.data["token"])
-    user_id = token.payload["user_id"]
-    user = User.objects.get(id=user_id)
-    serializer = FoodSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save(user=user)
-    return Response(serializer.data)
+# @api_view(["POST"])
+# @permission_classes([IsAuthenticated])
+# def createFood(request):
+#     token = AccessToken(request.data["token"])
+#     user_id = token.payload["user_id"]
+#     user = User.objects.get(id=user_id)
+#     serializer = FoodSerializer(data=request.data)
+#     serializer.is_valid(raise_exception=True)
+#     serializer.save(user=user)
+#     return Response(serializer.data)
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def getFoods(request):
-    foods = Food.objects.all()
-    serializer = FoodSerializer(foods, many=True)
-    return Response(serializer.data)
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+# def getFoods(request):
+#     foods = Food.objects.all()
+#     serializer = FoodSerializer(foods, many=True)
+#     return Response(serializer.data)
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def getMyMeals(request):
-    user = request.user
-    meals = Meal.objects.filter(user=user)
-    serializer = MealSerializer(meals, many=True)
-    return Response(serializer.data)
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+# def getMyMeals(request):
+#     user = request.user
+#     meals = Meal.objects.filter(user=user)
+#     serializer = MealSerializer(meals, many=True)
+#     return Response(serializer.data)
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def createMeal(request):
-    token = AccessToken(request.data["token"])
-    user_id = token.payload["user_id"]
-    user = User.objects.get(id=user_id)
-    serializer = MealSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save(user=user)
-    return Response(serializer.data)
+# @api_view(["POST"])
+# @permission_classes([IsAuthenticated])
+# def createMeal(request):
+#     token = AccessToken(request.data["token"])
+#     user_id = token.payload["user_id"]
+#     user = User.objects.get(id=user_id)
+#     serializer = MealSerializer(data=request.data)
+#     serializer.is_valid(raise_exception=True)
+#     serializer.save(user=user)
+#     return Response(serializer.data)
 
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def getInventory(request):
-    user = request.user
-    inventory = user.inventory_set.all()
-    serializer = GetInventorySerializer(inventory, many=True)
-    return Response(serializer.data)
+# @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
+# def getInventory(request):
+#     user = request.user
+#     inventory = user.inventory_set.all()
+#     serializer = GetInventorySerializer(inventory, many=True)
+#     return Response(serializer.data)
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def includeToInventory(request):
-    token = AccessToken(request.data["token"])
-    user_id = token.payload["user_id"]
-    user = User.objects.get(id=user_id)
-    serializer = InventorySerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save(user=user)
-    return Response(serializer.data)
+# @api_view(["POST"])
+# @permission_classes([IsAuthenticated])
+# def includeToInventory(request):
+#     token = AccessToken(request.data["token"])
+#     user_id = token.payload["user_id"]
+#     user = User.objects.get(id=user_id)
+#     serializer = InventorySerializer(data=request.data)
+#     serializer.is_valid(raise_exception=True)
+#     serializer.save(user=user)
+#     return Response(serializer.data)
 
 
-@api_view(["DELETE"])
-@permission_classes([IsAuthenticated])
-def deleteFromInventory(request, pk):
-    token = AccessToken(request.data["token"])
-    user_id = token.payload["user_id"]
-    user = User.objects.get(id=user_id)
-    inventory = Inventory.objects.get(id=pk, user=user)
-    if inventory:
-        inventory.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    else:
-        return Response({"msg": "teste"})
+# @api_view(["DELETE"])
+# @permission_classes([IsAuthenticated])
+# def deleteFromInventory(request, pk):
+#     token = AccessToken(request.data["token"])
+#     user_id = token.payload["user_id"]
+#     user = User.objects.get(id=user_id)
+#     inventory = Inventory.objects.get(id=pk, user=user)
+#     if inventory:
+#         inventory.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+#     else:
+#         return Response({"msg": "teste"})
 
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def updateInventory(request, pk):
-    token = AccessToken(request.data["token"])
-    user_id = token.payload["user_id"]
-    user = User.objects.get(id=user_id)
-    inventory = Inventory.objects.get(id=pk, user=user)
-    serializer = InventorySerializer(instance=inventory, data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    else:
-        return Response(serializer.errors)
+# @api_view(["POST"])
+# @permission_classes([IsAuthenticated])
+# def updateInventory(request, pk):
+#     token = AccessToken(request.data["token"])
+#     user_id = token.payload["user_id"]
+#     user = User.objects.get(id=user_id)
+#     inventory = Inventory.objects.get(id=pk, user=user)
+#     serializer = InventorySerializer(instance=inventory, data=request.data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         return Response(serializer.data)
+#     else:
+#         return Response(serializer.errors)
 
 
 @api_view(["GET"])
